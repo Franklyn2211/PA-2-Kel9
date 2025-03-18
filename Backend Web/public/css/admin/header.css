@@ -1,0 +1,275 @@
+@import "variables.css";
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: calc(
+        var(--sidebar-width) + 15px
+    ); /* Added gap between sidebar and header */
+    right: 15px; /* Adjusted right margin to match left */
+    margin: 0;
+    margin-top: 1rem;
+    margin-right: 0; /* Removed margin-right since we set right property directly */
+    background: var(--header-bg);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1.5rem 1rem 2rem; /* Increased left padding */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 5px 15px rgba(76, 223, 80, 0.1);
+    z-index: 1000;
+    transition: all var(--transition-speed) var(--transition-ease);
+    border: 1px solid rgba(76, 223, 80, 0.1);
+    animation: slideInDown 0.5s var(--transition-ease);
+    backdrop-filter: blur(5px);
+    width: calc(100% - var(--sidebar-width) - 30px); /* Set width explicitly */
+}
+
+.sidebar-collapsed .header {
+    left: calc(
+        var(--sidebar-mini-width) + 15px
+    ); /* Added gap for collapsed sidebar too */
+    width: calc(
+        100% - var(--sidebar-mini-width) - 30px
+    ); /* Adjusted width for collapsed sidebar */
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.menu-toggle {
+    background: rgba(76, 223, 80, 0.1);
+    border: none;
+    color: var(--primary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-speed) var(--transition-ease);
+    margin-right: 1.5rem;
+}
+
+.menu-toggle:hover {
+    background-color: rgba(76, 223, 80, 0.2);
+    color: var(--primary);
+    transform: rotate(180deg);
+    transition: all 0.5s var(--transition-ease);
+}
+
+.search-form {
+    position: relative;
+    margin-left: 1rem;
+}
+
+.search-input {
+    background-color: rgba(240, 247, 238, 0.7);
+    border: 1px solid rgba(76, 223, 80, 0.2);
+    border-radius: var(--border-radius-md);
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    width: 300px;
+    font-size: 0.95rem;
+    transition: all var(--transition-speed) var(--transition-ease);
+}
+
+.search-input:focus {
+    box-shadow: 0 0 0 4px rgba(76, 223, 80, 0.2);
+    outline: none;
+    width: 320px;
+    background-color: var(--light-bg);
+    transition: all 0.4s var(--transition-ease);
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-icon-btn {
+    background-color: rgba(240, 247, 238, 0.8);
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all var(--transition-speed) var(--transition-ease);
+    position: relative;
+    border: 1px solid rgba(76, 223, 80, 0.1);
+}
+
+.header-icon-btn:hover {
+    background-color: rgba(76, 223, 80, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(76, 223, 80, 0.2);
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--danger);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(244, 67, 54, 0.3);
+}
+
+/* User Dropdown Styles */
+.user-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-speed) var(--transition-ease);
+}
+
+.user-dropdown:hover {
+    background-color: rgba(76, 223, 80, 0.1);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-md);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 0.75rem;
+    box-shadow: 0 3px 8px rgba(76, 223, 80, 0.2);
+    transition: all var(--transition-speed) var(--transition-ease);
+}
+
+.user-dropdown:hover .user-avatar {
+    transform: scale(1.05);
+    box-shadow: 0 5px 12px rgba(76, 223, 80, 0.3);
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.user-role {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Dropdown Menu Styles */
+.dropdown-menu {
+    border: none;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem 0;
+    min-width: 200px;
+    margin-top: 0.5rem;
+    animation: fadeIn 0.3s var(--transition-ease);
+    border: 1px solid rgba(76, 223, 80, 0.1);
+    background: white;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    transition: all 0.25s var(--transition-ease);
+}
+
+.dropdown-item i {
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    color: var(--text-muted);
+    transition: all 0.25s var(--transition-ease);
+    width: 20px;
+    text-align: center;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(76, 223, 80, 0.08);
+    color: var(--primary);
+}
+
+.dropdown-item:hover i {
+    color: var(--primary);
+    transform: translateX(3px);
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0;
+    border-top: 1px solid rgba(76, 223, 80, 0.1);
+}
+
+.dropdown-header {
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 0.9rem;
+}
+
+/* Logout Item Styling - Enhanced */
+.logout-item {
+    color: #e63946 !important;
+    font-weight: 600;
+    margin-top: 5px;
+    background-color: rgba(230, 57, 70, 0.05);
+    border-radius: var(--border-radius-sm);
+}
+
+.logout-item i {
+    color: #e63946 !important;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.logout-item:hover {
+    background-color: rgba(230, 57, 70, 0.1) !important;
+    transform: translateX(5px);
+}

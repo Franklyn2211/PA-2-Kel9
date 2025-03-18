@@ -1,0 +1,37 @@
+:root {
+    --primary: #4cdf50; /* Much brighter green */
+    --primary-dark: #3ac53e; /* Brighter dark green */
+    --primary-light: #8ee34a; /* Brighter light green */
+    --secondary: #e9ffe9; /* Brighter very light green background */
+    --accent: #ff7043; /* Keep orange accent */
+    --dark: #2b2c34;
+    --light-bg: #f0f7ee; /* Light grey with green tint instead of white */
+    --light-gray: #e8f4e2; /* Brighter light green-tinted gray */
+    --sidebar-bg: linear-gradient(
+        160deg,
+        #f0ffe7 0%,
+        #e2fbd7 100%
+    ); /* Gradient for sidebar */
+    --header-bg: linear-gradient(
+        135deg,
+        #f5ffee 0%,
+        #ebffde 100%
+    ); /* Gradient for header */
+    --text-dark: #2b2c34;
+    --text-muted: #94a1b2;
+    --success: #00e096; /* Brighter success green */
+    --warning: #ffc107;
+    --danger: #f44336;
+    --info: #00bcd4;
+    --card-shadow: 0 0.5rem 1.5rem rgba(22, 28, 45, 0.05);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
+    --sidebar-width: 280px;
+    --sidebar-mini-width: 80px;
+    --header-height: 70px;
+    --transition-speed: 0.3s;
+    --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --border-radius-lg: 18px;
+    --border-radius-md: 12px;
+    --border-radius-sm: 8px;
+}
