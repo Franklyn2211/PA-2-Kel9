@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ResidentsController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,9 +31,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // Other admin routes
     // Penduduk
-    Route::get('/penduduk', function () {
-        return view('admin.penduduk.index');
-    })->name('admin.penduduk.index');
+    Route::get('/penduduk', [ResidentsController::class, 'index'])->name('admin.penduduk.index');
+    Route::get('/penduduk/create', [ResidentsController::class, 'create'])->name('admin.penduduk.create');
+    Route::post('/penduduk', [ResidentsController::class, 'store'])->name('admin.penduduk.store');
+    Route::get('/penduduk/{residents}/edit', [ResidentsController::class, 'edit'])->name('admin.penduduk.edit');
+    Route::put('/penduduk/{residents}', [ResidentsController::class, 'update'])->name('admin.penduduk.update');
+    Route::delete('/penduduk/{residents}', [ResidentsController::class, 'destroy'])->name('admin.penduduk.destroy');
 
     // Layanan
     Route::get('/layanan', [ProductController::class, 'index'])->name('admin.layanan.index');

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Postresource;
+use App\Models\News;
 use App\Models\Product;
+use App\Models\Residents;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -12,5 +14,17 @@ class PostController extends Controller
         $products = Product::all();
 
         return Postresource::collection($products);
+    }
+
+    public function getNews(){
+        $news = News::all();
+
+        return Postresource::collection($news);
+    }
+
+    public function getResidents()
+    {
+        $residents = Residents::all();
+        return Postresource::collection($residents);
     }
 }

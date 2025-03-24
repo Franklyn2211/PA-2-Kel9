@@ -16,3 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/products', [PostController::class, 'getProduct']);
+Route::get('/news', [PostController::class, 'getNews']);
+Route::get('penduduk', [PostController::class, 'getResidents']);
