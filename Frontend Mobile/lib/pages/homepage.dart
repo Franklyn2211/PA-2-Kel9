@@ -1,8 +1,12 @@
+import 'package:aplikasi_desa/pages/all_berita_page.dart';
+import 'package:aplikasi_desa/pages/auth_checker.dart';
+import 'package:aplikasi_desa/pages/berita.dart';
+import 'package:aplikasi_desa/pages/berita_detail_page.dart';
 import 'package:flutter/material.dart';
-import '../models/product_model.dart';
-import '../services/api_service.dart';
-import 'product_detail_page.dart';
-import 'layanan_surat_page.dart'; // Import halaman Layanan Surat
+import '../models/product_model.dart'; // Import model Product
+import '../models/berita.dart'; // Import model Berita
+import '../services/api_service.dart'; // Import ApiService
+import 'product_detail_page.dart'; // Import halaman Detail Produk
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,11 +16,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   late Future<List<Product>> futureProducts;
+  late Future<List<Berita>> futureBerita;
 
   @override
   void initState() {
     super.initState();
     futureProducts = ApiService.fetchProducts();
+    futureBerita = ApiService.fetchBerita();
   }
 
   @override
@@ -35,7 +41,53 @@ class _HomePageState extends State<HomePage> {
             children: [
               // Bagian Berita Desa
               sectionTitle("📰 Berita Desa"),
-              beritaDesa(),
+              FutureBuilder<List<Berita>>(
+                future: futureBerita,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('Tidak ada berita ditemukan'));
+                  } else {
+                    List<Berita> sortedBerita = snapshot.data!
+                      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+                    List<Berita> limitedBerita = sortedBerita.take(2).toList();
+
+                    return Column(
+                      children: [
+                        Column(
+                          children: limitedBerita
+                              .map((berita) => beritaItem(berita))
+                              .toList(),
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    AllBeritaPage(allBerita: snapshot.data!),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Lihat Lebih Banyak",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green[800],
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 12),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
               SizedBox(height: 20),
 
               // Bagian Informasi Desa
@@ -68,7 +120,8 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.article), label: 'Berita'),
           BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Layanan'),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Produk'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart), label: 'Produk'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
         ],
         currentIndex: _selectedIndex,
@@ -79,11 +132,15 @@ class _HomePageState extends State<HomePage> {
             _selectedIndex = index;
           });
 
-          // Navigasi ke halaman yang sesuai
-          if (index == 2) { // Jika item "Layanan" diklik
+          if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LayananSuratPage()),
+              MaterialPageRoute(builder: (context) => BeritaPage()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AuthCheckerScreen()),
             );
           }
         },
@@ -98,59 +155,68 @@ class _HomePageState extends State<HomePage> {
       child: Text(
         title,
         style: TextStyle(
-            fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blue[800]),
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.blue[800],
+        ),
       ),
     );
   }
 
-  // Contoh widget untuk berita desa
-  Widget beritaDesa() {
-    return Column(
-      children: [
-        beritaItem("assets/festival.jpg", "Festival Desa",
-            "Acara festival desa yang meriah."),
-        beritaItem("assets/jalan.jpg", "Pembangunan Jalan",
-            "Pembangunan jalan utama desa telah selesai."),
-      ],
-    );
-  }
-
-  Widget beritaItem(String imagePath, String title, String description) {
-    return Card(
-      color: Colors.white,
-      elevation: 3,
-      margin: EdgeInsets.only(bottom: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Gambar berita
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                imagePath,
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
+  // Widget untuk menampilkan item berita
+  Widget beritaItem(Berita berita) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BeritaDetailPage(berita: berita),
+          ),
+        );
+      },
+      child: Card(
+        color: Colors.white,
+        elevation: 3,
+        margin: EdgeInsets.only(bottom: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  berita.photoUrl,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            SizedBox(width: 10),
-            // Keterangan berita
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  SizedBox(height: 4),
-                  Text(description, style: TextStyle(color: Colors.grey[700])),
-                ],
+              SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      berita.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      berita.description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -183,16 +249,15 @@ class _HomePageState extends State<HomePage> {
   Widget produkItem(Product product) {
     return InkWell(
       onTap: () {
-        // Navigasi ke halaman detail produk
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ProductDetailPage(
-              imagePath: product.photoUrl, // Gunakan photoUrl
-              title: product.productName, // Gunakan productName
-              price: product.price, // Gunakan price
-              location: product.location, // Gunakan location
-              phoneNumber: product.phone, // Gunakan phone
+              imagePath: product.photoUrl,
+              title: product.productName,
+              price: product.price,
+              location: product.location,
+              phoneNumber: product.phone,
             ),
           ),
         );
@@ -207,33 +272,40 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Gambar produk
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  product.photoUrl, // Gunakan photoUrl
+                  product.photoUrl,
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
                 ),
               ),
               SizedBox(width: 10),
-              // Keterangan produk dan lokasi
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(product.productName, // Gunakan productName
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text(
+                      product.productName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                     SizedBox(height: 4),
-                    Text("Harga: Rp ${product.price}", // Gunakan price
-                        style: TextStyle(
-                            color: Colors.green[700],
-                            fontWeight: FontWeight.bold)),
+                    Text(
+                      "Harga: Rp ${product.price}",
+                      style: TextStyle(
+                        color: Colors.green[700],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(height: 4),
-                    Text("Lokasi: ${product.location}", // Gunakan location
-                        style: TextStyle(color: Colors.grey[600])),
+                    Text(
+                      "Lokasi: ${product.location}",
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
                   ],
                 ),
               ),

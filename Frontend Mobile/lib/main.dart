@@ -1,4 +1,5 @@
 import 'package:aplikasi_desa/pages/homepage.dart';
+import 'package:aplikasi_desa/screens/registrasi.dart';
 import 'package:flutter/material.dart';
 
 void main() {

@@ -1,0 +1,2 @@
+D:/semester 4/proyek akhir/PA-2-Kel9/Frontend Mobile/android/app/.cxx/Debug/552ybk3i/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/semester 4/proyek akhir/PA-2-Kel9/Frontend Mobile/android/app/.cxx/Debug/552ybk3i/armeabi-v7a/CMakeFiles/rebuild_cache.dir

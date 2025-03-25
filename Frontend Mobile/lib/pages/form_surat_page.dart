@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class FormSuratPage extends StatefulWidget {
   final String jenisSurat;
@@ -15,31 +13,6 @@ class _FormSuratPageState extends State<FormSuratPage> {
   final _formKey = GlobalKey<FormState>();
   final _nikController = TextEditingController();
   final _namaController = TextEditingController();
-
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/surat'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'jenis_surat': widget.jenisSurat,
-          'nik': _nikController.text,
-          'nama_lengkap': _namaController.text,
-        }),
-      );
-
-      if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Surat berhasil diajukan')),
-        );
-        Navigator.pop(context); // Kembali ke halaman sebelumnya
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal mengajukan surat')),
-        );
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +45,6 @@ class _FormSuratPageState extends State<FormSuratPage> {
                   }
                   return null;
                 },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text('Submit'),
               ),
             ],
           ),
