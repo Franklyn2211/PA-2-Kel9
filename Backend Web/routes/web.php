@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ResidentsController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\UMKMController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::get('/register/umkm', [UMKMController::class, 'showRegisterForm'])->name('register');
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -55,9 +58,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::delete('/berita/{news}', [NewsController::class, 'destroy'])->name('admin.berita.destroy');
 
     // Pengumuman
-    Route::get('/pengumuman', function () {
-        return view('admin.pengumuman.index');
-    })->name('admin.pengumuman.index');
+    Route::get('/pengumuman', [AnnouncementController::class, 'index'])->name('admin.pengumuman.index');
+    Route::get('/pengumuman/create', [AnnouncementController::class, 'create'])->name('admin.pengumuman.create');
+    Route::post('/pengumuman', [AnnouncementController::class,'store'])->name('admin.pengumuman.store');
+    Route::get('/pengumuman/{announcements}/edit', [AnnouncementController::class, 'edit'])->name('admin.pengumuman.edit');
+    Route::put('/pengumuman/{announcements}', [AnnouncementController::class, 'update'])->name('admin.pengumuman.update');
+    Route::delete('/pengumuman/{announcements}', [AnnouncementController::class, 'destroy'])->name('admin.pengumuman.destroy');
 
     // Galeri
     Route::get('/galeri', function () {

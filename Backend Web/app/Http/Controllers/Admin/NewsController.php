@@ -88,7 +88,7 @@ class NewsController extends Controller
             // Simpan foto baru
             $file = $request->file('photo');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('photos', $filename, 'public');
+            $file->storeAs('photos/berita', $filename, 'public');
             $news->photo = 'photos/berita/' . $filename;
         }
 
