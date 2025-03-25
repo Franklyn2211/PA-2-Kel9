@@ -85,4 +85,32 @@ class ResidentsController extends Controller
 
         return redirect()->route('admin.penduduk.index')->with('success', 'Data penduduk berhasil dihapus');
     }
+    public function CheckNik(Request $request)
+    {
+        // Validasi parameter nik
+        $request->validate([
+            'nik' => 'nullable|digits:16'
+        ]);
+
+        $query = Residents::query();
+        
+        // Filter berdasarkan NIK jika parameter ada
+        if ($request->has('nik')) {
+            $query->where('nik', $request->nik);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parameter NIK diperlukan',
+                'data' => []
+            ], 400);
+        }
+
+        $data = $query->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => $data->isEmpty() ? 'Data tidak ditemukan' : 'Data ditemukan',
+            'data' => $data
+        ]);
+    }
 }
