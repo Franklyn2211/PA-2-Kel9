@@ -17,5 +17,6 @@ use App\Http\Controllers\Admin\ResidentsController;
 */
 
 Route::get('/products', [PostController::class, 'getProduct']);
-Route::get('/news', [PostController::class, 'getnews']);
-Route::get('/penduduk', [ResidentsController::class, 'CheckNik']);
+Route::get('/news', [PostController::class, 'getNews']);
+Route::get('penduduk', [PostController::class, 'getResidents']);
+Route::get('/pengumuman', [PostController::class, 'getAnnouncements']);

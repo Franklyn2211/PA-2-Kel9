@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login UMKM</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/logo.png') }}" />
-    <!-- Bootstrap CSS via CDN -->
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <!-- Font Awesome untuk ikon -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
@@ -16,19 +16,18 @@
             justify-content: center;
             align-items: center;
             margin: 0;
-            /* Background akan ditambahkan oleh Anda */
-            background: url('assets/img/ambarita.jpg') no-repeat center center fixed;
+            background: url('{{ asset('assets/img/ambarita.jpg') }}') no-repeat center center fixed;
             background-size: cover;
         }
         .login-container {
-            background: rgba(255, 255, 255, 0.1); /* Transparansi putih */
-            backdrop-filter: blur(10px); /* Efek blur untuk kesan modern */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 2rem;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Bayangan lembut */
-            border: 1px solid rgba(255, 255, 255, 0.3); /* Garis tepi transparan */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         .login-container h2 {
             color: #fff;
@@ -88,7 +87,7 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Admin Desa</h2>
+        <h2>Login UMKM</h2>
 
         <!-- Pesan Error -->
         @if ($errors->any())
@@ -98,23 +97,13 @@
         @endif
 
         <!-- Form Login -->
-        <form action="{{ route('login') }}" method="POST">
+        {{-- <form action="{{ route('umkm.login') }}" method="POST"> --}}
             @csrf
-            <div class="input-group mb-3">
-                <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                </div>
-            </div>
             <div class="input-group mb-3">
                 <input type="password" name="password" class="form-control" placeholder="Password" required>
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
                 </div>
-            </div>
-            <div class="form-check mb-3">
-                <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                <label class="form-check-label" for="remember">Ingat Saya</label>
             </div>
             <button type="submit" class="btn btn-login">Masuk</button>
         </form>
