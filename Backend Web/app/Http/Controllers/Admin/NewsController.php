@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Models\News;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
+use Storage;
+
 
 class NewsController extends Controller
 {
@@ -32,22 +33,22 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required',
-            'photo' => 'required|image|mimes:jpeg,png,jpg|max:5000',
+            'title' =>'required|string|max:255',
+            'description' =>'required',
+            'photo' =>'required|image|mimes:jpeg,png,jpg|max:5000',
         ]);
 
-        // Clean HTML tags from description
-        $cleanDescription = strip_tags($request->description);
-
         $news = new News([
-            'title' => $request->title,
-            'description' => $cleanDescription, // Use cleaned description
+            'title' => $request->get('title'),
+            'description' => $request->get('description'),
         ]);
 
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('photos/berita', 'public');
-            $news->photo = $path;
+            $file = $request->file('photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $destinationPath = storage_path('app/public/photos/berita');
+            $file->move($destinationPath, $filename);
+            $news->photo = 'photos/berita/' . $filename;
         }
 
         $news->save();
@@ -68,28 +69,30 @@ class NewsController extends Controller
     public function update(Request $request, News $news)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5000',
+            'title' =>'required|string|max:255',
+            'description' =>'required',
+            'photo' =>'nullable|image|mimes:jpeg,png,jpg|max:5000',
         ]);
 
-        // Clean HTML tags from description
-        $cleanDescription = strip_tags($request->description);
-
-        $news->title = $request->title;
-        $news->description = $cleanDescription; // Use cleaned description
+        $data = [
+            'title' => $request->title,
+            'description' => $request->description,
+        ];
 
         if ($request->hasFile('photo')) {
-            // Delete old photo if exists
-            if ($news->photo) {
+            // Hapus foto lama jika ada
+            if ($news->photo && Storage::disk('public')->exists($news->photo)) {
                 Storage::disk('public')->delete($news->photo);
             }
 
-            $path = $request->file('photo')->store('photos/berita', 'public');
-            $news->photo = $path;
+            // Simpan foto baru
+            $file = $request->file('photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('photos/berita', $filename, 'public');
+            $news->photo = 'photos/berita/' . $filename;
         }
 
-        $news->save();
+        $news->update($data);
 
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil diubah');
     }
@@ -101,8 +104,8 @@ class NewsController extends Controller
     {
         $news = News::findOrFail($id);
 
-        if ($news->photo) {
-            Storage::disk('public')->delete($news->photo);
+        if (Storage::disk('public')->exists('photos/berita/' . $news->photo)) {
+            Storage::disk('public')->delete('photos/berita/' . $news->photo);
         }
 
         $news->delete();
