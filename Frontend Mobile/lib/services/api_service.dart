@@ -6,7 +6,7 @@ import '../models/berita.dart';
 
 class ApiService {
   static const String baseUrl =
-      "https://fad3-103-167-217-200.ngrok-free.app/api";
+      "https://fd35-103-167-217-200.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
