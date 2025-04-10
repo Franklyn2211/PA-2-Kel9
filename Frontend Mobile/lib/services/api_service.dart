@@ -1,12 +1,12 @@
 import 'dart:convert';
+import 'package:aplikasi_desa/models/userpenduduk.dart';
 import 'package:http/http.dart' as http;
 import '../models/penduduk_response.dart';
 import '../models/product_model.dart';
 import '../models/berita.dart';
 
 class ApiService {
-  static const String baseUrl =
-      "https://fd35-103-167-217-200.ngrok-free.app/api";
+  static const String baseUrl = "https://e9c6-114-5-147-128.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -70,6 +70,67 @@ class ApiService {
       final errorMsg = responseData['message'] ??
           'Request failed with status ${response.statusCode}';
       throw Exception(errorMsg);
+    }
+  }
+
+  static Future<Penduduk> registerPenduduk({
+    required String nik,
+    required String name,
+    required String password,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/register'),
+        headers: headers,
+        body: json.encode({
+          'nik': nik,
+          'name': name,
+          'password': password,
+        }),
+      );
+
+      final responseData = _parseResponse(response);
+
+      // Jika backend mengembalikan token (sesuai solusi sebelumnya)
+      if (responseData.containsKey('penduduk')) {
+        return Penduduk.fromJson(responseData['penduduk']);
+      } else {
+        return Penduduk.fromJson(responseData);
+      }
+    } catch (e) {
+      throw Exception('Gagal mendaftar: ${e.toString()}');
+    }
+  }
+
+  static Future<Map<String, dynamic>> loginPenduduk({
+    required String nik,
+    required String password,
+  }) async {
+    try {7
+      final response = await http.post(
+        Uri.parse('$baseUrl/login'),
+        headers: headers,
+        body: json.encode({
+          'nik': nik,
+          'password': password,
+        }),
+      );
+
+      final responseData = json.decode(response.body);
+
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'data': responseData,
+        };
+      } else {
+        return {
+          'success': false,
+          'message': responseData['message'] ?? 'Login gagal',
+        };
+      }
+    } catch (e) {
+      throw Exception('Error saat login: $e');
     }
   }
 }

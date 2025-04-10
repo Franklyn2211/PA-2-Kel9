@@ -1,5 +1,8 @@
+import 'package:aplikasi_desa/pages/form_surat_page.dart';
 import 'package:aplikasi_desa/pages/homepage.dart';
+import 'package:aplikasi_desa/pages/layanan_surat_page.dart';
 import 'package:aplikasi_desa/screens/registrasi.dart';
+import 'package:aplikasi_desa/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,10 +33,10 @@ class MyApp extends StatelessWidget {
           //
           // This works for code too, not just values: Most code changes can be
           // tested with just a hot reload.
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
           useMaterial3: true,
         ),
-        home: HomePage());
+        home: SplashScreen());
   }
 }
 
