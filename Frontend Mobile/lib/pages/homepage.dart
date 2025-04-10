@@ -3,10 +3,11 @@ import 'package:aplikasi_desa/pages/auth_checker.dart';
 import 'package:aplikasi_desa/pages/berita.dart';
 import 'package:aplikasi_desa/pages/berita_detail_page.dart';
 import 'package:flutter/material.dart';
-import '../models/product_model.dart'; // Import model Product
-import '../models/berita.dart'; // Import model Berita
-import '../services/api_service.dart'; // Import ApiService
-import 'product_detail_page.dart'; // Import halaman Detail Produk
+import '../models/product_model.dart';
+import '../models/berita.dart';
+import '../services/api_service.dart';
+import 'product_detail_page.dart';
+import 'package:html_unescape/html_unescape.dart'; // Tambahkan ini
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,12 +18,21 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   late Future<List<Product>> futureProducts;
   late Future<List<Berita>> futureBerita;
+  final HtmlUnescape htmlUnescape = HtmlUnescape(); // Tambahkan ini
 
   @override
   void initState() {
     super.initState();
     futureProducts = ApiService.fetchProducts();
     futureBerita = ApiService.fetchBerita();
+  }
+
+  // Fungsi untuk menghapus tag HTML
+  String _removeHtmlTags(String htmlText) {
+    return htmlUnescape.convert(htmlText)
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
   }
 
   @override
@@ -207,7 +217,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      berita.description,
+                      _removeHtmlTags(berita.description), // Gunakan fungsi untuk menghapus HTML
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.grey[700]),

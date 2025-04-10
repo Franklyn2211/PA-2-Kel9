@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/berita.dart'; // Sesuaikan dengan lokasi model Berita
+import '../models/berita.dart';
+import 'package:flutter_html/flutter_html.dart'; // Tambahkan ini
 
 class BeritaDetailPage extends StatelessWidget {
   final Berita berita;
@@ -11,11 +12,11 @@ class BeritaDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0, // Hilangkan shadow di AppBar
+        elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context); // Kembali ke halaman sebelumnya
+            Navigator.pop(context);
           },
         ),
         title: Text(
@@ -86,14 +87,28 @@ class BeritaDetailPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
 
-            SizedBox(height: 7),
-            Text(
-              berita.description,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[800],
-                height: 1.5, // Tinggi baris untuk keterbacaan yang lebih baik
-              ),
+            // Deskripsi berita dengan format HTML
+            Html(
+              data: berita.description,
+              style: {
+                "body": Style(
+                  fontSize: FontSize(16.0),
+                  color: Colors.grey[800],
+                  lineHeight: LineHeight(1.5),
+                ),
+                "b": Style(
+                  fontWeight: FontWeight.bold,
+                ),
+                "strong": Style(
+                  fontWeight: FontWeight.bold,
+                ),
+                "i": Style(
+                  fontStyle: FontStyle.italic,
+                ),
+                "em": Style(
+                  fontStyle: FontStyle.italic,
+                ),
+              },
             ),
           ],
         ),

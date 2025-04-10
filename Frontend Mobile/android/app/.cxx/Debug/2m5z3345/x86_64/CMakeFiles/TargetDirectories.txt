@@ -1,0 +1,2 @@
+D:/semester 4/pa/PA-2-Kel9/Frontend Mobile/android/app/.cxx/Debug/2m5z3345/x86_64/CMakeFiles/edit_cache.dir
+D:/semester 4/pa/PA-2-Kel9/Frontend Mobile/android/app/.cxx/Debug/2m5z3345/x86_64/CMakeFiles/rebuild_cache.dir
