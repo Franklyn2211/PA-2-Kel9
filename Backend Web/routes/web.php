@@ -3,11 +3,12 @@
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NewsController;
-use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\UMKM\ProductController;
 use App\Http\Controllers\Admin\ResidentsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\UMKMController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,9 +23,27 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('/register/umkm', [UMKMController::class, 'showRegisterForm'])->name('register');
+Route::post('/register/umkm', [UMKMController::class, 'register'])->name('register.umkm.post');
+Route::get('/login/umkm', [UMKMController::class, 'showLoginForm'])->name('login.umkm');
+Route::post('/login/umkm', [UMKMController::class, 'login'])->name('login.umkm.post');
+Route::post('/logout/umkm', [UMKMController::class, 'logout'])->name('logout.umkm');
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Umkm Routes
+Route::prefix('umkm')->middleware('auth:umkm')->group(function () {
+    Route::get('/', [\App\Http\Controllers\UMKM\DashboardController::class, 'index'])->name('umkm.dashboard');
+    Route::get('/umkm/dashboard', [\App\Http\Controllers\UMKM\DashboardController::class, 'index'])->name('umkm.dashboard.index');
+
+    // Other UMKM routes
+    Route::get('/products', [ProductController::class, 'index'])->name('umkm.products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('umkm.products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('umkm.products.store');
+    Route::get('/products/{products}/edit', [ProductController::class, 'edit'])->name('umkm.products.edit');
+    Route::put('/products/{products}', [ProductController::class, 'update'])->name('umkm.products.update');
+    Route::delete('/products/{products}', [ProductController::class, 'destroy'])->name('umkm.products.destroy');
+});
 
 // Admin Routes
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -64,6 +83,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/pengumuman/{announcements}/edit', [AnnouncementController::class, 'edit'])->name('admin.pengumuman.edit');
     Route::put('/pengumuman/{announcements}', [AnnouncementController::class, 'update'])->name('admin.pengumuman.update');
     Route::delete('/pengumuman/{announcements}', [AnnouncementController::class, 'destroy'])->name('admin.pengumuman.destroy');
+
+    // UMKM
+    Route::get('/umkm', [\App\Http\Controllers\Admin\UmkmController::class, 'index'])->name('admin.umkm.index');
+    Route::patch('/umkm/{id}/status', [\App\Http\Controllers\Admin\UmkmController::class, 'updateStatus'])->name('admin.umkm.updateStatus');
 
     // Galeri
     Route::get('/galeri', function () {

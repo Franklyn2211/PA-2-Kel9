@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\UMKM;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
@@ -11,13 +11,13 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::paginate(5);
-        return view('admin.layanan.index', ['products' => $products]);
+        $products = Product::where('umkm_id', auth()->id())->paginate(5); // Filter by UMKM
+        return view('umkm.layanan.index', ['products' => $products]);
     }
 
     public function create()
     {
-        return view('admin.layanan.create');
+        return view('umkm.layanan.create');
     }
 
     public function store(Request $request)
@@ -29,34 +29,34 @@ class ProductController extends Controller
             'location' => 'required|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'phone' => 'required|numeric',
         ]);
 
-        $products = new Product([
+        $data = [
             'product_name' => $request->get('product_name'),
             'description' => $request->get('description'),
             'location' => $request->get('location'),
             'price' => $request->get('price'),
             'stock' => $request->get('stock'),
-            'phone' => $request->get('phone'),
-        ]);
+            'phone' => auth()->user()->phone, // Use authenticated UMKM's phone
+            'umkm_id' => auth()->id(), // Associate product with UMKM
+        ];
 
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
             $filename = time() . '_' . $file->getClientOriginalName();
             $destinationPath = storage_path('app/public/photos');
             $file->move($destinationPath, $filename);
-            $products->photo = 'photos/' . $filename;
+            $data['photo'] = 'photos/' . $filename;
         }
 
-        $products->save();
+        Product::create($data);
 
-        return redirect()->route('admin.layanan.index')->with('success', 'Produk berhasil ditambahkan');
+        return redirect()->route('umkm.products.index')->with('success', 'Produk berhasil ditambahkan');
     }
 
     public function edit(Product $products)
     {
-        return view('admin.layanan.edit', compact('products'));
+        return view('umkm.layanan.edit', compact('products'));
     }
 
     public function update(Request $request, Product $products)
@@ -68,7 +68,6 @@ class ProductController extends Controller
             'location' => 'required|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'phone' => 'required|numeric',
         ]);
 
         $data = [
@@ -77,7 +76,7 @@ class ProductController extends Controller
             'location' => $request->location,
             'price' => $request->price,
             'stock' => $request->stock,
-            'phone' => $request->phone,
+            'phone' => auth()->user()->phone, // Use authenticated UMKM's phone
         ];
 
         if ($request->hasFile('photo')) {
@@ -90,12 +89,12 @@ class ProductController extends Controller
             $file = $request->file('photo');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->storeAs('photos', $filename, 'public');
-            $products->photo = 'photos/' . $filename;
+            $data['photo'] = 'photos/' . $filename;
         }
 
         $products->update($data);
 
-        return redirect()->route('admin.layanan.index')->with('success', 'Produk berhasil diperbarui');
+        return redirect()->route('umkm.products.index')->with('success', 'Produk berhasil diperbarui');
     }
 
     public function destroy($id)
@@ -108,6 +107,6 @@ class ProductController extends Controller
 
         $products->delete();
 
-        return redirect()->route('admin.layanan.index')->with('success', 'Produk berhasil dihapus');
+        return redirect()->route('umkm.products.index')->with('success', 'Produk berhasil dihapus');
     }
 }

@@ -2,7 +2,7 @@
     <div class="sidebar-header">
         <a href="/admin/dashboard" class="sidebar-logo">
             <div class="sidebar-logo-icon">
-                <img src="{{ asset('assets/images/logo.png') }}" alt="Desa Digital Logo">
+                <img src="{{ asset('assets/images/logo.bmp') }}" alt="Desa Digital Logo">
             </div>
             <div class="sidebar-logo-text">
                 <div class="sidebar-logo-title">Desa Ambarita</div>
@@ -27,12 +27,6 @@
                 <a class="nav-link" href="/admin/penduduk">
                     <i class="fas fa-users"></i>
                     <span class="nav-text">Data Penduduk</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('admin/layanan*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{route('admin.layanan.index')}}">
-                    <i class="fas fa-hands-helping"></i>
-                    <span class="nav-text">Layanan</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->is('admin/berita*') ? 'active' : '' }}">
@@ -67,6 +61,12 @@
                 <a class="nav-link" href="/admin/aparatur">
                     <i class="fas fa-user-tie"></i>
                     <span class="nav-text">Aparatur Desa</span>
+                </a>
+            </li>
+            <li class="nav-item {{ request()->is('admin/umkm*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{route('admin.umkm.index')}}">
+                    <i class="fas fa-store"></i>
+                    <span class="nav-text">UMKM</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->is('admin/program*') ? 'active' : '' }}">

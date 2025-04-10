@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Desa')</title>
+    <title>@yield('title', 'UMKM Desa')</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/logo.bmp') }}" />
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -30,12 +30,12 @@
 <body>
     <div class="layout-wrapper" id="app">
         <!-- Sidebar -->
-        @include('admin.layouts.sidebar')
+        @include('umkm.layouts.sidebar')
 
         <!-- Main Content -->
         <div class="main-content">
             <!-- Header -->
-            @include('admin.layouts.header')
+            @include('umkm.layouts.header')
 
             <!-- Page Content -->
             <div class="page-content">

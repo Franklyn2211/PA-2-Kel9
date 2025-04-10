@@ -29,6 +29,8 @@ class LoginController extends Controller
 
         // Coba autentikasi pengguna
         if (Auth::attempt($credentials, $request->filled('remember'))) {
+            // Set Admin session key
+            $request->session()->put('session_key', config('session.cookie'));
             // Regenerasi session untuk keamanan
             $request->session()->regenerate();
 
@@ -49,6 +51,8 @@ class LoginController extends Controller
     {
         Auth::logout();
 
+        // Clear Admin session key
+        $request->session()->forget('session_key');
         // Invalidasi session dan regenerasi token
         $request->session()->invalidate();
         $request->session()->regenerateToken();

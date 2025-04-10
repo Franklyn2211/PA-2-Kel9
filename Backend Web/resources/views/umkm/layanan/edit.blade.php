@@ -1,6 +1,6 @@
-@extends('admin.layouts.app')
+@extends('umkm.layouts.app')
 
-@section('title', 'Edit Produk - Admin Desa Digital')
+@section('title', 'Edit Produk - UMKM Desa Digital')
 
 @section('page-title', 'Edit Produk')
 
@@ -13,7 +13,7 @@
                     <h6 class="mb-0">@yield('page-title')</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.layanan.update', $products->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('umkm.products.update', $products->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -58,14 +58,9 @@
                             <input type="number" name="stock" id="stock" class="form-control" value="{{ old('stock', $products->stock) }}" required>
                         </div>
 
-                        <!-- Nomor hp -->
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Nomor HP</label>
-                            <input type="text" name="phone" id="phone" class="form-control" value="{{ old('phone', $products->phone) }}" required>
-                        </div>
-
                         <!-- Tombol Submit -->
                         <button type="submit" class="btn btn-soft-primary">Simpan Perubahan</button>
+                        <a href="{{ route('umkm.products.index') }}" class="btn btn-danger">Batal</a>
                     </form>
                 </div>
             </div>

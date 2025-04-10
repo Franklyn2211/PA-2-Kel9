@@ -126,10 +126,10 @@ return [
     |
     */
 
-    'cookie' => env(
-        'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
-    ),
+    'cookie' => env('SESSION_COOKIE', Str::slug(env('APP_NAME', 'laravel'), '_') . '_session'),
+
+    // Add a unique session cookie for UMKM
+    'cookie_umkm' => env('SESSION_COOKIE_UMKM', Str::slug(env('APP_NAME', 'laravel'), '_') . '_umkm_session'),
 
     /*
     |--------------------------------------------------------------------------

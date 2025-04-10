@@ -1,8 +1,8 @@
-@extends('admin.layouts.app')
+@extends('umkm.layouts.app')
 
-@section('title', 'Layanan - Admin Desa Ambarita')
+@section('title', 'Daftar Produk - UMKM Desa Ambarita')
 
-@section('page-title', 'Layanan')
+@section('page-title', 'Daftar Produk')
 
 @section('content')
 <div class="container-fluid" style="padding-top: 80px;">
@@ -10,12 +10,7 @@
         <div class="col-12">
             <div class="card animate-on-scroll fadeIn">
                 <div class="card-header">
-                    <h6 class="mb-0">Layanan Desa</h6>
-                    <a href="{{ route('admin.layanan.create') }}">
-                        <button class="btn btn-sm btn-soft-primary">
-                            <i class="fas fa-plus me-1"></i> Tambah Produk
-                        </button>
-                    </a>
+                    <h6 class="mb-0">Daftar Produk</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive mt-4">
@@ -47,12 +42,12 @@
                                     <td>{!! $product->description !!}</td>
                                     <td>Rp{{ number_format($product->price, 2, ',', '.') }}</td>
                                     <td>{{ $product->stock }}</td>
-                                    <td>{{ $product->phone }}</td>
+                                    <td>{{ auth()->user()->phone }}</td>
                                     <td>
-                                        <a href="{{ route('admin.layanan.edit', $product->id) }}" class="btn btn-sm btn-soft-primary">
+                                        <a href="{{ route('umkm.products.edit', $product->id) }}" class="btn btn-sm btn-soft-primary">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('admin.layanan.destroy', $product->id) }}" method="POST" style="display:inline;">
+                                        <form action="{{ route('umkm.products.destroy', $product->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-soft-danger" onclick="return confirm('Yakin ingin menghapus?')">
@@ -64,7 +59,7 @@
                                 @endforeach
                                 @if ($products->isEmpty())
                                 <tr>
-                                    <td colspan="6" class="text-center">Tidak ada data produk</td>
+                                    <td colspan="8" class="text-center">Tidak ada data produk</td>
                                 </tr>
                                 @endif
                             </tbody>

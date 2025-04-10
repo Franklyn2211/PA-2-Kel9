@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $table = 'product';
+    protected $table = 'products';
 
     protected $fillable = [
         'product_name',
@@ -19,5 +19,6 @@ class Product extends Model
         'price',
         'stock',
         'phone',
+        'umkm_id', // Ensure this field is included
     ];
 }

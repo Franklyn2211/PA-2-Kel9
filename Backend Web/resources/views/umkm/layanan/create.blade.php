@@ -1,6 +1,6 @@
-@extends('admin.layouts.app')
+@extends('umkm.layouts.app')
 
-@section('title', 'Tambah Produk - Admin Desa Ambarita')
+@section('title', 'Tambah Produk - UMKM Desa Ambarita')
 
 @section('page-title', 'Tambah Produk')
 
@@ -13,7 +13,7 @@
                     <h6 class="mb-0">@yield('page-title')</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{route('admin.layanan.store')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{route('umkm.products.store')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                         <!-- Judul -->
                         <div class="mb-3">
@@ -49,12 +49,6 @@
                         <div class="mb-3">
                             <label for="stock" class="form-label">Stok</label>
                             <input type="number" name="stock" id="stock" class="form-control" required>
-                        </div>
-
-                        <!-- Nomor hp -->
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Nomor HP</label>
-                            <input type="text" name="phone" id="phone" class="form-control" required>
                         </div>
 
                         <!-- Tombol Submit -->
