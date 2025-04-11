@@ -6,7 +6,7 @@ import '../models/product_model.dart';
 import '../models/berita.dart';
 
 class ApiService {
-  static const String baseUrl = "https://e9c6-114-5-147-128.ngrok-free.app/api";
+  static const String baseUrl = "https://15b4-103-167-217-200.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -106,7 +106,7 @@ class ApiService {
     required String nik,
     required String password,
   }) async {
-    try {7
+    try {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
         headers: headers,
