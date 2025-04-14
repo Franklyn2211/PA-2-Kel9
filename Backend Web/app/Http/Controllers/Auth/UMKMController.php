@@ -77,4 +77,52 @@ class UMKMController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('login.umkm');
     }
+
+    public function updateQRIS(Request $request)
+    {
+        $request->validate([
+            'qris_image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
+        ]);
+
+        $umkm = auth()->user(); // Get the authenticated UMKM user
+
+        // Delete the old QRIS image if it exists
+        if ($umkm->qris_image && file_exists(public_path($umkm->qris_image))) {
+            unlink(public_path($umkm->qris_image));
+        }
+
+        // Save the new QRIS image
+        $filename = time() . '.' . $request->qris_image->extension();
+        $request->qris_image->move(public_path('qris'), $filename);
+
+        $umkm->qris_image = 'qris/' . $filename;
+        $umkm->save();
+
+        return back()->with('success', 'QRIS berhasil diupload.');
+    }
+
+    public function edit()
+    {
+        $umkm = auth()->user(); // Get the authenticated UMKM user
+        return view('umkm.edit', compact('umkm')); // Return the edit view with UMKM data
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'nama_umkm' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:umkm,email,' . auth()->id(),
+            'phone' => 'required|regex:/^[0-9]{9,13}$/|unique:umkm,phone,' . auth()->id(),
+        ]);
+
+        $umkm = auth()->user(); // Get the authenticated UMKM user
+
+        $umkm->update([
+            'nama_umkm' => $request->get('nama_umkm'),
+            'email' => $request->get('email'),
+            'phone' => '+62' . ltrim($request->get('phone'), '0'), // Ensure phone starts with +62
+        ]);
+
+        return redirect()->route('umkm.profil')->with('success', 'Profil berhasil diperbarui.');
+    }
 }

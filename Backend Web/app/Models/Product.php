@@ -21,4 +21,9 @@ class Product extends Model
         'phone',
         'umkm_id', // Ensure this field is included
     ];
+
+    public function umkm()
+    {
+        return $this->belongsTo(Umkm::class);
+    }
 }

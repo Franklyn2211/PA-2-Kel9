@@ -43,6 +43,16 @@ Route::prefix('umkm')->middleware('auth:umkm')->group(function () {
     Route::get('/products/{products}/edit', [ProductController::class, 'edit'])->name('umkm.products.edit');
     Route::put('/products/{products}', [ProductController::class, 'update'])->name('umkm.products.update');
     Route::delete('/products/{products}', [ProductController::class, 'destroy'])->name('umkm.products.destroy');
+
+    Route::get('/profil', function () {
+        return view('umkm.profil');
+    })->name('umkm.profil');
+
+    Route::post('/profil/qris', [UMKMController::class, 'updateQRIS'])->name('umkm.qris.update');
+
+    // Add routes for editing and updating the UMKM profile
+    Route::get('/profil/edit', [UMKMController::class, 'edit'])->name('umkm.profil.edit');
+    Route::put('/profil', [UMKMController::class, 'update'])->name('umkm.profil.update');
 });
 
 // Admin Routes
@@ -79,7 +89,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Pengumuman
     Route::get('/pengumuman', [AnnouncementController::class, 'index'])->name('admin.pengumuman.index');
     Route::get('/pengumuman/create', [AnnouncementController::class, 'create'])->name('admin.pengumuman.create');
-    Route::post('/pengumuman', [AnnouncementController::class,'store'])->name('admin.pengumuman.store');
+    Route::post('/pengumuman', [AnnouncementController::class, 'store'])->name('admin.pengumuman.store');
     Route::get('/pengumuman/{announcements}/edit', [AnnouncementController::class, 'edit'])->name('admin.pengumuman.edit');
     Route::put('/pengumuman/{announcements}', [AnnouncementController::class, 'update'])->name('admin.pengumuman.update');
     Route::delete('/pengumuman/{announcements}', [AnnouncementController::class, 'destroy'])->name('admin.pengumuman.destroy');

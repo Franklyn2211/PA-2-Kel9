@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone')->unique(); // Added phone column
+            $table->string('qris_image')->nullable();
             $table->boolean('status')->default(false);
             $table->timestamps();
         });
