@@ -6,7 +6,7 @@
             </div>
             <div class="sidebar-logo-text">
                 <div class="sidebar-logo-title">Desa Ambarita</div>
-                <div class="sidebar-logo-subtitle">Admin Panel</div>
+                <div class="sidebar-logo-subtitle">UMKM</div>
             </div>
         </a>
     </div>

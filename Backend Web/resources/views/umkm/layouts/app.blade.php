@@ -53,7 +53,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Anda belum menambahkan QRIS untuk UMKM Anda. Silahkan tambahkan QRIS di halaman profil untuk mempermudah transaksi.</p>
+                        <p>Anda belum menambahkan QRIS (DANA) untuk UMKM Anda. Silahkan tambahkan QRIS (DANA) di halaman profil untuk mempermudah transaksi.</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ResidentsController;
 use App\Http\Controllers\Api\PendudukController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\API\OrdersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,5 +24,7 @@ Route::get('/news', [PostController::class, 'getNews']);
 Route::get('/penduduk', [ResidentsController::class, 'CheckNik']);
 Route::get('/pengumuman', [PostController::class, 'getAnnouncements']);
 Route::get('/penduduk', [ResidentsController::class, 'CheckNik']);
+
 Route::post('/register', [PendudukController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/orders', [OrdersController::class, 'store']);

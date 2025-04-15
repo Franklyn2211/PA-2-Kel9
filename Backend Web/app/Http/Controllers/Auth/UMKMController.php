@@ -7,6 +7,7 @@ use App\Models\UMKM;
 use Auth;
 use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UMKMController extends Controller
 {
@@ -88,15 +89,18 @@ class UMKMController extends Controller
         $umkm = auth()->user(); // Get the authenticated UMKM user
 
         // Delete the old QRIS image if it exists
-        if ($umkm->qris_image && file_exists(public_path($umkm->qris_image))) {
-            unlink(public_path($umkm->qris_image));
+        if ($umkm->qris_image && Storage::disk('public')->exists($umkm->qris_image)) {
+            Storage::disk('public')->delete($umkm->qris_image);
         }
 
         // Save the new QRIS image
-        $filename = time() . '.' . $request->qris_image->extension();
-        $request->qris_image->move(public_path('qris'), $filename);
+        if ($request->hasFile('qris_image')) {
+            $file = $request->file('qris_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('qris', $filename, 'public');
+            $umkm->qris_image = 'qris/' . $filename;
+        }
 
-        $umkm->qris_image = 'qris/' . $filename;
         $umkm->save();
 
         return back()->with('success', 'QRIS berhasil diupload.');

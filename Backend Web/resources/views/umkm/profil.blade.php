@@ -34,14 +34,16 @@
 
                         <!-- QRIS Image -->
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">QRIS</label>
+                            <label class="form-label fw-bold">QRIS DANA</label>
                             @if (auth()->user()->qris_image)
+                            <small class="text-danger d-block mt-1">Pastikan QRIS berasal dari DANA</small>
                                 <div class="mb-2">
                                     <img src="{{ asset(auth()->user()->qris_image) }}" alt="QRIS Image" class="img-thumbnail" width="150">
                                 </div>
                             @else
+                            <small class="text-danger d-block mt-1">Pastikan QRIS berasal dari DANA</small>    
                                 <p class="text-muted">Belum ada QRIS yang diunggah.</p>
-                            @endif
+                                @endif
                         </div>
                     </div>
 
@@ -49,9 +51,15 @@
                     <div class="text-center mt-4">
                         <form action="{{ route('umkm.qris.update') }}" method="POST" enctype="multipart/form-data" style="display: inline;">
                             @csrf
-                            <label for="qris_image" class="btn btn-soft-primary me-2">
-                                <i class="fas fa-upload"></i> Tambah QRIS
-                            </label>
+                            @if (auth()->user()->qris_image)
+                                <label for="qris_image" class="btn btn-soft-primary me-2">
+                                    <i class="fas fa-upload"></i> Ubah QRIS
+                                </label>
+                            @else
+                                <label for="qris_image" class="btn btn-soft-primary me-2">
+                                    <i class="fas fa-upload"></i> Tambah QRIS
+                                </label>
+                            @endif
                             <input type="file" name="qris_image" id="qris_image" class="d-none" onchange="this.form.submit()">
                         </form>
                         <a href="{{ route('umkm.profil.edit') }}" class="btn btn-soft-secondary me-2">
