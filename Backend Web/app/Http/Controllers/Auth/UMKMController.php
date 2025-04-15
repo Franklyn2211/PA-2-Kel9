@@ -97,8 +97,8 @@ class UMKMController extends Controller
         if ($request->hasFile('qris_image')) {
             $file = $request->file('qris_image');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('qris', $filename, 'public');
-            $umkm->qris_image = 'qris/' . $filename;
+            $file->storeAs('photos/qris', $filename, 'public');
+            $umkm->qris_image = 'photos/qris/' . $filename;
         }
 
         $umkm->save();

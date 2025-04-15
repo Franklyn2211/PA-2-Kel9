@@ -7,6 +7,7 @@ use App\Models\Announcements;
 use App\Models\News;
 use App\Models\Product;
 use App\Models\Residents;
+use App\Models\Umkm;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -31,5 +32,10 @@ class PostController extends Controller
     {
         $announcements = Announcements::all();
         return Postresource::collection($announcements);
+    }
+    public function getUmkm()
+    {
+        $umkm = Umkm::all();
+        return Postresource::collection($umkm);
     }
 }
