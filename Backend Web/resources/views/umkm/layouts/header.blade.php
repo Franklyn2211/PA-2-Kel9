@@ -14,7 +14,7 @@
                 </div>
                 <div class="user-info">
                     <div class="user-name">UMKM Desa</div>
-                    <div class="user-role">Administrator</div>
+                    <div class="user-role">Profil</div>
                 </div>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">

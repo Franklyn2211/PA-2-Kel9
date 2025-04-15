@@ -53,6 +53,7 @@ class UMKMController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard('umkm')->attempt($credentials)) {
+            $request->session()->put('just_logged_in', true); // Set session flag
             $request->session()->put('session_key', 'umkm_session'); // Set UMKM session key
             $request->session()->regenerate();
 

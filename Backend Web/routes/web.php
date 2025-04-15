@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ResidentsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\UMKMController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 
 /*
@@ -30,6 +31,12 @@ Route::post('/logout/umkm', [UMKMController::class, 'logout'])->name('logout.umk
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Add a route to clear the session flag after the popup is displayed
+Route::post('/clear-just-logged-in', function (Request $request) {
+    $request->session()->forget('just_logged_in'); // Clear the session flag
+    return response()->noContent();
+})->name('clear.just_logged_in');
 
 // Umkm Routes
 Route::prefix('umkm')->middleware('auth:umkm')->group(function () {

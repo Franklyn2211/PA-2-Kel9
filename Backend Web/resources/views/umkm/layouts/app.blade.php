@@ -44,6 +44,25 @@
         </div>
     </div>
 
+    @if (session('just_logged_in') && auth()->check() && auth()->user()->qris_image === null)
+        <div class="modal fade" id="qrisModal" tabindex="-1" aria-labelledby="qrisModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="qrisModalLabel">Informasi QRIS</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Anda belum menambahkan QRIS untuk UMKM Anda. Silahkan tambahkan QRIS di halaman profil untuk mempermudah transaksi.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- jQuery -->
     <script src="/assets/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 5 Bundle with Popper -->
@@ -64,9 +83,7 @@
                 tabsize: 2,
             });
         });
-    </script>
 
-    <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Apply animations to dropdown menu items with staggered delay
             function setupDropdownAnimations() {
@@ -164,6 +181,14 @@
                 element.style.opacity = 0;
                 observer.observe(element);
             });
+
+            @if (session('just_logged_in') && auth()->check() && auth()->user()->qris_image === null)
+                var qrisModal = new bootstrap.Modal(document.getElementById('qrisModal'));
+                qrisModal.show();
+
+                // Clear the session flag after showing the popup
+                fetch("{{ route('clear.just_logged_in') }}", { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+            @endif
         });
     </script>
 
