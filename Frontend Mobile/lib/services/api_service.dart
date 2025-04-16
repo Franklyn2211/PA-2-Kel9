@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 import '../models/penduduk_response.dart';
 import '../models/product_model.dart';
 import '../models/berita.dart';
+import '../models/umkm.dart';
 
 class ApiService {
-  static const String baseUrl = "https://15b4-103-167-217-200.ngrok-free.app/api";
+  static const String baseUrl = "https://2381-120-188-70-54.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -46,6 +47,18 @@ class ApiService {
         .map((item) => Product.fromJson(item))
         .toList();
   }
+  // ==================== UMKM ====================
+  static Future<List<Umkm>> fetchUmkm() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/umkm'),
+      headers: headers,
+    );
+
+    final responseData = _parseResponse(response);
+    return (responseData['data'] as List)
+        .map((item) => Umkm.fromJson(item))
+        .toList();
+  } 
 
   // ==================== NEWS ====================
   static Future<List<Berita>> fetchBerita() async {

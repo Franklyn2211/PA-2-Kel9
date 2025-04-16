@@ -2,12 +2,12 @@ import 'package:aplikasi_desa/pages/all_berita_page.dart';
 import 'package:aplikasi_desa/pages/auth_checker.dart';
 import 'package:aplikasi_desa/pages/berita.dart';
 import 'package:aplikasi_desa/pages/berita_detail_page.dart';
+import 'package:aplikasi_desa/pages/product_detail_page.dart';
 import 'package:flutter/material.dart';
 import '../models/product_model.dart';
 import '../models/berita.dart';
+import '../models/umkm.dart';
 import '../services/api_service.dart';
-import 'product_detail_page.dart';
-
 import 'package:html_unescape/html_unescape.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,8 +21,8 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   late Future<List<Product>> futureProducts;
   late Future<List<Berita>> futureBerita;
+  late Future<List<Umkm>> futureUmkm;
 
-  // Define the theme color for reusability
   final Color themeColor = const Color(0xFF3AC53E);
   final Color themeLightColor = const Color(0xFF4CDF50);
   final Color themeAccentColor = const Color(0xFF2EA232);
@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       futureProducts = ApiService.fetchProducts();
       futureBerita = ApiService.fetchBerita();
+      futureUmkm = ApiService.fetchUmkm(); // Added UMKM fetch
     });
   }
 
@@ -66,7 +67,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text(
           "Desa Digital",
           style: TextStyle(
-            fontWeight: FontWeight.bold, 
+            fontWeight: FontWeight.bold,
             color: Colors.white,
             fontSize: 22,
           ),
@@ -76,15 +77,11 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined, color: Colors.white),
-            onPressed: () {
-              // Handle notifikasi
-            },
+            onPressed: () {},
           ),
           IconButton(
             icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {
-              // Handle pencarian
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -97,9 +94,10 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Hero section with gradient
+              // Hero section
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [themeColor, themeAccentColor],
@@ -186,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Bagian Berita Desa
+                    // Berita Desa section
                     _sectionTitle("📰 Berita Desa", "Lihat Semua", () {
                       futureBerita.then((berita) {
                         Navigator.push(
@@ -236,7 +234,7 @@ class _HomePageState extends State<HomePage> {
 
                     const SizedBox(height: 24),
 
-                    // Bagian Informasi Desa
+                    // Informasi Desa section
                     _sectionTitle("ℹ️ Informasi Desa", "Detail", () {
                       // Navigate to detail informasi desa
                     }),
@@ -244,7 +242,7 @@ class _HomePageState extends State<HomePage> {
 
                     const SizedBox(height: 24),
 
-                    // Bagian Produk Desa
+                    // Produk Desa section
                     _sectionTitle("🛒 Produk Desa", "Lihat Semua", () {
                       // Navigate to all products
                     }),
@@ -270,13 +268,44 @@ class _HomePageState extends State<HomePage> {
                               'Tidak ada produk ditemukan');
                         } else {
                           List<Product> products = snapshot.data!;
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount:
-                                products.length > 3 ? 3 : products.length,
-                            itemBuilder: (context, index) {
-                              return _produkItem(products[index]);
+                          return FutureBuilder<List<Umkm>>(
+                            future: futureUmkm,
+                            builder: (context, umkmSnapshot) {
+                              if (umkmSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator(
+                                    color: themeColor);
+                              } else if (umkmSnapshot.hasError) {
+                                return _errorWidget(
+                                    'Error: ${umkmSnapshot.error}');
+                              } else if (!umkmSnapshot.hasData) {
+                                return _emptyStateWidget(
+                                    'Data UMKM tidak tersedia');
+                              } else {
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount:
+                                      products.length > 3 ? 3 : products.length,
+                                  itemBuilder: (context, index) {
+                                    // Find corresponding UMKM for the product
+                                    final umkm = umkmSnapshot.data!.firstWhere(
+                                      (u) => u.id == products[index].id,
+                                      orElse: () => Umkm(
+                                        id: 1,
+                                        namaUmkm: 'Contoh',
+                                        email: 'contoh@email.com',
+                                        phone: '08123456789',
+                                        qrisImage: 'link_qris.png',
+                                        status: true,
+                                        photoUrl:
+                                            'https://example.com/default-photo.jpg', // ✅ Tambahkan ini
+                                      ),
+                                    );
+                                    return _produkItem(products[index], umkm);
+                                  },
+                                );
+                              }
                             },
                           );
                         }
@@ -326,7 +355,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildQuickAction(IconData icon, String label, VoidCallback onTap, Color color) {
+  Widget _buildQuickAction(
+      IconData icon, String label, VoidCallback onTap, Color color) {
     return InkWell(
       onTap: onTap,
       child: Column(
@@ -466,8 +496,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.calendar_today,
-                            size: 14, color: themeColor),
+                        Icon(Icons.calendar_today, size: 14, color: themeColor),
                         const SizedBox(width: 4),
                         Text(
                           _formatDate(berita.createdAt),
@@ -551,7 +580,8 @@ class _HomePageState extends State<HomePage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
               child: const Text(
                 "Lihat Detail",
@@ -564,7 +594,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _produkItem(Product product) {
+  Widget _produkItem(Product product, Umkm umkm) {
     return Card(
       color: Colors.white,
       elevation: 3,
@@ -575,7 +605,8 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProductDetailPage(
+              builder: (context) => HalamanDetailProduk(
+                qrisImage: umkm.photoUrl ??'',
                 imagePath: product.photoUrl,
                 title: product.productName,
                 price: product.price,
@@ -594,7 +625,7 @@ class _HomePageState extends State<HomePage> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  product.photoUrl,
+                  product.photoUrl ?? 'default_image.jpg',
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
@@ -625,13 +656,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: themeColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        "Rp ${_formatPrice(product.price)}",
+                        "Rp ${_formatPrice(product.price.toString())}",
                         style: TextStyle(
                           color: themeColor,
                           fontWeight: FontWeight.bold,
@@ -642,12 +674,11 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.location_on,
-                            size: 14, color: themeColor),
+                        Icon(Icons.location_on, size: 14, color: themeColor),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            product.location,
+                            product.location ?? 'Lokasi tidak tersedia',
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 13,
@@ -661,10 +692,24 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
+                        Icon(Icons.store, size: 14, color: themeColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          umkm.namaUmkm,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
                         Icon(Icons.phone, size: 14, color: themeColor),
                         const SizedBox(width: 4),
                         Text(
-                          product.phone,
+                          product.phone ?? umkm.phone,
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 13,
