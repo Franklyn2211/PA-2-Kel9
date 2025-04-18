@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NewsController;
+use App\Http\Controllers\Admin\ProfilDesaController;
 use App\Http\Controllers\UMKM\ProductController;
 use App\Http\Controllers\Admin\ResidentsController;
 use App\Http\Controllers\Auth\LoginController;
@@ -131,9 +132,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     })->name('admin.pembangunan.index');
 
     // Profil Desa
-    Route::get('/profil', function () {
-        return view('admin.profil.index');
-    })->name('admin.profil.index');
+    Route::get('/profildesa', [ProfilDesaController::class, 'index'])->name('admin.profildesa.index');
+    Route::get('/profildesa/create', [ProfilDesaController::class, 'create'])->name('admin.profildesa.create');
+    Route::post('/profildesa', [ProfilDesaController::class, 'store'])->name('admin.profildesa.store');
+    Route::get('/profildesa/{profilDesa}/edit', [ProfilDesaController::class, 'edit'])->name('admin.profildesa.edit');
+    Route::put('/profildesa/{profilDesa}', [ProfilDesaController::class, 'update'])->name('admin.profildesa.update');
+    Route::delete('/profildesa/{profilDesa}', [ProfilDesaController::class, 'destroy'])->name('admin.profildesa.destroy');
 
     // Pengguna
     Route::get('/users', function () {

@@ -38,10 +38,10 @@
                             @if (auth()->user()->qris_image)
                             <small class="text-danger d-block mt-1">Pastikan QRIS berasal dari DANA</small>
                                 <div class="mb-2">
-                                    <img src="{{ asset(auth()->user()->qris_image) }}" alt="QRIS Image" class="img-thumbnail" width="150">
+                                    <img src="{{ asset('storage/' . auth()->user()->qris_image) }}" alt="QRIS Image" class="img-thumbnail" width="150">
                                 </div>
                             @else
-                            <small class="text-danger d-block mt-1">Pastikan QRIS berasal dari DANA</small>    
+                            <small class="text-danger d-block mt-1">Pastikan QRIS berasal dari DANA</small>
                                 <p class="text-muted">Belum ada QRIS yang diunggah.</p>
                                 @endif
                         </div>
