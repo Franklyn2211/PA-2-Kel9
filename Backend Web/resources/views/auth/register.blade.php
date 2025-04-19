@@ -113,7 +113,7 @@
 
     <div class="input-group mb-3">
         <span class="input-group-text">+62</span>
-        <input type="text" name="phone" class="form-control" placeholder="Nomor HP" value="{{ old('phone') }}" required>
+        <input type="text" name="phone" class="form-control" placeholder="Nomor HP" value="{{ old('phone') }}" maxlength="11" required>
         <div class="input-group-append">
             <span class="input-group-text"><i class="fas fa-phone"></i></span>
         </div>

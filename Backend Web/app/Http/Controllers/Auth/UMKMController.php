@@ -21,7 +21,7 @@ class UMKMController extends Controller
         $request->validate([
             'nama_umkm' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:umkm',
-            'phone' => 'required|regex:/^[0-9]{9,13}$/|unique:umkm', // Adjusted validation rule
+            'phone' => 'required|numeric|regex:/^[0-9]{9,13}$/|unique:umkm', // Adjusted validation rule
             'password' => 'required|string|min:8|confirmed',
         ]);
 
