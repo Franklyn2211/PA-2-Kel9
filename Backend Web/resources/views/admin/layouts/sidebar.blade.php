@@ -86,7 +86,7 @@
         <div class="nav-section">Sistem</div>
         <ul class="nav flex-column">
             <li class="nav-item {{ request()->is('admin/profil*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/profil">
+                <a class="nav-link" href="{{route('admin.profildesa.index')}}">
                     <i class="fas fa-info-circle"></i>
                     <span class="nav-text">Profil Desa</span>
                 </a>

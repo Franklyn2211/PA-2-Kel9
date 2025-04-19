@@ -10,8 +10,8 @@ class ProfilDesaController extends Controller
 {
     public function index()
     {
-        $profilDesa = ProfilDesa::all();
-        $profilDesaExists = $profilDesa->isNotEmpty();
+        $profilDesa = ProfilDesa::first();
+        $profilDesaExists = $profilDesa !== null;
         return view('admin.profildesa.index', compact('profilDesa', 'profilDesaExists'));
     }
 
@@ -46,7 +46,12 @@ class ProfilDesaController extends Controller
             'misi' => 'required|string',
         ]);
 
-        $profilDesa->update($request->all());
+        $data = [
+            'history' => $request->history,
+            'visi' => $request->visi,
+            'misi' => $request->misi,
+        ];
+        $profilDesa->update($data);
 
         return redirect()->route('admin.profildesa.index')->with('success', 'Profil Desa berhasil diperbarui');
     }

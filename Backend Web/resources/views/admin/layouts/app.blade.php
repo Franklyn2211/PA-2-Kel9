@@ -63,6 +63,16 @@
                 placeholder: 'Tulis deskripsi di sini...',
                 tabsize: 2,
             });
+            $('#visi').summernote({
+                height: 200,
+                placeholder: 'Tulis deskripsi di sini...',
+                tabsize: 2,
+            });
+            $('#misi').summernote({
+                height: 200,
+                placeholder: 'Tulis deskripsi di sini...',
+                tabsize: 2,
+            });
         });
     </script>
 

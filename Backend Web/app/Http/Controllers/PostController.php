@@ -6,6 +6,7 @@ use App\Http\Resources\Postresource;
 use App\Models\Announcements;
 use App\Models\News;
 use App\Models\Product;
+use App\Models\ProfilDesa;
 use App\Models\Residents;
 use App\Models\Umkm;
 use Illuminate\Http\Request;
@@ -39,5 +40,11 @@ class PostController extends Controller
     {
         $umkms = Umkm::all();
         return response()->json($umkms);
+    }
+
+    public function getProfilDesa()
+    {
+        $profilDesa = ProfilDesa::first();
+        return new Postresource($profilDesa);
     }
 }
