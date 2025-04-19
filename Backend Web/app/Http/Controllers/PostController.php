@@ -12,12 +12,14 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function getProduct(){
-        $products = Product::all();
-        return Postresource::collection($products);
+    public function getProduct()
+    {
+        $products = Product::with('umkm:id,nama_umkm,qris_image')->get();
+        return PostResource::collection($products);
     }
 
-    public function getNews(){
+    public function getNews()
+    {
         $news = News::all();
         return Postresource::collection($news);
     }
@@ -35,7 +37,7 @@ class PostController extends Controller
     }
     public function getUmkm()
     {
-        $umkm = Umkm::all();
-        return Postresource::collection($umkm);
+        $umkms = Umkm::all();
+        return response()->json($umkms);
     }
 }

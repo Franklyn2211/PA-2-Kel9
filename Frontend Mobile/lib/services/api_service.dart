@@ -7,7 +7,7 @@ import '../models/berita.dart';
 import '../models/umkm.dart';
 
 class ApiService {
-  static const String baseUrl = "https://2381-120-188-70-54.ngrok-free.app/api";
+  static const String baseUrl = "https://0ee4-114-10-83-99.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -47,18 +47,30 @@ class ApiService {
         .map((item) => Product.fromJson(item))
         .toList();
   }
+
   // ==================== UMKM ====================
   static Future<List<Umkm>> fetchUmkm() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/umkm'),
-      headers: headers,
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/umkm'),
+        headers: {'Accept': 'application/json'},
+      );
 
-    final responseData = _parseResponse(response);
-    return (responseData['data'] as List)
-        .map((item) => Umkm.fromJson(item))
-        .toList();
-  } 
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((json) => Umkm.fromJson(json)).toList();
+      } else {
+        throw Exception(
+            'Failed to load UMKM. Status code: ${response.statusCode}');
+      }
+    } on FormatException catch (e) {
+      throw Exception('Invalid JSON format: $e');
+    } on http.ClientException catch (e) {
+      throw Exception('Network error: $e');
+    } catch (e) {
+      throw Exception('Unexpected error: $e');
+    }
+  }
 
   // ==================== NEWS ====================
   static Future<List<Berita>> fetchBerita() async {

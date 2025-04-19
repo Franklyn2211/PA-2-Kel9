@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UMKM;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Umkm;
 use Illuminate\Http\Request;
 use Storage;
 
@@ -31,14 +32,17 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
         ]);
 
+        // Ambil data UMKM berdasarkan auth()->id()
+        $umkm = Umkm::findOrFail(auth()->id());
+
         $data = [
             'product_name' => $request->get('product_name'),
             'description' => $request->get('description'),
             'location' => $request->get('location'),
             'price' => $request->get('price'),
             'stock' => $request->get('stock'),
-            'phone' => auth()->user()->phone, // Use authenticated UMKM's phone
-            'umkm_id' => auth()->id(), // Associate product with UMKM
+            'phone' => auth()->user()->phone, // Gunakan nomor telepon UMKM
+            'umkm_id' => auth()->id(), // Kaitkan produk dengan UMKM
         ];
 
         if ($request->hasFile('photo')) {
@@ -70,13 +74,16 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
         ]);
 
+        // Ambil data UMKM berdasarkan auth()->id()
+        $umkm = Umkm::findOrFail(auth()->id());
+
         $data = [
             'product_name' => $request->product_name,
             'description' => $request->description,
             'location' => $request->location,
             'price' => $request->price,
             'stock' => $request->stock,
-            'phone' => auth()->user()->phone, // Use authenticated UMKM's phone
+            'phone' => auth()->user()->phone, // Gunakan nomor telepon UMKM
         ];
 
         if ($request->hasFile('photo')) {
@@ -101,8 +108,8 @@ class ProductController extends Controller
     {
         $products = Product::findOrFail($id);
 
-        if (Storage::disk('public')->exists('photos/' . $products->photo)) {
-            Storage::disk('public')->delete('photos/' . $products->photo);
+        if ($products->photo && Storage::disk('public')->exists($products->photo)) {
+            Storage::disk('public')->delete($products->photo);
         }
 
         $products->delete();

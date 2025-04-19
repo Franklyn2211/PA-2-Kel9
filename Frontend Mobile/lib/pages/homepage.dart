@@ -286,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemCount:
-                                      products.length > 3 ? 3 : products.length,
+                                      products.length > 5 ? 5: products.length,
                                   itemBuilder: (context, index) {
                                     // Find corresponding UMKM for the product
                                     final umkm = umkmSnapshot.data!.firstWhere(
@@ -298,7 +298,7 @@ class _HomePageState extends State<HomePage> {
                                         phone: '08123456789',
                                         qrisImage: 'link_qris.png',
                                         status: true,
-                                        photoUrl:
+                                        qrisUrl:
                                             'https://example.com/default-photo.jpg', // ✅ Tambahkan ini
                                       ),
                                     );
@@ -595,27 +595,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _produkItem(Product product, Umkm umkm) {
+    final qrisUrl = product.qrisUrl ?? umkm.qrisUrl ?? '';
     return Card(
       color: Colors.white,
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 14),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HalamanDetailProduk(
-                qrisImage: umkm.photoUrl ??'',
-                imagePath: product.photoUrl,
-                title: product.productName,
-                price: product.price,
-                location: product.location,
-                phoneNumber: product.phone,
-              ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HalamanDetailProduk(
+              qrisImage: qrisUrl,
+              imagePath: product.photoUrl,
+              title: product.productName,
+              price: product.price,
+              location: product.location,
+              phoneNumber: product.phone,
             ),
-          );
-        },
+          ),
+        );
+      },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(14),
@@ -625,7 +626,7 @@ class _HomePageState extends State<HomePage> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  product.photoUrl ?? 'default_image.jpg',
+                  product.photoUrl,
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
@@ -678,7 +679,7 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            product.location ?? 'Lokasi tidak tersedia',
+                            product.location,
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 13,
@@ -709,7 +710,7 @@ class _HomePageState extends State<HomePage> {
                         Icon(Icons.phone, size: 14, color: themeColor),
                         const SizedBox(width: 4),
                         Text(
-                          product.phone ?? umkm.phone,
+                          product.phone,
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 13,
