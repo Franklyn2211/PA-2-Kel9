@@ -5,6 +5,8 @@ import '../models/penduduk_response.dart';
 import '../models/product_model.dart';
 import '../models/berita.dart';
 import '../models/umkm.dart';
+import 'package:http_parser/http_parser.dart';
+import 'dart:io';
 
 class ApiService {
   static const String baseUrl = "https://0ee4-114-10-83-99.ngrok-free.app/api";
@@ -156,6 +158,56 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Error saat login: $e');
+    }
+  }
+
+  static Future<Map<String, dynamic>> createOrder({
+    required int pendudukId,
+    required int productId,
+    required String amount,
+    required String note,
+    required File buktiTransfer,
+  }) async {
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/orders'),
+      );
+
+      // Tambahkan fields
+      request.fields['penduduk_id'] = pendudukId.toString();
+      request.fields['product_id'] = productId.toString();
+      request.fields['amount'] = amount;
+      request.fields['note'] = note;
+
+      // Tambahkan file bukti transfer
+      var file = await http.MultipartFile.fromPath(
+        'bukti_transfer',
+        buktiTransfer.path,
+        contentType: MediaType('image', 'jpeg'), // Sesuaikan dengan tipe file
+      );
+      request.files.add(file);
+
+      // Kirim request
+      var response = await request.send();
+      var responseData = await response.stream.bytesToString();
+
+      if (response.statusCode == 201) {
+        return {
+          'success': true,
+          'data': json.decode(responseData),
+        };
+      } else {
+        return {
+          'success': false,
+          'message': json.decode(responseData)['message'] ?? 'Failed to create order',
+        };
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'message': e.toString(),
+      };
     }
   }
 }

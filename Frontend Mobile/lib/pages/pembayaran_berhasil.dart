@@ -1,3 +1,4 @@
+import 'package:aplikasi_desa/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -57,7 +58,7 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
     );
   }
 
-  void _submitPaymentProof() {
+  void _submitPaymentProof() async {
     if (_formKey.currentState!.validate()) {
       if (_imageFile == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -66,33 +67,46 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
         return;
       }
 
-      // Simulasi proses pengiriman data
       setState(() {
         _isLoading = true;
       });
 
-      // Di sini Anda bisa menambahkan kode untuk mengirim data ke server
-      // Misalnya menggunakan HTTP request atau Firebase Storage
+      // Ganti dengan ID penduduk dan produk yang sesuai
+      final pendudukId = 1; // Ambil dari state management atau auth
+      final productId = 1; // Ambil dari navigasi arguments
 
-      // Simulasi delay proses upload
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          _isLoading = false;
-        });
-        
-        // Tampilkan notifikasi sukses
+      final response = await ApiService.createOrder(
+        pendudukId: pendudukId,
+        productId: productId,
+        amount: _amountController.text,
+        note: _noteController.text,
+        buktiTransfer: _imageFile!,
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (response['success']) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Bukti pembayaran berhasil diunggah')),
         );
-        
-        // Reset form setelah berhasil
+
+        // Reset form
         _formKey.currentState!.reset();
         _amountController.clear();
         _noteController.clear();
         setState(() {
           _imageFile = null;
         });
-      });
+
+        // Navigasi ke halaman sukses atau kembali
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'])),
+        );
+      }
     }
   }
 
@@ -126,7 +140,8 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                         padding: EdgeInsets.all(16.0),
                         child: Column(
                           children: [
-                            Icon(Icons.info_outline, color: Colors.white, size: 30),
+                            Icon(Icons.info_outline,
+                                color: Colors.white, size: 30),
                             SizedBox(height: 8),
                             Text(
                               'Silakan unggah bukti pembayaran Anda berupa struk/screenshot transaksi',
@@ -154,7 +169,7 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Input catatan (opsional)
                     TextFormField(
                       controller: _noteController,
@@ -166,7 +181,7 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                       maxLines: 2,
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Area unggah bukti pembayaran
                     GestureDetector(
                       onTap: _showImageSourceSelection,
@@ -192,7 +207,8 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                                       backgroundColor: Colors.red,
                                       radius: 18,
                                       child: IconButton(
-                                        icon: const Icon(Icons.close, color: Colors.white, size: 18),
+                                        icon: const Icon(Icons.close,
+                                            color: Colors.white, size: 18),
                                         onPressed: () {
                                           setState(() {
                                             _imageFile = null;
@@ -206,7 +222,8 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const [
-                                  Icon(Icons.cloud_upload, size: 50, color: Colors.grey),
+                                  Icon(Icons.cloud_upload,
+                                      size: 50, color: Colors.grey),
                                   SizedBox(height: 8),
                                   Text(
                                     'Tap untuk mengunggah bukti pembayaran',
@@ -215,14 +232,15 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                                   SizedBox(height: 4),
                                   Text(
                                     '(Foto/Gambar dari galeri)',
-                                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 12),
                                   ),
                                 ],
                               ),
                       ),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Tombol kirim
                     ElevatedButton(
                       onPressed: _submitPaymentProof,
@@ -232,7 +250,8 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                       ),
                       child: const Text(
                         'KIRIM BUKTI PEMBAYARAN',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],

@@ -1,3 +1,4 @@
+import 'package:aplikasi_desa/pages/auth_checker.dart';
 import 'package:aplikasi_desa/pages/pembayaran_berhasil.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -166,17 +167,12 @@ class HalamanDetailProduk extends StatelessWidget {
                       onPressed: () {
                         // Tutup dialog
                         Navigator.pop(context);
-                        
-                        // Tampilkan SnackBar
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Pembayaran berhasil dikonfirmasi")),
-                        );
 
                         // Navigasi ke halaman bukti pembayaran
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PaymentProofScreen(),
+                            builder: (context) => AuthCheckerScreen(),
                           ),
                         );
                       },

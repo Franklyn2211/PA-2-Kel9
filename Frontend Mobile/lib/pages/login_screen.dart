@@ -1,10 +1,17 @@
-import 'package:aplikasi_desa/pages/layanan_surat_page.dart';
+import 'package:aplikasi_desa/pages/pembayaran_berhasil.dart';
 import 'package:aplikasi_desa/screens/registrasi.dart';
-import 'package:aplikasi_desa/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:aplikasi_desa/pages/layanan_surat_page.dart';
+import 'package:aplikasi_desa/services/api_service.dart';
 
 class LoginScreen extends StatefulWidget {
+  final String redirectTo;
+
+  const LoginScreen({
+    Key? key,
+    this.redirectTo = 'layanan-surat',
+  }) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -36,10 +43,40 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (response['success']) {
-        // Pindah ke LayananSuratPage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LayananSuratPage()),
+        // Provide options to navigate to different screens after login
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Login Berhasil'),
+              content: Text('Pilih layanan yang ingin Anda gunakan:'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close dialog
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LayananSuratPage()),
+                    );
+                  },
+                  child: Text('Layanan Surat'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close dialog
+                    // Navigate to PaymentProofScreen (no parameters needed)
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PaymentProofScreen()),
+                    );
+                  },
+                  child: Text('Pembayaran'),
+                ),
+              ],
+            );
+          },
         );
       } else {
         setState(() => _errorMessage = response['message']);
@@ -110,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(height: 40),
-                    
+
                     // NIK Field with improved styling
                     Container(
                       decoration: BoxDecoration(
@@ -157,23 +194,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(16),
-                        ],
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'NIK harus diisi';
-                          }
-                          if (value.length != 16) {
-                            return 'NIK harus 16 digit';
-                          }
-                          return null;
-                        },
                       ),
                     ),
                     SizedBox(height: 20),
-                    
+
                     // Password field with eye toggle
                     Container(
                       decoration: BoxDecoration(
@@ -245,7 +269,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(height: 12),
-                    
+
                     // "Lupa Password" link
                     Align(
                       alignment: Alignment.centerRight,
@@ -263,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(height: 12),
-                    
+
                     // Error message display
                     if (_errorMessage != null)
                       Container(
@@ -286,16 +310,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                    
+
                     SizedBox(height: 30),
-                    
+
                     // Login button with improved styling
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Theme.of(context).primaryColor.withOpacity(0.3),
+                            color:
+                                Theme.of(context).primaryColor.withOpacity(0.3),
                             blurRadius: 12,
                             offset: Offset(0, 5),
                           ),
@@ -332,15 +357,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                       ),
                     ),
-                    
+
                     SizedBox(height: 30),
-                    
+
                     // Registration text
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => NikVerificationScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => NikVerificationScreen()),
                         );
                       },
                       child: Text.rich(

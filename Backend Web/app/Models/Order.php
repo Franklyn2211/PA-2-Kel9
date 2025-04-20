@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
-class Orders extends Model
+class Order extends Model
 {
     use HasApiTokens, HasFactory;
 
@@ -14,6 +14,9 @@ class Orders extends Model
         'penduduk_id',
         'product_id',
         'bukti_transfer',
+        'amount',
+        'note',
+        'status'
     ];
     protected $table = 'orders';
 

@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('penduduk_id'); // relasi ke penduduk yang login
+            $table->unsignedBigInteger('penduduk_id');
             $table->unsignedBigInteger('product_id');
-            $table->string('bukti_transfer')->nullable(); // path ke file bukti transfer
+            $table->string('bukti_transfer')->nullable();
+            $table->string('amount')->nullable(); // Tambahkan field amount
+            $table->text('note')->nullable(); // Tambahkan field note
+            $table->string('status')->default('pending'); // Tambahkan status
             $table->timestamps();
-
+        
             $table->foreign('penduduk_id')->references('id')->on('penduduk')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });

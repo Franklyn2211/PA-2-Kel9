@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\API\OrdersController;
+use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\Api\PendudukController;
 use App\Http\Controllers\Admin\ResidentsController;
 
@@ -16,4 +16,4 @@ Route::get('/penduduk', [ResidentsController::class, 'CheckNik']);
 
 Route::post('/register', [PendudukController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/orders', [OrdersController::class, 'store']);
+Route::post('/orders', [OrderController::class, 'store']);
