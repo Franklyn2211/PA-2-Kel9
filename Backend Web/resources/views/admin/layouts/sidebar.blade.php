@@ -57,10 +57,10 @@
 
         <div class="nav-section">Master Data</div>
         <ul class="nav flex-column">
-            <li class="nav-item {{ request()->is('admin/aparatur*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/aparatur">
+            <li class="nav-item {{ request()->is('admin/staff*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{route('admin.staff.index')}}">
                     <i class="fas fa-user-tie"></i>
-                    <span class="nav-text">Aparatur Desa</span>
+                    <span class="nav-text">Staff Desa</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->is('admin/umkm*') ? 'active' : '' }}">

@@ -12,6 +12,7 @@ Route::get('/umkm', [PostController::class, 'getUmkm']);
 Route::get('/news', [PostController::class, 'getNews']);
 Route::get('/pengumuman', [PostController::class, 'getAnnouncements']);
 Route::get('/profildesa', [PostController::class, 'getProfilDesa']);
+Route::get('/staff', [PostController::class, 'getStaff']);
 Route::get('/penduduk', [ResidentsController::class, 'CheckNik']);
 
 Route::post('/register', [PendudukController::class, 'register']);

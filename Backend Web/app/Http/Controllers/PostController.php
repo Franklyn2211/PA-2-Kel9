@@ -8,6 +8,7 @@ use App\Models\News;
 use App\Models\Product;
 use App\Models\ProfilDesa;
 use App\Models\Residents;
+use App\Models\Staff;
 use App\Models\Umkm;
 use Illuminate\Http\Request;
 
@@ -46,5 +47,11 @@ class PostController extends Controller
     {
         $profilDesa = ProfilDesa::first();
         return new Postresource($profilDesa);
+    }
+
+    public function getStaff()
+    {
+        $staff = Staff::all();
+        return Postresource::collection($staff);
     }
 }

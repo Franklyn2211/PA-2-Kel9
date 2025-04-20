@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ProfilDesaController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\UMKM\ProductController;
 use App\Http\Controllers\Admin\ResidentsController;
 use App\Http\Controllers\Auth\LoginController;
@@ -116,10 +117,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         return view('admin.surat.index');
     })->name('admin.surat.index');
 
-    // Aparatur Desa
-    Route::get('/aparatur', function () {
-        return view('admin.aparatur.index');
-    })->name('admin.aparatur.index');
+    // Staff
+    Route::get('/staff', [StaffController::class, 'index'])->name('admin.staff.index');
+    Route::get('/staff/create', [StaffController::class, 'create'])->name('admin.staff.create');
+    Route::post('/staff', [StaffController::class, 'store'])->name('admin.staff.store');
+    Route::get('/staff/{staff}/edit', [StaffController::class, 'edit'])->name('admin.staff.edit');
+    Route::put('/staff/{staff}', [StaffController::class, 'update'])->name('admin.staff.update');
+    Route::delete('/staff/{staff}', [StaffController::class, 'destroy'])->name('admin.staff.destroy');
 
     // Program Desa
     Route::get('/program', function () {
