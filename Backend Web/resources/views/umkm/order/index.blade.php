@@ -32,7 +32,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $order->penduduk->name }}</td>
-                                    <td>{{ $order->product->name }}</td>
+                                    <td>{{ $order->products->name }}</td>
                                     <td>Rp {{ number_format($order->amount, 0, ',', '.') }}</td>
                                     <td>
                                         @if($order->bukti_transfer)
@@ -46,7 +46,7 @@
                                     <td>{{ $order->note ?? '-' }}</td>
                                     <td>
                                         <span class="badge bg-{{ $order->status ? 'success' : 'warning' }}">
-                                            {{ $order->status ? 'Selesai' : 'Pending' }}
+                                            {{ $order->status ? 'Diterima' : 'Pending' }}
                                         </span>
                                     </td>
                                     <td>
@@ -55,7 +55,7 @@
                                                 @csrf
                                                 @method('PUT')
                                                 <button type="submit" class="btn btn-sm btn-success">
-                                                    Selesai
+                                                    Terima
                                                 </button>
                                             </form>
                                         @endif
