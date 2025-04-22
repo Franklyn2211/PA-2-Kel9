@@ -43,7 +43,7 @@
 
                         <!-- NPSN -->
                         <div class="mb-3">
-                            <label for="npsn_active" class="form-label">NPSN</label>
+                            <label for="npsn_active" class="form-label">Masa Aktif NPSN</label>
                             <input type="date" name="npsn_active" id="npsn_active" class="form-control" required>
                         </div>
 

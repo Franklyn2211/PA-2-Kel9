@@ -20,6 +20,10 @@ class Order extends Model
     ];
     protected $table = 'orders';
 
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+
     public function penduduk()
     {
         return $this->belongsTo(Penduduk::class);

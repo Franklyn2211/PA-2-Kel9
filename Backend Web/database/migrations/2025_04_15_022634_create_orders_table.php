@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('bukti_transfer')->nullable();
             $table->string('amount')->nullable(); // Tambahkan field amount
             $table->text('note')->nullable(); // Tambahkan field note
-            $table->string('status')->default('pending'); // Tambahkan status
+            $table->boolean('status')->default(false); // Tambahkan status
             $table->timestamps();
-        
+
             $table->foreign('penduduk_id')->references('id')->on('penduduk')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });

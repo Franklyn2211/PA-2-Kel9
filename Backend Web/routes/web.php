@@ -53,6 +53,9 @@ Route::prefix('umkm')->middleware('auth:umkm')->group(function () {
     Route::put('/products/{products}', [ProductController::class, 'update'])->name('umkm.products.update');
     Route::delete('/products/{products}', [ProductController::class, 'destroy'])->name('umkm.products.destroy');
 
+    Route::get('/orders', [\App\Http\Controllers\UMKM\OrderController::class, 'index'])->name('umkm.order.index');
+    Route::patch('/orders/{id}/status', [\App\Http\Controllers\UMKM\OrderController::class, 'updateStatus'])->name('umkm.order.status');
+
     Route::get('/profil', function () {
         return view('umkm.profil');
     })->name('umkm.profil');

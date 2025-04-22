@@ -28,7 +28,7 @@
                                     <th>Jabatan</th>
                                     <th>Nomor HP</th>
                                     <th>Email</th>
-                                    <th>NPSN</th>
+                                    <th>Masa Aktif NPSN</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
