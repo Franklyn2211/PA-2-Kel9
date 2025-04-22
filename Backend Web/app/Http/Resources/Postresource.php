@@ -12,6 +12,7 @@ class PostResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+    
     public function toArray(Request $request): array
     {
         // Base structure yang sama untuk semua tipe

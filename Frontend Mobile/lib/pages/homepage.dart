@@ -149,9 +149,8 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildQuickAction(
-                              Icons.description_outlined, "Layanan", () {
-                          }, themeColor),
+                          _buildQuickAction(Icons.description_outlined,
+                              "Layanan", () {}, themeColor),
                           _buildQuickAction(Icons.article_outlined, "Berita",
                               () {
                             Navigator.push(

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Postresource;
+use App\Http\Resources\PendudukResource;
 use App\Models\Announcements;
 use App\Models\News;
 use App\Models\Penduduk;
@@ -35,7 +36,7 @@ class PostController extends Controller
     public function getPenduduk()
     {
         $penduduk = Penduduk::all();
-        return Postresource::collection($penduduk);
+        return Pendudukresource::collection($penduduk);
     }
 
     public function getAnnouncements()
