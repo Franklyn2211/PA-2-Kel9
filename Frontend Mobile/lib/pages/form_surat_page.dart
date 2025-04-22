@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class FormSuratPage extends StatefulWidget {
   final String jenisSurat;
+  final int? pendudukId;
 
   const FormSuratPage({
     Key? key,
     required this.jenisSurat,
+    this.pendudukId,
   }) : super(key: key);
 
   @override
@@ -64,6 +66,7 @@ class _FormSuratPageState extends State<FormSuratPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('PendudukId yang diterima: ${widget.pendudukId}');
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(

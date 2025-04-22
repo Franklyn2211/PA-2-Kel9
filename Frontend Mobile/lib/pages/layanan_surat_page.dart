@@ -2,7 +2,8 @@ import 'package:aplikasi_desa/pages/pilih_jenis_surat_page.dart';
 import 'package:flutter/material.dart';
 
 class LayananSuratPage extends StatelessWidget {
-  const LayananSuratPage({Key? key}) : super(key: key);
+  final int? pendudukId;
+  const LayananSuratPage({Key? key, this.pendudukId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +189,9 @@ class LayananSuratPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PilihJenisSuratPage(),
+                        builder: (context) => PilihJenisSuratPage(
+                          pendudukId: pendudukId,
+                        ),
                       ),
                     );
                   },
