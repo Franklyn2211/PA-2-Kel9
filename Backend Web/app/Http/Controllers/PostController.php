@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Postresource;
 use App\Models\Announcements;
 use App\Models\News;
+use App\Models\Penduduk;
 use App\Models\Product;
 use App\Models\ProfilDesa;
 use App\Models\Residents;
@@ -30,6 +31,11 @@ class PostController extends Controller
     {
         $residents = Residents::all();
         return Postresource::collection($residents);
+    }
+    public function getPenduduk()
+    {
+        $penduduk = Penduduk::all();
+        return Postresource::collection($penduduk);
     }
 
     public function getAnnouncements()

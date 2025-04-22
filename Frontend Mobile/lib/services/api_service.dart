@@ -9,7 +9,7 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:io';
 
 class ApiService {
-  static const String baseUrl = "https://0ee4-114-10-83-99.ngrok-free.app/api";
+  static const String baseUrl = "https://b979-114-5-147-71.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -47,6 +47,18 @@ class ApiService {
     final responseData = _parseResponse(response);
     return (responseData['data'] as List)
         .map((item) => Product.fromJson(item))
+        .toList();
+  }
+  // ==================== PENDUDUK ====================
+  static Future<List<Penduduk>> fetchPenduduk() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/pendudukku'),
+      headers: headers,
+    );
+
+    final responseData = _parseResponse(response);
+    return (responseData['data'] as List)
+        .map((item) => Penduduk.fromJson(item))
         .toList();
   }
 
@@ -210,4 +222,28 @@ class ApiService {
       };
     }
   }
+  static Future<Map<String, dynamic>> getProductById(int productId) async {
+  try {
+    final response = await http.get(
+      Uri.parse('${baseUrl}/products/$productId'),
+      headers: {
+        'Content-Type': 'application/json',
+        // Tambahkan header authorization jika diperlukan
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['success']) {
+        return data['data'];
+      } else {
+        throw Exception(data['message'] ?? 'Gagal mengambil data produk');
+      }
+    } else {
+      throw Exception('Server error: ${response.statusCode}');
+    }
+  } catch (e) {
+    throw Exception('Gagal terhubung ke server: ${e.toString()}');
+  }
+}
 }

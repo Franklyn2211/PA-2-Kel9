@@ -151,10 +151,6 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           _buildQuickAction(
                               Icons.description_outlined, "Layanan", () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AuthCheckerScreen()));
                           }, themeColor),
                           _buildQuickAction(Icons.article_outlined, "Berita",
                               () {
@@ -286,7 +282,7 @@ class _HomePageState extends State<HomePage> {
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemCount:
-                                      products.length > 5 ? 5: products.length,
+                                      products.length > 5 ? 5 : products.length,
                                   itemBuilder: (context, index) {
                                     // Find corresponding UMKM for the product
                                     final umkm = umkmSnapshot.data!.firstWhere(
@@ -334,23 +330,6 @@ class _HomePageState extends State<HomePage> {
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
         elevation: 15,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-
-          if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => BeritaPage()),
-            );
-          } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AuthCheckerScreen()),
-            );
-          }
-        },
       ),
     );
   }
@@ -602,21 +581,24 @@ class _HomePageState extends State<HomePage> {
       margin: const EdgeInsets.only(bottom: 14),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HalamanDetailProduk(
-              qrisImage: qrisUrl,
-              imagePath: product.photoUrl,
-              title: product.productName,
-              price: product.price,
-              location: product.location,
-              phoneNumber: product.phone,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HalamanDetailProduk(
+                productId: product.id, // Tambahkan productId
+                imagePath: product.photoUrl,
+                title: product.productName,
+                price: product.price,
+                location: product.location,
+                phoneNumber: product.phone,
+                description:
+                    product.description, // Tambahkan description jika ada
+                qrisImage: qrisUrl,
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(14),

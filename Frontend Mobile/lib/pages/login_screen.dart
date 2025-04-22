@@ -1,14 +1,19 @@
+import 'package:aplikasi_desa/auth/auth_provider.dart';
 import 'package:aplikasi_desa/pages/pembayaran_berhasil.dart';
-import 'package:aplikasi_desa/screens/registrasi.dart';
-import 'package:flutter/material.dart';
 import 'package:aplikasi_desa/pages/layanan_surat_page.dart';
+import 'package:aplikasi_desa/screens/registrasi.dart';
 import 'package:aplikasi_desa/services/api_service.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 
 class LoginScreen extends StatefulWidget {
-  final String redirectTo;
+  final int? productId; // Add productId parameter
+  final String? redirectTo;
 
   const LoginScreen({
     Key? key,
+    this.productId,
     this.redirectTo = 'layanan-surat',
   }) : super(key: key);
 
@@ -23,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   bool _obscurePassword = true;
   String? _errorMessage;
+  
 
   @override
   void dispose() {
@@ -30,6 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
+  
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
@@ -43,65 +50,54 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (response['success']) {
-        // Provide options to navigate to different screens after login
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Login Berhasil'),
-              content: Text('Pilih layanan yang ingin Anda gunakan:'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close dialog
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LayananSuratPage()),
-                    );
-                  },
-                  child: Text('Layanan Surat'),
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        await authProvider.setUser(response['data']);
+        print('Data respons login: ${response['data']}');
+        print('User setelah login: ${authProvider.user?.toJson()}');
+        print('User ID: ${authProvider.user?.id}');
+
+        // Navigasi setelah login berhasil
+        if (mounted) {
+          if (widget.productId != null) {
+            // Jika ada productId, langsung navigasi ke PaymentProofScreen
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PaymentProofScreen(
+                  productId: widget.productId!,
+                  pendudukId: authProvider.user?.id,
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close dialog
-                    // Navigate to PaymentProofScreen (no parameters needed)
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PaymentProofScreen()),
-                    );
-                  },
-                  child: Text('Pembayaran'),
-                ),
-              ],
+              ),
             );
-          },
-        );
+          } else {
+            // Jika tidak ada productId, navigasi ke LayananSuratPage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => LayananSuratPage()),
+            );
+          }
+        }
       } else {
-        setState(() => _errorMessage = response['message']);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response['message']),
-            backgroundColor: Colors.red.shade700,
-          ),
-        );
+        // Handle login failure
+        setState(() {
+          _errorMessage =
+              response['message'] ?? 'Login gagal. Silakan coba lagi.';
+        });
       }
     } catch (e) {
-      setState(() => _errorMessage = e.toString());
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: Colors.red.shade700,
-        ),
-      );
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Terjadi kesalahan: ${e.toString()}';
+        });
+      }
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    print('ProductID yang diterima: ${widget.productId}'); // Debug
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -123,7 +119,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Header with logo and title
                     SizedBox(height: 40),
                     Icon(
                       Icons.account_circle,
@@ -148,246 +143,82 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 40),
 
-                    // NIK Field with improved styling
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 8,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
+                    // NIK Field
+                    TextFormField(
+                      controller: _nikController,
+                      decoration: InputDecoration(
+                        labelText: 'NIK',
+                        prefixIcon: Icon(Icons.credit_card),
+                        border: OutlineInputBorder(),
                       ),
-                      child: TextFormField(
-                        controller: _nikController,
-                        decoration: InputDecoration(
-                          labelText: 'NIK',
-                          hintText: 'Masukkan 16 digit NIK',
-                          prefixIcon: Icon(Icons.credit_card),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).primaryColor,
-                              width: 2,
-                            ),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 16,
-                            horizontal: 16,
-                          ),
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'NIK harus diisi';
+                        }
+                        if (value.length != 16) {
+                          return 'NIK harus 16 digit';
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(height: 20),
 
-                    // Password field with eye toggle
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 8,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          hintText: 'Masukkan password',
-                          prefixIcon: Icon(Icons.lock),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.grey.shade600,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Colors.grey.shade300,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).primaryColor,
-                              width: 2,
-                            ),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 16,
-                            horizontal: 16,
-                          ),
+                    // Password Field
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                          onPressed: () {
+                            setState(
+                                () => _obscurePassword = !_obscurePassword);
+                          },
                         ),
-                        obscureText: _obscurePassword,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Password harus diisi';
-                          }
-                          if (value.length < 6) {
-                            return 'Password minimal 6 karakter';
-                          }
-                          return null;
-                        },
+                        border: OutlineInputBorder(),
                       ),
+                      obscureText: _obscurePassword,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password harus diisi';
+                        }
+                        return null;
+                      },
                     ),
-                    SizedBox(height: 12),
+                    SizedBox(height: 20),
 
-                    // "Lupa Password" link
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          // Navigate to reset password page
-                        },
-                        child: Text(
-                          'Lupa Password?',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12),
-
-                    // Error message display
                     if (_errorMessage != null)
-                      Container(
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade50,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.red.shade200),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.error_outline, color: Colors.red),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                _errorMessage!,
-                                style: TextStyle(color: Colors.red.shade700),
-                              ),
-                            ),
-                          ],
-                        ),
+                      Text(
+                        _errorMessage!,
+                        style: TextStyle(color: Colors.red),
                       ),
 
-                    SizedBox(height: 30),
+                    SizedBox(height: 20),
 
-                    // Login button with improved styling
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                Theme.of(context).primaryColor.withOpacity(0.3),
-                            blurRadius: 12,
-                            offset: Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _isLoading ? null : _login,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: _isLoading
-                            ? SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 3,
-                                ),
-                              )
-                            : Text(
-                                'MASUK',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.2,
-                                ),
-                              ),
+                    ElevatedButton(
+                      onPressed: _isLoading ? null : _login,
+                      child: _isLoading
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text('MASUK'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 50),
                       ),
                     ),
 
-                    SizedBox(height: 30),
-
-                    // Registration text
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => NikVerificationScreen()),
+                            builder: (context) => NikVerificationScreen(),
+                          ),
                         );
                       },
-                      child: Text.rich(
-                        TextSpan(
-                          text: 'Belum punya akun? ',
-                          style: TextStyle(
-                            color: Colors.grey.shade700,
-                            fontSize: 16,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: 'Daftar sekarang',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      child: Text('Belum punya akun? Daftar sekarang'),
                     ),
                   ],
                 ),

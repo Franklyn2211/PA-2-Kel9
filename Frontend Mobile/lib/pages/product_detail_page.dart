@@ -1,5 +1,4 @@
 import 'package:aplikasi_desa/pages/auth_checker.dart';
-import 'package:aplikasi_desa/pages/pembayaran_berhasil.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,6 +6,7 @@ import 'package:intl/intl.dart'; // Untuk format harga
 import 'package:cached_network_image/cached_network_image.dart'; // Tambahkan package ini
 
 class HalamanDetailProduk extends StatelessWidget {
+  final int productId;
   final String imagePath;
   final String title;
   final String price;
@@ -17,6 +17,7 @@ class HalamanDetailProduk extends StatelessWidget {
 
   const HalamanDetailProduk({
     Key? key,
+    required this.productId,
     required this.imagePath,
     required this.title,
     required this.price,
@@ -117,7 +118,8 @@ class HalamanDetailProduk extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.qr_code, size: 50, color: Colors.grey),
+                                Icon(Icons.qr_code,
+                                    size: 50, color: Colors.grey),
                                 SizedBox(height: 10),
                                 Text(
                                   "Kode QR tidak tersedia",
@@ -135,7 +137,8 @@ class HalamanDetailProduk extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.qr_code, size: 50, color: Colors.grey),
+                                Icon(Icons.qr_code,
+                                    size: 50, color: Colors.grey),
                                 SizedBox(height: 10),
                                 Text(
                                   "Kode QR tidak tersedia",
@@ -165,20 +168,16 @@ class HalamanDetailProduk extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // Tutup dialog
-                        Navigator.pop(context);
-
-                        // Navigasi ke halaman bukti pembayaran
+                        Navigator.pop(context); // Tutup dialog
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AuthCheckerScreen(),
+                            builder: (context) => AuthCheckerScreen(
+                              productId: productId, // Kirim productId
+                            ),
                           ),
                         );
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                      ),
                       child: Text("Konfirmasi Pembayaran"),
                     ),
                   ],

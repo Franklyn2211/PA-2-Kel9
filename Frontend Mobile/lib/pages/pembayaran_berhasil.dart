@@ -1,10 +1,21 @@
+import 'package:aplikasi_desa/auth/auth_provider.dart';
+import 'package:aplikasi_desa/pages/login_screen.dart';
 import 'package:aplikasi_desa/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import 'package:provider/provider.dart';
+
 class PaymentProofScreen extends StatefulWidget {
-  const PaymentProofScreen({Key? key}) : super(key: key);
+  final int productId;
+  final int? pendudukId;
+
+  const PaymentProofScreen({
+    Key? key,
+    required this.productId,
+    this.pendudukId,
+  }) : super(key: key);
 
   @override
   _PaymentProofScreenState createState() => _PaymentProofScreenState();
@@ -16,6 +27,15 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
   final TextEditingController _noteController = TextEditingController();
   File? _imageFile;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Debug info
+    debugPrint('PaymentProofScreen initialized with:');
+    debugPrint('productId: ${widget.productId}');
+    debugPrint('pendudukId: ${widget.pendudukId}');
+  }
 
   Future<void> _getImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -67,45 +87,92 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
         return;
       }
 
+      // Debug info
+      debugPrint('Submitting payment proof');
+      debugPrint('Product ID: ${widget.productId}');
+      debugPrint('Penduduk ID from widget: ${widget.pendudukId}');
+
+      // Coba ambil pendudukId dari provider jika tidak ada di widget
+      final int? actualPendudukId = widget.pendudukId ??
+          Provider.of<AuthProvider>(context, listen: false).pendudukId;
+
+      debugPrint('Actual Penduduk ID: $actualPendudukId');
+
+      // Validasi pendudukId
+      if (actualPendudukId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content:
+                  Text('Data pengguna tidak ditemukan, silakan login kembali')),
+        );
+
+        // Arahkan ke login screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(
+              productId: widget.productId,
+              redirectTo: 'pembayaran',
+            ),
+          ),
+        );
+        return;
+      }
+
       setState(() {
         _isLoading = true;
       });
 
-      // Ganti dengan ID penduduk dan produk yang sesuai
-      final pendudukId = 1; // Ambil dari state management atau auth
-      final productId = 1; // Ambil dari navigasi arguments
-
-      final response = await ApiService.createOrder(
-        pendudukId: pendudukId,
-        productId: productId,
-        amount: _amountController.text,
-        note: _noteController.text,
-        buktiTransfer: _imageFile!,
-      );
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      if (response['success']) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Bukti pembayaran berhasil diunggah')),
+      try {
+        // Menggunakan productId dan pendudukId dari widget
+        final response = await ApiService.createOrder(
+          pendudukId: widget.pendudukId!,
+          productId: widget.productId,
+          amount: _amountController.text,
+          note: _noteController.text,
+          buktiTransfer: _imageFile!,
         );
 
-        // Reset form
-        _formKey.currentState!.reset();
-        _amountController.clear();
-        _noteController.clear();
-        setState(() {
-          _imageFile = null;
-        });
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
 
-        // Navigasi ke halaman sukses atau kembali
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response['message'])),
-        );
+          if (response['success']) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Bukti pembayaran berhasil diunggah')),
+            );
+
+            // Reset form
+            _formKey.currentState!.reset();
+            _amountController.clear();
+            _noteController.clear();
+            setState(() {
+              _imageFile = null;
+            });
+
+            // Navigasi ke halaman sukses atau kembali
+            Navigator.pop(context,
+                true); // Mengirim status berhasil ke halaman sebelumnya
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(response['message'] ??
+                      'Terjadi kesalahan saat mengunggah')),
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${e.toString()}')),
+          );
+        }
       }
     }
   }

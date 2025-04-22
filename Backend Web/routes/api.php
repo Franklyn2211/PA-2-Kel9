@@ -14,6 +14,7 @@ Route::get('/pengumuman', [PostController::class, 'getAnnouncements']);
 Route::get('/profildesa', [PostController::class, 'getProfilDesa']);
 Route::get('/staff', [PostController::class, 'getStaff']);
 Route::get('/penduduk', [ResidentsController::class, 'CheckNik']);
+Route::get('/pendudukku', [PostController::class, 'getPenduduk']);
 
 Route::post('/register', [PendudukController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
