@@ -46,27 +46,6 @@ class _BeritaPageState extends State<BeritaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Berita Desa",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: themeColor,
-        elevation: 0,
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {
-              // Handle search
-            },
-          ),
-        ],
-      ),
       body: FutureBuilder<List<Berita>>(
         future: futureBerita,
         builder: (context, snapshot) {
