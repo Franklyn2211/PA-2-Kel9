@@ -38,7 +38,6 @@ class OrderController extends Controller
                 'amount' => $request->amount,
                 'note' => $request->note,
                 'bukti_transfer' => $imagePath,
-                'status' => 'pending',
             ]);
 
             return response()->json([

@@ -32,7 +32,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $order->penduduk->name }}</td>
-                                    <td>{{ $order->products->name }}</td>
+                                    <td>{{ $order->product->product_name }}</td>
                                     <td>Rp {{ number_format($order->amount, 0, ',', '.') }}</td>
                                     <td>
                                         @if($order->bukti_transfer)
@@ -51,9 +51,9 @@
                                     </td>
                                     <td>
                                         @if(!$order->status)
-                                            <form action="{{ route('umkm.order.update', $order->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('umkm.order.status', $order->id) }}" method="POST" class="d-inline">
                                                 @csrf
-                                                @method('PUT')
+                                                @method('PATCH')
                                                 <button type="submit" class="btn btn-sm btn-success">
                                                     Terima
                                                 </button>
