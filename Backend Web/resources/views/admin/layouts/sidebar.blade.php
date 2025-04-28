@@ -42,7 +42,7 @@
                 </a>
             </li>
             <li class="nav-item {{ request()->is('admin/galeri*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/galeri">
+                <a class="nav-link" href="{{route('admin.galeri.index')}}">
                     <i class="fas fa-images"></i>
                     <span class="nav-text">Galeri</span>
                 </a>
@@ -69,18 +69,6 @@
                     <span class="nav-text">UMKM</span>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('admin/program*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/program">
-                    <i class="fas fa-tasks"></i>
-                    <span class="nav-text">Program Desa</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('admin/pembangunan*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/pembangunan">
-                    <i class="fas fa-hard-hat"></i>
-                    <span class="nav-text">Pembangunan</span>
-                </a>
-            </li>
         </ul>
 
         <div class="nav-section">Sistem</div>
@@ -89,12 +77,6 @@
                 <a class="nav-link" href="{{route('admin.profildesa.index')}}">
                     <i class="fas fa-info-circle"></i>
                     <span class="nav-text">Profil Desa</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('admin/users*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/users">
-                    <i class="fas fa-user-shield"></i>
-                    <span class="nav-text">Pengguna</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->is('admin/settings*') ? 'active' : '' }}">

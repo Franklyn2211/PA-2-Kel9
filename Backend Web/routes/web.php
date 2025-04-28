@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ProfilDesaController;
 use App\Http\Controllers\Admin\StaffController;
@@ -111,9 +112,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::patch('/umkm/{id}/status', [\App\Http\Controllers\Admin\UmkmController::class, 'updateStatus'])->name('admin.umkm.updateStatus');
 
     // Galeri
-    Route::get('/galeri', function () {
-        return view('admin.galeri.index');
-    })->name('admin.galeri.index');
+    Route::get('/galeri', [GalleryController::class, 'index'])->name('admin.galeri.index');
+    Route::get('/galeri/create', [GalleryController::class, 'create'])->name('admin.galeri.create');
+    Route::post('/galeri', [GalleryController::class, 'store'])->name('admin.galeri.store');
+    Route::get('/galeri/{galleries}/edit', [GalleryController::class, 'edit'])->name('admin.galeri.edit');
+    Route::put('/galeri/{galleries}', [GalleryController::class, 'update'])->name('admin.galeri.update');
+    Route::delete('/galeri/{galleries}', [GalleryController::class, 'destroy'])->name('admin.galeri.destroy');
 
     // Surat Menyurat
     Route::get('/surat', function () {
