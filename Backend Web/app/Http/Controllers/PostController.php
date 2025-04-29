@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Postresource;
 use App\Http\Resources\PendudukResource;
 use App\Models\Announcements;
+use App\Models\Gallery;
 use App\Models\News;
 use App\Models\Penduduk;
 use App\Models\Product;
@@ -60,5 +61,10 @@ class PostController extends Controller
     {
         $staff = Staff::all();
         return Postresource::collection($staff);
+    }
+    public function getGallery()
+    {
+        $galleries = Gallery::all();
+        return Postresource::collection($galleries);
     }
 }
