@@ -6,10 +6,12 @@ use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ProfilDesaController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\SuratController;
 use App\Http\Controllers\UMKM\ProductController;
 use App\Http\Controllers\Admin\ResidentsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\UMKMController;
+use App\Http\Controllers\Auth\PengajuanSuratController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -106,6 +108,25 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/pengumuman/{announcements}/edit', [AnnouncementController::class, 'edit'])->name('admin.pengumuman.edit');
     Route::put('/pengumuman/{announcements}', [AnnouncementController::class, 'update'])->name('admin.pengumuman.update');
     Route::delete('/pengumuman/{announcements}', [AnnouncementController::class, 'destroy'])->name('admin.pengumuman.destroy');
+
+    // Routes untuk warga
+Route::middleware(['auth'])->group(function () {
+    Route::get('/pengajuan/{jenis}', [PengajuanSuratController::class, 'create']);
+    Route::post('/pengajuan', [PengajuanSuratController::class, 'store']);
+    Route::get('/pengajuan/detail/{id}', [PengajuanSuratController::class, 'show']);
+});
+
+// Routes untuk admin
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [SuratController::class, 'dashboard']);
+    Route::get('/pengajuan', [SuratController::class, 'pengajuan']);
+    Route::get('/pengajuan/{id}', [SuratController::class, 'detailPengajuan']);
+    Route::post('/pengajuan/approve/{id}', [PengajuanSuratController::class, 'approve']);
+    Route::post('/pengajuan/reject/{id}', [PengajuanSuratController::class, 'reject']);
+    
+    // Routes untuk manajemen template
+    Route::resource('templates', SuratTemplateController::class);
+});
 
     // UMKM
     Route::get('/umkm', [\App\Http\Controllers\Admin\UmkmController::class, 'index'])->name('admin.umkm.index');

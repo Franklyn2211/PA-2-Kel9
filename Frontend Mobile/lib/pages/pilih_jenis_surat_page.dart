@@ -13,7 +13,7 @@ class _PilihJenisSuratPageState extends State<PilihJenisSuratPage> {
   String? selectedSurat;
 
   final List<Map<String, String>> jenisSurat = [
-    {'value': 'Surat Tidak Mampu', 'label': 'Surat Tidak Mampu'},
+    {'value': 'Surat Keterangan Belum Pernah Menikah', 'label': 'Surat Keterangan Belum Pernah Menikah'},
     {'value': 'Surat Keterangan Domisili', 'label': 'Surat Keterangan Domisili'},
     {'value': 'Surat Keterangan Usaha', 'label': 'Surat Keterangan Usaha'},
     {'value': 'Surat Pengantar', 'label': 'Surat Pengantar'},
@@ -57,12 +57,25 @@ class _PilihJenisSuratPageState extends State<PilihJenisSuratPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _buildPendudukIdDisplay(),
+          const SizedBox(height: 16),
           _buildHeaderText(),
           const SizedBox(height: 24),
           _buildSuratDropdown(),
           const SizedBox(height: 32),
           _buildContinueButton(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPendudukIdDisplay() {
+    return Text(
+      'Penduduk ID: ${widget.pendudukId ?? "Tidak tersedia"}',
+      style: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: Colors.black87,
       ),
     );
   }

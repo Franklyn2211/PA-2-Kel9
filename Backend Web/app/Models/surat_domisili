@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class surat_domisili extends Model
+{
+    use HasFactory;
+
+    protected $table = 'surat_domisili';
+
+    protected $fillable = [
+        'pengajuan_id',
+        'alamat_domisili',
+        'sejak_tanggal',
+        'keperluan',
+        'data_tambahan'
+    ];
+
+    protected $casts = [
+        'sejak_tanggal' => 'date',
+        'data_tambahan' => 'array'
+    ];
+
+    // Relasi ke pengajuan surat
+    public function pengajuan()
+    {
+        return $this->belongsTo(pengajuan_surat::class, 'pengajuan_id');
+    }
+}

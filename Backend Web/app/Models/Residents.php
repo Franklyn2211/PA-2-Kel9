@@ -21,8 +21,23 @@ class Residents extends Model
         'family_card_number',
     ];
 
+    protected $casts = [
+        'birth_date' => 'date:Y-m-d',
+    ];
+
+    protected $appends = [
+        'gender_label',
+        'age'
+    ];
+
     public function getGenderLabelAttribute()
     {
-        return $this->gender === 'Male'? 'Laki-laki' : 'Perempuan';
+        if ($this->gender === null) return 'Belum diisi';
+        return $this->gender === 'Male' ? 'Laki-laki' : 'Perempuan';
+    }
+
+    public function getAgeAttribute()
+    {
+        return $this->birth_date?->age ?? 'Belum diisi';
     }
 }

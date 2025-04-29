@@ -10,8 +10,8 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::paginate(5);
-        return view('umkm.order.index', compact('orders'));
+        $umkmId = auth()->user()->umkm->id; // Mendapatkan ID UMKM dari user yang sedang login
+        $orders = Order::where('umkm_id', $umkmId)->paginate(5); // Filter order berdasarkan UMKM ID
     }
 
     public function updateStatus($id)

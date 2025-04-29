@@ -32,13 +32,13 @@ class PostController extends Controller
     public function getResidents()
     {
         $residents = Residents::all();
-        return Postresource::collection($residents);
+        return PendudukResource::collection($residents);
     }
     public function getPenduduk()
     {
         $penduduk = Penduduk::all();
         return Pendudukresource::collection($penduduk);
-    }
+    }   
 
     public function getAnnouncements()
     {

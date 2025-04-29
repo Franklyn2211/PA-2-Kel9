@@ -1,4 +1,4 @@
-class Penduduk {
+class Residents {
   final int id;
   final String nik;
   final String name;
@@ -9,7 +9,7 @@ class Penduduk {
   final String familyCardNumber;
   final String? photoUrl;
 
-  Penduduk({
+  Residents({
     required this.id,
     required this.nik,
     required this.name,
@@ -21,16 +21,16 @@ class Penduduk {
     this.photoUrl,
   });
 
-  factory Penduduk.fromJson(Map<String, dynamic> json) {
-    return Penduduk(
-      id: json['id'],
-      nik: json['nik'],
-      name: json['name'],
-      gender: json['gender'],
-      address: json['address'],
-      birthDate: json['birth_date'],
-      religion: json['religion'],
-      familyCardNumber: json['family_card_number'],
+  factory Residents.fromJson(Map<String, dynamic> json) {
+    return Residents(
+      id: json['id'] ?? 0,
+      nik: json['nik'] ?? '',
+      name: json['name'] ?? '',
+      gender: json['gender'] ?? '',
+      address: json['address'] ?? '',
+      birthDate: json['birth_date'] ?? '',
+      religion: json['religion'] ?? '',
+      familyCardNumber: json['family_card_number'] ?? '',
       photoUrl: json['photo_url'],
     );
   }

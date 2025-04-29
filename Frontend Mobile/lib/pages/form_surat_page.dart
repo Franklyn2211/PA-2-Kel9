@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
+import '../models/penduduk.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class FormSuratPage extends StatefulWidget {
   final String jenisSurat;
   final int? pendudukId;
+  
 
   const FormSuratPage({
     Key? key,
@@ -16,12 +21,66 @@ class FormSuratPage extends StatefulWidget {
 
 class _FormSuratPageState extends State<FormSuratPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nikController = TextEditingController();
-  final _namaController = TextEditingController();
   final _alamatController = TextEditingController();
   final _telpController = TextEditingController();
   final _tujuanController = TextEditingController();
+  final _nikController = TextEditingController(); // Tambahkan controller untuk NIK
+  final _namaController = TextEditingController(); // Tambahkan controller untuk Nama
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPendudukData();
+  }
+
+  Future<void> _fetchPendudukData() async {
+    if (widget.pendudukId == null) return;
+
+    try {
+      final apiService = ApiService();
+      final baseUrl = apiService.getBaseUrl();
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/pendudukku'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final pendudukList = (data['data'] as List)
+            .map((item) => Residents.fromJson(item))
+            .toList();
+
+        final penduduk = pendudukList.firstWhere(
+          (p) => p.id == widget.pendudukId,
+          orElse: () => Residents(
+            id: 0,
+            nik: '',
+            name: '',
+            gender: '',
+            address: '',
+            birthDate: '',
+            religion: '',
+            familyCardNumber: '',
+          ),
+        );
+
+        setState(() {
+          _nikController.text = penduduk.nik; // Set nilai NIK ke controller
+          _namaController.text = penduduk.name; // Set nilai Nama ke controller
+        });
+      } else {
+        throw Exception('Gagal memuat data');
+      }
+    } catch (e) {
+      debugPrint('Error saat mengambil data penduduk: $e');
+      setState(() {
+        _nikController.text = 'Error';
+        _namaController.text = 'Error';
+      });
+    }
+  }
 
   String _getDescriptionText() {
     switch (widget.jenisSurat) {
@@ -66,7 +125,6 @@ class _FormSuratPageState extends State<FormSuratPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('PendudukId yang diterima: ${widget.pendudukId}');
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -116,88 +174,45 @@ class _FormSuratPageState extends State<FormSuratPage> {
                   const Text(
                     'Data Diri',
                     style: TextStyle(
-                      fontSize: 18, 
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
-                  // NIK Field
+
+                  // NIK Field (Non-editable)
                   TextFormField(
-                    controller: _nikController,
+                    controller: _nikController, // Gunakan controller
                     decoration: InputDecoration(
                       labelText: 'NIK',
-                      hintText: 'Masukkan 16 digit NIK',
                       prefixIcon: const Icon(Icons.badge),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Colors.grey[200],
                     ),
-                    keyboardType: TextInputType.number,
-                    maxLength: 16,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'NIK tidak boleh kosong';
-                      }
-                      if (value.length != 16) {
-                        return 'NIK harus 16 digit';
-                      }
-                      return null;
-                    },
+                    readOnly: true,
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
-                  // Nama Field
+
+                  // Nama Field (Non-editable)
                   TextFormField(
-                    controller: _namaController,
+                    controller: _namaController, // Gunakan controller
                     decoration: InputDecoration(
                       labelText: 'Nama Lengkap',
-                      hintText: 'Masukkan nama lengkap sesuai KTP',
                       prefixIcon: const Icon(Icons.person),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Colors.grey[200],
                     ),
-                    textCapitalization: TextCapitalization.words,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Nama lengkap tidak boleh kosong';
-                      }
-                      return null;
-                    },
+                    readOnly: true,
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
-                  // Alamat Field
-                  TextFormField(
-                    controller: _alamatController,
-                    decoration: InputDecoration(
-                      labelText: 'Alamat',
-                      hintText: 'Masukkan alamat lengkap',
-                      prefixIcon: const Icon(Icons.home),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    maxLines: 3,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Alamat tidak boleh kosong';
-                      }
-                      return null;
-                    },
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
                   // No. Telepon Field
                   TextFormField(
                     controller: _telpController,
@@ -283,11 +298,11 @@ class _FormSuratPageState extends State<FormSuratPage> {
 
   @override
   void dispose() {
-    _nikController.dispose();
-    _namaController.dispose();
     _alamatController.dispose();
     _telpController.dispose();
     _tujuanController.dispose();
+    _nikController.dispose(); // Dispose controller NIK
+    _namaController.dispose(); // Dispose controller Nama
     super.dispose();
   }
 }

@@ -1,12 +1,16 @@
 import 'package:aplikasi_desa/pages/pilih_jenis_surat_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../auth/auth_provider.dart';
 
 class LayananSuratPage extends StatelessWidget {
-  final int? pendudukId;
-  const LayananSuratPage({Key? key, this.pendudukId}) : super(key: key);
+  const LayananSuratPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final pendudukId = Provider.of<AuthProvider>(context, listen: false).pendudukId;
+    print('PendudukId yang diterima: $pendudukId');
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -186,14 +190,23 @@ class LayananSuratPage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PilihJenisSuratPage(
-                          pendudukId: pendudukId,
+                    if (pendudukId != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PilihJenisSuratPage(
+                            pendudukId: pendudukId,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Penduduk ID tidak ditemukan.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,

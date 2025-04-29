@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:aplikasi_desa/models/penduduk.dart';
 import 'package:aplikasi_desa/models/userpenduduk.dart';
 import 'package:http/http.dart' as http;
 import '../models/penduduk_response.dart';
@@ -9,12 +10,16 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:io';
 
 class ApiService {
-  static const String baseUrl = "https://b979-114-5-147-71.ngrok-free.app/api";
+  static const String baseUrl = "https://4634-114-10-83-46.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'ngrok-skip-browser-warning': 'true'
   };
+
+  String getBaseUrl() {
+    return 'https://4634-114-10-83-46.ngrok-free.app'; // Replace with your actual base URL
+  }
 
   // ==================== NIK VERIFICATION ====================
   // services/api_service.dart
@@ -50,7 +55,7 @@ class ApiService {
         .toList();
   }
   // ==================== PENDUDUK ====================
-  static Future<List<Penduduk>> fetchPenduduk() async {
+  static Future<List<Residents>> fetchPenduduk() async {
     final response = await http.get(
       Uri.parse('$baseUrl/pendudukku'),
       headers: headers,
@@ -58,7 +63,7 @@ class ApiService {
 
     final responseData = _parseResponse(response);
     return (responseData['data'] as List)
-        .map((item) => Penduduk.fromJson(item))
+        .map((item) => Residents.fromJson(item))
         .toList();
   }
 
