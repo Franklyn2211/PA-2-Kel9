@@ -8,9 +8,20 @@ use Illuminate\Http\Request;
 
 class ResidentsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $residents = Residents::all();
+        $query = Residents::query();
+
+        // Apply search filter if provided
+        if ($request->has('search') && $request->search) {
+            $query->where('nik', 'like', '%' . $request->search . '%')
+                  ->orWhere('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('address', 'like', '%' . $request->search . '%')
+                  ->orWhere('family_card_number', 'like', '%' . $request->search . '%');
+        }
+
+        $residents = $query->paginate(10);
+
         return view('admin.penduduk.index', ['residents' => $residents]);
     }
 
@@ -93,7 +104,7 @@ class ResidentsController extends Controller
         ]);
 
         $query = Residents::query();
-        
+
         // Filter berdasarkan NIK jika parameter ada
         if ($request->has('nik')) {
             $query->where('nik', $request->nik);

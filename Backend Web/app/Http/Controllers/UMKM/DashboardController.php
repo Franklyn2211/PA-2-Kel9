@@ -10,7 +10,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $umkm = UMKM::all();
-        return view('umkm.dashboard', compact('umkm'));
+        return view('umkm.dashboard');
     }
 }
