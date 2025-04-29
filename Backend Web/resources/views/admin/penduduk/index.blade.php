@@ -18,6 +18,17 @@
                     </a>
                 </div>
                 <div class="card-body">
+                    <!-- Search Form -->
+                    <form method="GET" action="{{ route('admin.penduduk.index') }}" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" name="search" class="form-control" placeholder="Pencarian" value="{{ request('search') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-soft-primary">Cari</button>
+                            </div>
+                        </div>
+                    </form>
                     <div class="table-responsive mt-4">
                         <table class="table table-hover">
                             <thead>
@@ -31,7 +42,6 @@
                                     <th>Agama</th>
                                     <th>Nomor KK</th>
                                     <th>Aksi</th>
-                                </tr>
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,9 +77,9 @@
                             </tbody>
                         </table>
                     </div>
-                    {{-- <div class="d-flex justify-content-end mt-3">
-                        {{ $products->links('pagination::bootstrap-4') }}
-                    </div> --}}
+                    <div class="d-flex justify-content-end mt-3">
+                        {{ $residents->links('pagination::bootstrap-4') }}
+                    </div>
                 </div>
             </div>
         </div>
