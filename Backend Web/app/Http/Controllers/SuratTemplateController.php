@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\surat_templates;
 use Illuminate\Http\Request;
 
-class surat_templatesController extends Controller
+class SuratTemplateController extends Controller
 {
     // Menampilkan daftar template
     public function index()

@@ -3,38 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\PengajuanSurat;
+use App\Models\Residents;
 use Illuminate\Http\Request;
 
 class SuratController extends Controller
 {
     // Dashboard admin
-    public function dashboard()
+    public function index()
     {
-        $pengajuanTerbaru = PengajuanSurat::with(['resident', 'template'])
-            ->orderBy('created_at', 'desc')
-            ->limit(10)
-            ->get();
-            
-        $stats = [
-            'total' => PengajuanSurat::count(),
-            'diajukan' => PengajuanSurat::where('status', 'diajukan')->count(),
-            'diproses' => PengajuanSurat::where('status', 'diproses')->count(),
-            'disetujui' => PengajuanSurat::where('status', 'disetujui')->count(),
-        ];
+        // Ambil data resident dengan ID 3
+        $resident = Residents::with('umkm')->findOrFail(3);
 
-        return view('admin.dashboard', compact('pengajuanTerbaru', 'stats'));
+        // Jika ingin mengambil semua UMKM dari resident tertentu:
+        // $umkm = Umkm::where('resident_id', 3)->get();
+
+        return view('admin.surat.index', compact('resident'));
     }
-
     // Daftar pengajuan
     public function pengajuan(Request $request)
     {
         $status = $request->get('status', 'diajukan');
-        
+
         $pengajuan = PengajuanSurat::with(['resident', 'template'])
             ->where('status', $status)
             ->orderBy('created_at', 'desc')
             ->paginate(15);
-            
+
         return view('admin.pengajuan', compact('pengajuan', 'status'));
     }
 
@@ -42,14 +36,14 @@ class SuratController extends Controller
     public function detailPengajuan($id)
     {
         $pengajuan = PengajuanSurat::with(['resident', 'template'])->findOrFail($id);
-        
+
         // Ambil data khusus berdasarkan jenis surat
         $detailPengajuan = null;
         switch ($pengajuan->template->jenis_surat) {
             case 'surat_tidak_mampu':
                 $detailPengajuan = SuratTidakMampu::where('pengajuan_id', $id)->first();
                 break;
-            
+
             // Tambahkan case untuk jenis surat lainnya
         }
 

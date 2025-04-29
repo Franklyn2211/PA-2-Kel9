@@ -21,7 +21,6 @@ class FormSuratPage extends StatefulWidget {
 
 class _FormSuratPageState extends State<FormSuratPage> {
   final _formKey = GlobalKey<FormState>();
-  final _alamatController = TextEditingController();
   final _telpController = TextEditingController();
   final _tujuanController = TextEditingController();
   final _nikController = TextEditingController(); // Tambahkan controller untuk NIK
@@ -95,18 +94,35 @@ class _FormSuratPageState extends State<FormSuratPage> {
     }
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-      
-      // Simulasi proses pengiriman data
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          _isLoading = false;
-        });
-        
+  void _submitForm() async {
+  if (_formKey.currentState!.validate()) {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final apiService = ApiService();
+      final baseUrl = apiService.getBaseUrl();
+
+      // Data yang akan dikirim ke backend
+      final requestData = {
+        'resident_id': widget.pendudukId.toString(),
+        'keperluan': _tujuanController.text,
+        'nomor_telepon': _telpController.text,
+      };
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/pengajuan/surat-domisili'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(requestData),
+      );
+
+      final responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Pengajuan ${widget.jenisSurat} berhasil dikirim!'),
@@ -114,14 +130,25 @@ class _FormSuratPageState extends State<FormSuratPage> {
             behavior: SnackBarBehavior.floating,
           ),
         );
-        
-        // Kembali ke halaman sebelumnya setelah berhasil
-        Future.delayed(const Duration(seconds: 1), () {
-          Navigator.pop(context);
-        });
+        Navigator.pop(context);
+      } else {
+        final errorMessage = responseData['message'] ?? 'Gagal mengajukan surat';
+        throw Exception(errorMessage);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'), // Pastikan alasan gagal ditampilkan
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -298,7 +325,6 @@ class _FormSuratPageState extends State<FormSuratPage> {
 
   @override
   void dispose() {
-    _alamatController.dispose();
     _telpController.dispose();
     _tujuanController.dispose();
     _nikController.dispose(); // Dispose controller NIK

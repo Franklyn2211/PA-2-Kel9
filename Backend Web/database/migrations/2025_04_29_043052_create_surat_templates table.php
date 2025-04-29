@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('surat_templates_skbpms');
+        Schema::dropIfExists('surat_templates');
     }
 };

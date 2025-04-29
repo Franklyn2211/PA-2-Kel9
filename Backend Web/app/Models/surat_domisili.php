@@ -13,18 +13,10 @@ class surat_domisili extends Model
 
     protected $fillable = [
         'pengajuan_id',
-        'alamat_domisili',
-        'sejak_tanggal',
         'keperluan',
-        'data_tambahan'
     ];
 
-    protected $casts = [
-        'sejak_tanggal' => 'date',
-        'data_tambahan' => 'array'
-    ];
 
-    // Relasi ke pengajuan surat
     public function pengajuan()
     {
         return $this->belongsTo(pengajuan_surat::class, 'pengajuan_id');

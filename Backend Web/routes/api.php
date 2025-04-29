@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\SuratDomisiliController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthController;
@@ -20,3 +21,4 @@ Route::get('/pendudukku', [PostController::class, 'getResidents']);
 Route::post('/register', [PendudukController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/orders', [OrderController::class, 'store']);
+Route::post('/pengajuan/surat-domisili', [SuratDomisiliController::class, 'store']);

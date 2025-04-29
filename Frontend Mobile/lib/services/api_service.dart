@@ -10,7 +10,7 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:io';
 
 class ApiService {
-  static const String baseUrl = "https://4634-114-10-83-46.ngrok-free.app/api";
+  static const String baseUrl = "https://e585-103-167-217-200.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -18,7 +18,7 @@ class ApiService {
   };
 
   String getBaseUrl() {
-    return 'https://4634-114-10-83-46.ngrok-free.app'; // Replace with your actual base URL
+    return 'https://e585-103-167-217-200.ngrok-free.app'; // Replace with your actual base URL
   }
 
   // ==================== NIK VERIFICATION ====================
