@@ -10,6 +10,7 @@ use App\Models\surat_tidak_mampu; // Contoh jenis surat khusus
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
+use Illuminate\Support\Facades\DB; // Tambahkan jika belum ada
 
 class PengajuanSuratController extends Controller
 {
@@ -116,6 +117,19 @@ class PengajuanSuratController extends Controller
         $pengajuan->save();
 
         return back()->with('success', 'Pengajuan telah ditolak');
+    }
+
+    // Menampilkan daftar pengajuan surat
+    public function index()
+    {
+        $pengajuanSurat = pengajuan_surat::with([
+                'resident:id,name', // Only select id and name from resident
+                'template:id,nama'  // Only select id and nama from template
+            ])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.surat.index', compact('pengajuanSurat'));
     }
 
     // Generate nomor surat

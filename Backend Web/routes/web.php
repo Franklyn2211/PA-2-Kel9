@@ -151,6 +151,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/surat', function () {
         return view('admin.surat.index');
     })->name('admin.surat.index');
+    Route::get('/admin/surat', [PengajuanSuratController::class, 'index'])->name('admin.surat.index');
 
     // Staff
     Route::get('/staff', [StaffController::class, 'index'])->name('admin.staff.index');
