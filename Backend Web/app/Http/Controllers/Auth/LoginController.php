@@ -60,4 +60,42 @@ class LoginController extends Controller
         // Redirect ke halaman login atau home
         return redirect('/login');
     }
+
+    /**
+     * Show the edit profile form.
+     */
+    public function editProfile()
+    {
+        return view('admin.edit'); // Pastikan view ini sudah ada
+    }
+
+    /**
+     * Update the admin profile.
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validate input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        // Update name and email
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+
+        // Update password if provided
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->input('password'));
+        }
+
+        // Save changes
+        $user->save();
+
+        // Redirect back with success message
+        return redirect()->route('admin.profil')->with('success', 'Profile updated successfully.');
+    }
 }

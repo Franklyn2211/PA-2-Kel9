@@ -10,7 +10,7 @@ class Penduduk extends Authenticatable
 {
     use HasApiTokens, HasFactory; // Tambahkan HasApiTokens
 
-    protected $table = 'penduduk';
+    protected $table = 'resident';
 
     protected $fillable = [
         'nik',

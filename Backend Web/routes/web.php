@@ -101,6 +101,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::put('/berita/{news}', [NewsController::class, 'update'])->name('admin.berita.update');
     Route::delete('/berita/{news}', [NewsController::class, 'destroy'])->name('admin.berita.destroy');
 
+    // Profil
+    Route::get('/profil', function () {
+        return view('admin.profil');
+    })->name('admin.profil');
+    Route::put('/profil', [LoginController::class, 'updateProfile'])->name('admin.profil.update');
+    Route::get('/profil/edit', [LoginController::class, 'editProfile'])->name('admin.profil.edit');
+
     // Pengumuman
     Route::get('/pengumuman', [AnnouncementController::class, 'index'])->name('admin.pengumuman.index');
     Route::get('/pengumuman/create', [AnnouncementController::class, 'create'])->name('admin.pengumuman.create');
@@ -123,7 +130,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/pengajuan/{id}', [SuratController::class, 'detailPengajuan']);
     Route::post('/pengajuan/approve/{id}', [PengajuanSuratController::class, 'approve']);
     Route::post('/pengajuan/reject/{id}', [PengajuanSuratController::class, 'reject']);
-    
+
     // Routes untuk manajemen template
     Route::resource('templates', SuratTemplateController::class);
 });

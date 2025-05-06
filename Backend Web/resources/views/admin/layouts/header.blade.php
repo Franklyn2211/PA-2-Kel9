@@ -19,11 +19,8 @@
                 </div>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="#">
+                <li><a class="dropdown-item" href="{{ route('admin.profil') }}">
                     <i class="fas fa-user"></i> Profil
-                </a></li>
-                <li><a class="dropdown-item" href="#">
-                    <i class="fas fa-cog"></i> Pengaturan
                 </a></li>
                 <li><hr class="dropdown-divider"></li>
             <li>
