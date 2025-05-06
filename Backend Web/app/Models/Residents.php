@@ -19,7 +19,16 @@ class Residents extends Model
         'birth_date',
         'religion',
         'family_card_number',
+        'user_id',
     ];
+    protected static function booted()
+    {
+        static::creating(function ($resident) {
+            if (is_null($resident->user_id)) {
+                $resident->user_id = 1; // Default value
+            }
+        });
+    }
 
     protected $casts = [
         'birth_date' => 'date:Y-m-d',

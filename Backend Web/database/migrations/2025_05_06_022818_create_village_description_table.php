@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->text('history');
             $table->text('visi');
             $table->text('misi');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
