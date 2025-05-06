@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('resident_id');
             $table->unsignedBigInteger('template_id');
-            $table->string('nomor_surat')->nullable();
+            $table->string('nomor_surat')->default('N/A'); // Updated to have a default value
             $table->enum('status', ['draft', 'diajukan', 'diproses', 'disetujui', 'ditolak'])->default('draft');
             $table->text('catatan_admin')->nullable();
             $table->text('feedback')->nullable();
