@@ -24,7 +24,7 @@ class SuratBelumMenikahController extends Controller
 
         try {
             // Cari template surat belum menikah
-            $template = surat_templates::where('jenis_surat', 'surat_belum_menikah')->first();
+            $template = surat_templates::where('jenis_surat', 'surat belum menikah')->first();
             
             if (!$template) {
                 throw new \Exception("Template surat belum menikah belum tersedia");

@@ -16,7 +16,7 @@ class CreateSuratDomisiliTable extends Migration
             $table->id();
             $table->unsignedBigInteger('pengajuan_id');
             $table->string('keperluan');
-            $table->binary('data_tambahan')->nullable();
+            $table->json('data_tambahan')->nullable(); // Ubah dari binary ke json
             $table->timestamps();
 
             $table->foreign('pengajuan_id')->references('id')->on('pengajuan')->onDelete('cascade');

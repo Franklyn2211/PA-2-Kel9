@@ -14,6 +14,7 @@ class surat_domisili extends Model
     protected $fillable = [
         'pengajuan_id',
         'keperluan',
+        'data_tambahan', // Tambahkan ini
     ];
 
 
