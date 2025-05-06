@@ -14,10 +14,7 @@ class pengajuan_surat extends Model
     protected $fillable = [
         'resident_id',
         'template_id',
-        'nomor_surat',
         'status',
-        'catatan_admin',
-        'feedback',
         'tanggal_diselesaikan'
     ];
 

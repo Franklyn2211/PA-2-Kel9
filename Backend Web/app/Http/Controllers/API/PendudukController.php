@@ -13,7 +13,7 @@ class PendudukController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nik' => 'required|string|size:16|unique:penduduk',
+            'nik' => 'required|string|size:16|unique:resident',
             'password' => 'required|string|min:6',
             'name' => 'required|string|max:255',
         ]);
@@ -25,19 +25,19 @@ class PendudukController extends Controller
             ], 422);
         }
         
-        $penduduk = Penduduk::create([
+        $resident = Penduduk::create([
             'nik' => $request->nik,
             'name' => $request->name,
             'password' => Hash::make($request->password),
         ]);
         
-        $token = $penduduk->createToken('auth_token')->plainTextToken;
+        $token = $resident->createToken('auth_token')->plainTextToken;
         
         return response()->json([
             'success' => true,
             'message' => 'Registrasi berhasil',
             'data' => [
-                'user' => $penduduk,
+                'user' => $resident,
                 'access_token' => $token,
                 'token_type' => 'Bearer'
             ]

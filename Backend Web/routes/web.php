@@ -7,11 +7,12 @@ use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ProfilDesaController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\SuratController;
+use App\Http\Controllers\SuratTemplateController;
 use App\Http\Controllers\UMKM\ProductController;
 use App\Http\Controllers\Admin\ResidentsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\UMKMController;
-use App\Http\Controllers\Auth\PengajuanSuratController;
+use App\Http\Controllers\PengajuanSuratController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -109,25 +110,21 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::put('/pengumuman/{announcements}', [AnnouncementController::class, 'update'])->name('admin.pengumuman.update');
     Route::delete('/pengumuman/{announcements}', [AnnouncementController::class, 'destroy'])->name('admin.pengumuman.destroy');
 
-    // Routes untuk warga
-Route::middleware(['auth'])->group(function () {
-    Route::get('/pengajuan/{jenis}', [PengajuanSuratController::class, 'create']);
-    Route::post('/pengajuan', [PengajuanSuratController::class, 'store']);
-    Route::get('/pengajuan/detail/{id}', [PengajuanSuratController::class, 'show']);
-});
+    Route::get('/template', [SuratTemplateController::class, 'index'])->name('admin.templates.index');
+    Route::get('/template/create', [SuratTemplateController::class, 'create'])->name('admin.templates.create');
+    Route::post('/template', [SuratTemplateController::class, 'store'])->name('admin.templates.store');
+    Route::get('/template/{announcements}/edit', [SuratTemplateController::class, 'edit'])->name('admin.templates.edit');
+    Route::put('/template/{announcements}', [SuratTemplateController::class, 'update'])->name('admin.templates.update');
+    Route::delete('/template/{announcements}', [SuratTemplateController::class, 'destroy'])->name('admin.templates.destroy');
 
-// Routes untuk admin
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [SuratController::class, 'dashboard']);
-    Route::get('/pengajuan', [SuratController::class, 'pengajuan']);
-    Route::get('/pengajuan/{id}', [SuratController::class, 'detailPengajuan']);
-    Route::post('/pengajuan/approve/{id}', [PengajuanSuratController::class, 'approve']);
-    Route::post('/pengajuan/reject/{id}', [PengajuanSuratController::class, 'reject']);
+    Route::get('/dashboard', [SuratController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/pengajuan', [SuratController::class, 'pengajuan'])->name('admin.pengajuan.index');
+    Route::get('/pengajuan/{id}', [SuratController::class, 'detailPengajuan'])->name('admin.pengajuan.show');
+    Route::post('/pengajuan/approve/{id}', [PengajuanSuratController::class, 'approve'])->name('admin.pengajuan.approve');
+    Route::post('/pengajuan/reject/{id}', [PengajuanSuratController::class, 'reject'])->name('admin.pengajuan.reject');
     
     // Routes untuk manajemen template
     Route::resource('templates', SuratTemplateController::class);
-});
-
     // UMKM
     Route::get('/umkm', [\App\Http\Controllers\Admin\UmkmController::class, 'index'])->name('admin.umkm.index');
     Route::patch('/umkm/{id}/status', [\App\Http\Controllers\Admin\UmkmController::class, 'updateStatus'])->name('admin.umkm.updateStatus');
@@ -142,9 +139,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     // Surat Menyurat
     Route::get('/surat', function () {
-        return view('admin.surat.index');
-    })->name('admin.surat.index');
-    Route::get('/admin/surat', [PengajuanSuratController::class, 'index'])->name('admin.surat.index');
+        return view('admin.pengajuan.index');
+    })->name('admin.pengajuan.index');
+    Route::get('/admin/pengajuan', [SuratController::class, 'index'])->name('admin.pengajuan.index');
 
     // Staff
     Route::get('/staff', [StaffController::class, 'index'])->name('admin.staff.index');

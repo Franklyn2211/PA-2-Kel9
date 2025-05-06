@@ -3,7 +3,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSuratDomisiliTable extends Migration
+class CreateSuratBelumMenikahTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateSuratDomisiliTable extends Migration
      */
     public function up()
     {
-        Schema::create('surat_domisili', function (Blueprint $table) {
+        Schema::create('surat_belum_menikah', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('pengajuan_id');
             $table->string('keperluan');
@@ -30,6 +30,6 @@ class CreateSuratDomisiliTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('surat_domisili');
+        Schema::dropIfExists('surat_belum_menikah');
     }
 }

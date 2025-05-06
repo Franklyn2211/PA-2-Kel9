@@ -75,7 +75,12 @@ class PengajuanSuratController extends Controller
     public function show($id)
     {
         $pengajuan = pengajuan_surat::with(['resident', 'template'])->findOrFail($id);
-        
+
+        // Debugging untuk memastikan data pengajuan
+        if (!$pengajuan) {
+            abort(404, 'Pengajuan tidak ditemukan'); // Ganti dd dengan abort
+        }
+
         // Ambil data khusus berdasarkan jenis surat
         $detailPengajuan = null;
         switch ($pengajuan->template->jenis_surat) {
@@ -86,7 +91,12 @@ class PengajuanSuratController extends Controller
             // Tambahkan case untuk jenis surat lainnya
         }
 
-        return view('pengajuan.show', compact('pengajuan', 'detailPengajuan'));
+        // Debugging untuk memastikan data detail pengajuan
+        if (!$detailPengajuan) {
+            abort(404, 'Detail pengajuan tidak ditemukan'); // Ganti dd dengan abort
+        }
+
+        return view('admin.surat.index', compact('pengajuan', 'detailPengajuan'));
     }
 
     // Approve pengajuan oleh admin
@@ -118,20 +128,6 @@ class PengajuanSuratController extends Controller
 
         return back()->with('success', 'Pengajuan telah ditolak');
     }
-
-    // Menampilkan daftar pengajuan surat
-    public function index()
-    {
-        $pengajuanSurat = pengajuan_surat::with([
-                'resident:id,name', // Only select id and name from resident
-                'template:id,nama'  // Only select id and nama from template
-            ])
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return view('admin.surat.index', compact('pengajuanSurat'));
-    }
-
     // Generate nomor surat
     private function generateNomorSurat($pengajuan)
     {

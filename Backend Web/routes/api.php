@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\SuratDomisiliController;
+use App\Http\Controllers\Api\SuratBelumMenikahController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthController;
@@ -22,3 +23,4 @@ Route::post('/register', [PendudukController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/orders', [OrderController::class, 'store']);
 Route::post('/pengajuan/surat-domisili', [SuratDomisiliController::class, 'store']);
+Route::post('/pengajuan/belum-menikah', [SuratBelumMenikahController::class, 'store']);

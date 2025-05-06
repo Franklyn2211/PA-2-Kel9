@@ -48,7 +48,7 @@
                 </a>
             </li>
             <li class="nav-item {{ request()->is('admin/surat*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/surat">
+                <a class="nav-link" href="/admin/pengajuan">
                     <i class="fas fa-file-alt"></i>
                     <span class="nav-text">Surat Menyurat</span>
                 </a>

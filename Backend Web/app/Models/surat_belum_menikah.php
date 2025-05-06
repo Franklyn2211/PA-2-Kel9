@@ -5,25 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class surat_tidak_mampu extends Model
+class surat_belum_menikah extends Model
 {
     use HasFactory;
 
-    protected $table = 'surat_tidak_mampu';
+    protected $table = 'surat_belum_menikah';
 
     protected $fillable = [
         'pengajuan_id',
-        'alasan_pengajuan',
-        'nomor_telepon',
-        'alamat_sekarang',
-        'data_tambahan'
+        'keperluan',
+        'data_tambahan',
     ];
 
-    protected $casts = [
-        'data_tambahan' => 'array'
-    ];
-
-    // Relasi ke pengajuan surat
     public function pengajuan()
     {
         return $this->belongsTo(pengajuan_surat::class, 'pengajuan_id');

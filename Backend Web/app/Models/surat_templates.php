@@ -15,13 +15,7 @@ class surat_templates extends Model
         'jenis_surat',
         'nama_surat',
         'template_path',
-        'placeholder_fields'
     ];
-
-    protected $casts = [
-        'placeholder_fields' => 'array'
-    ];
-
     // Relasi ke pengajuan surat
     public function pengajuanSurat()
     {

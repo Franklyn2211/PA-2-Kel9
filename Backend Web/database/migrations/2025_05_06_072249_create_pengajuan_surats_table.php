@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,10 +14,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('resident_id');
             $table->unsignedBigInteger('template_id');
-            $table->string('nomor_surat')->default('N/A'); // Updated to have a default value
+            $table->string('jenis_surat'); // Add this field to store the type of letter
             $table->enum('status', ['draft', 'diajukan', 'diproses', 'disetujui', 'ditolak'])->default('draft');
-            $table->text('catatan_admin')->nullable();
-            $table->text('feedback')->nullable();
             $table->dateTime('tanggal_pengajuan')->useCurrent();
             $table->dateTime('tanggal_diselesaikan')->nullable();
             $table->timestamps();

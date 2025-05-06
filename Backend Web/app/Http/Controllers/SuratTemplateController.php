@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\surat_templates;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SuratTemplateController extends Controller
 {
@@ -36,7 +37,6 @@ class SuratTemplateController extends Controller
             'jenis_surat' => $request->jenis_surat,
             'nama_surat' => $request->nama_surat,
             'template_path' => $path,
-            'placeholder_fields' => json_encode($request->fields)
         ]);
 
         return redirect()->route('templates.index')
@@ -57,7 +57,6 @@ class SuratTemplateController extends Controller
         
         $data = [
             'nama_surat' => $request->nama_surat,
-            'placeholder_fields' => json_encode($request->fields)
         ];
 
         if ($request->hasFile('template')) {
@@ -72,5 +71,20 @@ class SuratTemplateController extends Controller
 
         return redirect()->route('templates.index')
             ->with('success', 'Template berhasil diperbarui');
+    }
+    
+    // Delete template
+    public function destroy($id)
+    {
+        $template = surat_templates::findOrFail($id);
+
+        // Hapus file template
+        Storage::delete($template->template_path);
+
+        // Hapus data dari database
+        $template->delete();
+
+        return redirect()->route('templates.index')
+            ->with('success', 'Template berhasil dihapus');
     }
 }

@@ -104,15 +104,24 @@ class _FormSuratPageState extends State<FormSuratPage> {
       final apiService = ApiService();
       final baseUrl = apiService.getBaseUrl();
 
+      // Tentukan endpoint berdasarkan jenis surat
+      final endpoint = {
+        'Surat Keterangan Belum Pernah Menikah': 'api/pengajuan/belum-menikah',
+        'Surat Keterangan Domisili': 'api/pengajuan/surat-domisili',
+        'Surat Keterangan Usaha': 'api/pengajuan/surat-usaha',
+        // Tambahkan jenis surat lainnya di sini
+      }[widget.jenisSurat] ?? 'api/surat-umum';
+
       // Data yang akan dikirim ke backend
       final requestData = {
         'resident_id': widget.pendudukId.toString(),
+        'jenis_surat': widget.jenisSurat,
         'keperluan': _tujuanController.text,
         'nomor_telepon': _telpController.text,
       };
 
       final response = await http.post(
-        Uri.parse('$baseUrl/api/pengajuan/surat-domisili'),
+        Uri.parse('$baseUrl/$endpoint'), // Gunakan endpoint dinamis
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -138,7 +147,7 @@ class _FormSuratPageState extends State<FormSuratPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: ${e.toString()}'), // Pastikan alasan gagal ditampilkan
+          content: Text('Error: ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );
