@@ -79,12 +79,6 @@
                     <span class="nav-text">Profil Desa</span>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('admin/settings*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/settings">
-                    <i class="fas fa-sliders-h"></i>
-                    <span class="nav-text">Pengaturan</span>
-                </a>
-            </li>
         </ul>
     </div>
 </aside>

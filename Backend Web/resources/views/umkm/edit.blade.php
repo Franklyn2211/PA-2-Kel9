@@ -43,7 +43,7 @@
                             <button type="submit" class="btn btn-soft-primary">
                                 <i class="fas fa-save"></i> Simpan Perubahan
                             </button>
-                            <a href="{{ route('umkm.profil') }}" class="btn btn-danger">
+                            <a href="{{ route('umkm.profil') }}" class="btn btn-soft-secondary me-2">
                                 <i class="fas fa-times"></i> Batal
                             </a>
                         </div>
