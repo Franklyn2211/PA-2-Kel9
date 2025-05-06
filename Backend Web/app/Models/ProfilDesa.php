@@ -15,5 +15,14 @@ class ProfilDesa extends Model
         'history',
         'visi',
         'misi',
+        'user_id',
     ];
+    protected static function booted()
+    {
+        static::creating(function ($profilDesa) {
+            if (is_null($profilDesa->user_id)) {
+                $profilDesa->user_id = 1; // Default value
+            }
+        });
+    }
 }

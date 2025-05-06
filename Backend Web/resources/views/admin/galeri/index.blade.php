@@ -13,7 +13,7 @@
                     <h6 class="mb-0">@yield('page-title')</h6>
                     <a href="{{route('admin.galeri.create')}}">
                     <button class="btn btn-sm btn-soft-primary">
-                        <i class="fas fa-plus me-1"></i> Tambah Galeri
+                        <i class="fas fa-plus me-1"></i> Tambah Gambar
                     </button>
                 </a>
                 </div>

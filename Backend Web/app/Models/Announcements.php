@@ -12,6 +12,14 @@ class Announcements extends Model
     protected $table = 'announcements';
 
     protected $fillable = [
-        'title', 'description',
+        'title', 'description', 'user_id',
     ];
+    protected static function booted()
+    {
+        static::creating(function ($announcement) {
+            if (is_null($announcement->user_id)) {
+                $announcement->user_id = 1; // Default value
+            }
+        });
+    }
 }

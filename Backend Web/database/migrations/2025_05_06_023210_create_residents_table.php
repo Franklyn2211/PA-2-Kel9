@@ -8,14 +8,18 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('penduduk', function (Blueprint $table) {
+        Schema::create('residents', function (Blueprint $table) {
             $table->id();
             $table->string('nik', 16)->unique();
             $table->string('name');
-            $table->string('password');
-            $table->rememberToken();
+            $table->enum('gender', ['Male', 'Female']);
+            $table->text('address');
+            $table->date('birth_date');
+            $table->string('religion', 50);
+            $table->string('family_card_number', 16);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('penduduk');
+        Schema::dropIfExists('residents');
     }
 };

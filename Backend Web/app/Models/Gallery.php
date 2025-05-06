@@ -15,5 +15,14 @@ class Gallery extends Model
         'title',
         'photo',
         'date_taken',
+        'user_id',
     ];
+    protected static function booted()
+    {
+        static::creating(function ($gallery) {
+            if (is_null($gallery->user_id)) {
+                $gallery->user_id = 1; // Default value
+            }
+        });
+    }
 }

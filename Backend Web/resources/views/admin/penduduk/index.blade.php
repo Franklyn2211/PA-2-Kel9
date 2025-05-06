@@ -52,7 +52,7 @@
                                     <td>{{ $penduduk->name }}</td>
                                     <td>{{ $penduduk->gender_label }}</td>
                                     <td>{{ $penduduk->address }}</td>
-                                    <td>{{ $penduduk->birth_date }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($penduduk->birth_date)->format('d-m-Y') }}</td>
                                     <td>{{ $penduduk->religion }}</td>
                                     <td>{{ $penduduk->family_card_number }}</td>
                                     <td>

@@ -17,7 +17,16 @@ class UMKM extends Authenticatable
         'phone',
         'qris_image',
         'status',
+        'user_id',
     ];
+    protected static function booted()
+    {
+        static::creating(function ($umkm) {
+            if (is_null($umkm->user_id)) {
+                $umkm->user_id = 1; // Default value
+            }
+        });
+    }
 
     protected $hidden = [
         'password',
@@ -38,11 +47,11 @@ class UMKM extends Authenticatable
     public function getQrisUrlAttribute()
     {
         if (!$this->qris_image) return null;
-        
+
         if (filter_var($this->qris_image, FILTER_VALIDATE_URL)) {
             return $this->qris_image;
         }
-        
+
         return asset('storage/'.$this->qris_image);
     }
 }

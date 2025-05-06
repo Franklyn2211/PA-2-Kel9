@@ -18,5 +18,14 @@ class Staff extends Model
         'email',
         'phone',
         'npsn_active',
+        'user_id',
     ];
+    protected static function booted()
+    {
+        static::creating(function ($staff) {
+            if (is_null($staff->user_id)) {
+                $staff->user_id = 1; // Default value
+            }
+        });
+    }
 }

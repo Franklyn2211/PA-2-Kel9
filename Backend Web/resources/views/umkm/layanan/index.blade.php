@@ -11,6 +11,11 @@
             <div class="card animate-on-scroll fadeIn">
                 <div class="card-header">
                     <h6 class="mb-0">Daftar Produk</h6>
+                    <a href="{{route('umkm.products.create')}}">
+                        <button class="btn btn-sm btn-soft-primary">
+                            <i class="fas fa-plus me-1"></i> Tambah Produk
+                        </button>
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive mt-4">

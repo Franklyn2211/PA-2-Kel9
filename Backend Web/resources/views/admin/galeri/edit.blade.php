@@ -1,8 +1,8 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit Galeri - Admin Desa Digital')
+@section('title', 'Edit Gambar - Admin Desa Digital')
 
-@section('page-title', 'Edit Galeri')
+@section('page-title', 'Edit Gambar')
 
 @section('content')
 
@@ -32,6 +32,10 @@
                                 </div>
                             @endif
                             <input type="file" name="photo" id="photo" class="form-control" accept="image/*">
+                            <small class="text-muted">Gambar harus berformat JPG, PNG, atau JPEG dan maksimal 5MB.</small>
+                            @error('photo')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
 

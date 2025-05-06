@@ -10,15 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('residents', function (Blueprint $table) {
+        Schema::create('announcements', function (Blueprint $table) {
             $table->id();
-            $table->string('nik', 16)->unique();
-            $table->string('name');
-            $table->enum('gender', ['Male', 'Female']);
-            $table->text('address');
-            $table->date('birth_date');
-            $table->string('religion', 50);
-            $table->string('family_card_number', 16);
+            $table->string('title');
+            $table->text('description');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('residents');
+        Schema::dropIfExists('announcements');
     }
 };

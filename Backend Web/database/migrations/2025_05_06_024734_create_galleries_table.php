@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('surat_domisili', function (Blueprint $table) {
+        Schema::create('galleries', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('pengajuan_id');
-            $table->text('keperluan');
-            $table->text('data_tambahan')->nullable();
+            $table->string('title');
+            $table->string('photo',);
+            $table->date('date_taken')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
-            
-            $table->foreign('pengajuan_id')->references('id')->on('pengajuan_surat')->onDelete('cascade');
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('surat_domisili');
+        Schema::dropIfExists('galleries');
     }
 };

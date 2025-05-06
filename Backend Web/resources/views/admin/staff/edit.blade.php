@@ -57,6 +57,10 @@
                                 </div>
                             @endif
                             <input type="file" name="photo" id="photo" class="form-control" accept="image/*">
+                            <small class="text-muted">Gambar harus berformat JPG, PNG, atau JPEG dan maksimal 5MB.</small>
+                            @error('photo')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
                         </div>
                         <!-- Tombol Submit -->
                         <button type="submit" class="btn btn-soft-primary">Simpan Perubahan</button>
