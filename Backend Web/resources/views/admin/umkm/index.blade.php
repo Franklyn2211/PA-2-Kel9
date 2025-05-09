@@ -48,7 +48,7 @@
                                             <form action="{{ route('admin.umkm.updateStatus', $umkm->id) }}" method="post">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="btn btn-sm {{ $umkm->status ? 'btn-danger' : 'btn-success' }}">
+                                                <button type="submit" class="btn btn-sm {{ $umkm->status ? 'btn-danger' : 'btn-soft-primary' }}">
                                                     {{ $umkm->status ? 'Tolak' : 'Setujui' }}
                                                 </button>
                                             </form>

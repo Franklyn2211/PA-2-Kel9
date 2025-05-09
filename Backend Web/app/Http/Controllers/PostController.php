@@ -7,9 +7,9 @@ use App\Http\Resources\PendudukResource;
 use App\Models\Announcements;
 use App\Models\Gallery;
 use App\Models\News;
-use App\Models\Penduduk;
 use App\Models\Product;
 use App\Models\ProfilDesa;
+use App\Models\Resident;
 use App\Models\Residents;
 use App\Models\Staff;
 use App\Models\Umkm;
@@ -36,9 +36,9 @@ class PostController extends Controller
     }
     public function getPenduduk()
     {
-        $penduduk = Penduduk::all();
+        $penduduk = Resident::all();
         return Pendudukresource::collection($penduduk);
-    }   
+    }
 
     public function getAnnouncements()
     {

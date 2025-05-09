@@ -124,23 +124,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::put('/template/{announcements}', [SuratTemplateController::class, 'update'])->name('admin.templates.update');
     Route::delete('/template/{announcements}', [SuratTemplateController::class, 'destroy'])->name('admin.templates.destroy');
 
-<<<<<<< HEAD
     Route::get('/dashboard', [SuratController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/pengajuan', [SuratController::class, 'pengajuan'])->name('admin.pengajuan.index');
     Route::get('/pengajuan/{id}', [SuratController::class, 'detailPengajuan'])->name('admin.pengajuan.show');
     Route::post('/pengajuan/approve/{id}', [PengajuanSuratController::class, 'approve'])->name('admin.pengajuan.approve');
     Route::post('/pengajuan/reject/{id}', [PengajuanSuratController::class, 'reject'])->name('admin.pengajuan.reject');
-    
-=======
-// Routes untuk admin
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [SuratController::class, 'dashboard']);
-    Route::get('/pengajuan', [SuratController::class, 'pengajuan']);
-    Route::get('/pengajuan/{id}', [SuratController::class, 'detailPengajuan']);
-    Route::post('/pengajuan/approve/{id}', [PengajuanSuratController::class, 'approve']);
-    Route::post('/pengajuan/reject/{id}', [PengajuanSuratController::class, 'reject']);
 
->>>>>>> d4a5a657749a8878a7ca7675debc09c6f7e129e3
     // Routes untuk manajemen template
     Route::resource('templates', SuratTemplateController::class);
     // UMKM

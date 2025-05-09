@@ -25,11 +25,12 @@
                     <span class="nav-text">Daftar Produk</span>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('umkm/orders*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{route('umkm.order.index')}}">
+            <li class="nav-item {{ request()->is('umkm/order*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('umkm.order.index') }}">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="nav-text">Daftar Pesanan</span>
                 </a>
+            </li>
         </ul>
     </div>
 </aside>

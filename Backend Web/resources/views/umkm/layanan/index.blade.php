@@ -28,7 +28,6 @@
                                     <th>Deskripsi</th>
                                     <th>Harga</th>
                                     <th>Stok</th>
-                                    <th>Nomor HP</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -47,7 +46,6 @@
                                     <td>{!! $product->description !!}</td>
                                     <td>Rp{{ number_format($product->price, 2, ',', '.') }}</td>
                                     <td>{{ $product->stock }}</td>
-                                    <td>{{ auth()->user()->phone }}</td>
                                     <td>
                                         <a href="{{ route('umkm.products.edit', $product->id) }}" class="btn btn-sm btn-soft-primary">
                                             <i class="fas fa-edit"></i>

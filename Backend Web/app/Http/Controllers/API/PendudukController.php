@@ -2,13 +2,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Penduduk;
+use App\Models\Resident;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class PendudukController extends Controller
-{    
+{
     // Register
     public function register(Request $request)
     {
@@ -24,15 +24,15 @@ class PendudukController extends Controller
                 'message' => $validator->errors()->first(),
             ], 422);
         }
-        
-        $resident = Penduduk::create([
+
+        $resident = Resident::create([
             'nik' => $request->nik,
             'name' => $request->name,
             'password' => Hash::make($request->password),
         ]);
-        
+
         $token = $resident->createToken('auth_token')->plainTextToken;
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Registrasi berhasil',

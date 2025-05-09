@@ -14,6 +14,7 @@ class HalamanDetailProduk extends StatelessWidget {
   final String phoneNumber;
   final String? description;
   final String qrisImage; // URL gambar QRIS dari API
+  final int stock; // Tambahkan properti stok
 
   const HalamanDetailProduk({
     Key? key,
@@ -25,6 +26,7 @@ class HalamanDetailProduk extends StatelessWidget {
     required this.phoneNumber,
     this.description,
     required this.qrisImage,
+    required this.stock, // Tambahkan parameter stok
   }) : super(key: key);
 
   // Fungsi untuk membuka WhatsApp (tidak diubah)
@@ -329,6 +331,21 @@ class HalamanDetailProduk extends StatelessWidget {
                               ],
                             ),
 
+                            // Tambahkan tampilan stok
+                            Row(
+                              children: [
+                                Icon(Icons.inventory, color: Colors.grey[600], size: 20),
+                                SizedBox(width: 8),
+                                Text(
+                                  "Stok: $stock",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                              ],
+                            ),
+
                             Divider(height: 30),
 
                             // Deskripsi produk (jika ada)
@@ -343,7 +360,7 @@ class HalamanDetailProduk extends StatelessWidget {
                               ),
                               SizedBox(height: 10),
                               Text(
-                                description!,
+                                description!.replaceAll(RegExp(r'<\/?p>'), ''), // Hilangkan tag <p>
                                 style: TextStyle(
                                   fontSize: 16,
                                   height: 1.5,

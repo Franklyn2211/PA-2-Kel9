@@ -46,7 +46,6 @@ class _HomePageState extends State<HomePage> {
     _pages.add(buildHomeContent()); // Home content (implemented as a method)
     _pages.add(BeritaPage()); // Berita page
     _pages.add(PeringatanLogin()); // Berita page
-
   }
 
   // Method to build the home content
@@ -495,8 +494,7 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -822,6 +820,7 @@ class _HomePageState extends State<HomePage> {
                 phoneNumber: product.phone,
                 description: product.description,
                 qrisImage: qrisUrl,
+                stock: product.stock, // Tambahkan parameter stok
               ),
             ),
           );

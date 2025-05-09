@@ -24,7 +24,7 @@ class Product extends Model
 
     public function umkm()
     {
-        return $this->belongsTo(Umkm::class, 'umkm_id');
+        return $this->belongsTo(UMKM::class);
     }
 
     public function getPhotoUrlAttribute()

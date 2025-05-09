@@ -1,11 +1,11 @@
 import 'package:aplikasi_desa/auth/auth_provider.dart';
 import 'package:aplikasi_desa/pages/login_screen.dart';
-import 'package:aplikasi_desa/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'package:provider/provider.dart';
+import 'package:aplikasi_desa/services/api_service.dart';
 
 class PaymentProofScreen extends StatefulWidget {
   final int productId;
@@ -31,7 +31,6 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
   @override
   void initState() {
     super.initState();
-    // Debug info
     debugPrint('PaymentProofScreen initialized with:');
     debugPrint('productId: ${widget.productId}');
     debugPrint('pendudukId: ${widget.pendudukId}');
@@ -44,6 +43,8 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
     setState(() {
       if (pickedFile != null) {
         _imageFile = File(pickedFile.path);
+      } else {
+        debugPrint('No image selected.');
       }
     });
   }
@@ -79,100 +80,106 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
   }
 
   void _submitPaymentProof() async {
-    if (_formKey.currentState!.validate()) {
-      if (_imageFile == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Mohon unggah bukti pembayaran')),
-        );
-        return;
-      }
+    if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
+      debugPrint('Form validation failed or form state is null.');
+      return;
+    }
 
-      // Debug info
-      debugPrint('Submitting payment proof');
-      debugPrint('Product ID: ${widget.productId}');
-      debugPrint('Penduduk ID from widget: ${widget.pendudukId}');
+    if (_imageFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Mohon unggah bukti pembayaran')),
+      );
+      debugPrint('Image file is null.');
+      return;
+    }
 
-      // Coba ambil pendudukId dari provider jika tidak ada di widget
-      final int? actualPendudukId = widget.pendudukId ??
-          Provider.of<AuthProvider>(context, listen: false).pendudukId;
+    debugPrint('Submitting payment proof');
+    debugPrint('Product ID: ${widget.productId}');
+    debugPrint('Penduduk ID from widget: ${widget.pendudukId}');
 
-      debugPrint('Actual Penduduk ID: $actualPendudukId');
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    debugPrint('AuthProvider pendudukId before load: ${authProvider.pendudukId}');
 
-      // Validasi pendudukId
-      if (actualPendudukId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content:
-                  Text('Data pengguna tidak ditemukan, silakan login kembali')),
-        );
+    if (authProvider.pendudukId == null) {
+      final loaded = await authProvider.loadUser();
+      debugPrint('User loaded status: $loaded');
+      debugPrint('AuthProvider pendudukId after load: ${authProvider.pendudukId}');
+    }
 
-        // Arahkan ke login screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => LoginScreen(
-              productId: widget.productId,
-              redirectTo: 'pembayaran',
-            ),
+    final int? actualPendudukId = widget.pendudukId ?? authProvider.pendudukId;
+
+    debugPrint('Actual Penduduk ID: $actualPendudukId');
+
+    if (actualPendudukId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Data pengguna tidak ditemukan, silakan login kembali')),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(
+            productId: widget.productId,
+            redirectTo: 'pembayaran',
           ),
-        );
-        return;
-      }
+        ),
+      );
+      debugPrint('Penduduk ID is null, redirecting to login.');
+      return;
+    }
 
-      setState(() {
-        _isLoading = true;
-      });
+    setState(() {
+      _isLoading = true;
+    });
 
-      try {
-        // Menggunakan productId dan pendudukId dari widget
-        final response = await ApiService.createOrder(
-          pendudukId: widget.pendudukId!,
-          productId: widget.productId,
-          amount: _amountController.text,
-          note: _noteController.text,
-          buktiTransfer: _imageFile!,
-        );
+    try {
+      final response = await ApiService.createOrder(
+        pendudukId: actualPendudukId,
+        productId: widget.productId,
+        amount: _amountController.text,
+        note: _noteController.text,
+        buktiTransfer: _imageFile!,
+      );
 
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
 
-          if (response['success']) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text('Bukti pembayaran berhasil diunggah')),
-            );
-
-            // Reset form
-            _formKey.currentState!.reset();
-            _amountController.clear();
-            _noteController.clear();
-            setState(() {
-              _imageFile = null;
-            });
-
-            // Navigasi ke halaman sukses atau kembali
-            Navigator.pop(context,
-                true); // Mengirim status berhasil ke halaman sebelumnya
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(response['message'] ??
-                      'Terjadi kesalahan saat mengunggah')),
-            );
-          }
-        }
-      } catch (e) {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-
+        if (response['success']) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${e.toString()}')),
+            const SnackBar(content: Text('Bukti pembayaran berhasil diunggah')),
           );
+
+          _formKey.currentState?.reset();
+          _amountController.clear();
+          _noteController.clear();
+          setState(() {
+            _imageFile = null;
+          });
+
+          debugPrint('Payment proof submitted successfully, returning to previous page.');
+          Navigator.pop(context); // Simply pop to return to the previous page
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(
+                    response['message'] ?? 'Terjadi kesalahan saat mengunggah')),
+          );
+          debugPrint('API response failed: ${response['message']}');
         }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${e.toString()}')),
+        );
+        debugPrint('Error during API call: $e');
       }
     }
   }
@@ -200,7 +207,6 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Instruksi
                     const Card(
                       color: Colors.blue,
                       child: Padding(
@@ -236,8 +242,6 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
-
-                    // Input catatan (opsional)
                     TextFormField(
                       controller: _noteController,
                       decoration: const InputDecoration(
@@ -248,8 +252,6 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                       maxLines: 2,
                     ),
                     const SizedBox(height: 24),
-
-                    // Area unggah bukti pembayaran
                     GestureDetector(
                       onTap: _showImageSourceSelection,
                       child: Container(
@@ -307,8 +309,6 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-
-                    // Tombol kirim
                     ElevatedButton(
                       onPressed: _submitPaymentProof,
                       style: ElevatedButton.styleFrom(

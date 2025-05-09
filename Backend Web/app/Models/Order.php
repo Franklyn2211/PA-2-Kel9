@@ -26,7 +26,7 @@ class Order extends Model
 
     public function penduduk()
     {
-        return $this->belongsTo(Penduduk::class);
+        return $this->belongsTo(Resident::class);
     }
 
     public function product()

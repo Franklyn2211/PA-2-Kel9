@@ -13,7 +13,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'penduduk_id' => 'required|exists:penduduk,id',
+            'penduduk_id' => 'required|exists:resident,id',
             'product_id' => 'required|exists:products,id',
             'amount' => 'required|numeric',
             'note' => 'nullable|string',

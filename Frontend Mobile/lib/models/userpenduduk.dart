@@ -1,10 +1,10 @@
-class Penduduk {
+class Resident {
   final String nik;
   final String name;
   final String? password;
   final int? id; // Optional karena mungkin tidak ingin menampilkan
 
-  Penduduk({
+  Resident({
     required this.nik,
     required this.name,
     this.password,
@@ -12,11 +12,11 @@ class Penduduk {
   });
    @override
   String toString() {
-    return 'Penduduk{id: $id, nik: $nik, name: $name}';
+    return 'Resident{id: $id, nik: $nik, name: $name}';
   }
 
-  factory Penduduk.fromJson(Map<String, dynamic> json) {
-    return Penduduk(
+  factory Resident.fromJson(Map<String, dynamic> json) {
+    return Resident(
       id: json['id'],
       nik: json['nik'] ?? '',
       name: json['nama'] ?? '',

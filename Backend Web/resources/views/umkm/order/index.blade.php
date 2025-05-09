@@ -45,8 +45,8 @@
                                     </td>
                                     <td>{{ $order->note ?? '-' }}</td>
                                     <td>
-                                        <span class="badge bg-{{ $order->status ? 'success' : 'warning' }}">
-                                            {{ $order->status ? 'Diterima' : 'Pending' }}
+                                        <span class="text-{{ $order->status ? 'success' : 'danger' }}">
+                                            {{ $order->status ? 'Diterima' : 'Belum Diterima' }}
                                         </span>
                                     </td>
                                     <td>
@@ -54,7 +54,7 @@
                                             <form action="{{ route('umkm.order.status', $order->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="btn btn-sm btn-success">
+                                                <button type="submit" class="btn btn-sm btn-soft-primary">
                                                     Terima
                                                 </button>
                                             </form>

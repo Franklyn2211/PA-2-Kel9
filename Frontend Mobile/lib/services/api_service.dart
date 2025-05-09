@@ -10,7 +10,7 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:io';
 
 class ApiService {
-  static const String baseUrl = "https://c0da-103-167-217-200.ngrok-free.app/api";
+  static const String baseUrl = "https://a90c-103-167-217-200.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -18,7 +18,7 @@ class ApiService {
   };
 
   String getBaseUrl() {
-    return 'https://c0da-103-167-217-200.ngrok-free.app'; // Replace with your actual base URL
+    return 'https://a90c-103-167-217-200.ngrok-free.app'; // Replace with your actual base URL
   }
 
   // ==================== NIK VERIFICATION ====================
@@ -26,7 +26,7 @@ class ApiService {
   static Future<PendudukResponse> verifyNik(String nik) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/penduduk?nik=$nik'),
+        Uri.parse('$baseUrl/resident?nik=$nik'),
         headers: headers,
       );
 
@@ -117,7 +117,7 @@ class ApiService {
     }
   }
 
-  static Future<Penduduk> registerPenduduk({
+  static Future<Resident> registerPenduduk({
     required String nik,
     required String name,
     required String password,
@@ -135,11 +135,10 @@ class ApiService {
 
       final responseData = _parseResponse(response);
 
-      // Jika backend mengembalikan token (sesuai solusi sebelumnya)
-      if (responseData.containsKey('penduduk')) {
-        return Penduduk.fromJson(responseData['penduduk']);
+      if (responseData.containsKey('resident')) {
+        return Resident.fromJson(responseData['resident']);
       } else {
-        return Penduduk.fromJson(responseData);
+        return Resident.fromJson(responseData);
       }
     } catch (e) {
       throw Exception('Gagal mendaftar: ${e.toString()}');
@@ -196,12 +195,13 @@ class ApiService {
       request.fields['product_id'] = productId.toString();
       request.fields['amount'] = amount;
       request.fields['note'] = note;
+      request.fields['status'] = 'pending';
 
-      // Tambahkan file bukti transfer
+      // Add file dengan nama field yang sesuai backend
       var file = await http.MultipartFile.fromPath(
-        'bukti_transfer',
+        'bukti_transfer',  // Ubah dari bukti_transfer
         buktiTransfer.path,
-        contentType: MediaType('image', 'jpeg'), // Sesuaikan dengan tipe file
+        contentType: MediaType('image', 'jpeg'),
       );
       request.files.add(file);
 
@@ -210,15 +210,27 @@ class ApiService {
       var responseData = await response.stream.bytesToString();
 
       if (response.statusCode == 201) {
-        return {
-          'success': true,
-          'data': json.decode(responseData),
-        };
+        try {
+          return {
+            'success': true,
+            'data': json.decode(responseData),
+          };
+        } catch (e) {
+          throw Exception('Invalid JSON format in response: $responseData');
+        }
       } else {
-        return {
-          'success': false,
-          'message': json.decode(responseData)['message'] ?? 'Failed to create order',
-        };
+        if (response.headers['content-type']?.contains('text/html') == true) {
+          throw Exception('Unexpected HTML response: $responseData');
+        }
+        try {
+          final errorData = json.decode(responseData);
+          return {
+            'success': false,
+            'message': errorData['message'] ?? 'Validation error',
+          };
+        } catch (e) {
+          throw Exception('Unexpected response: $responseData');
+        }
       }
     } catch (e) {
       return {
@@ -227,28 +239,29 @@ class ApiService {
       };
     }
   }
-  static Future<Map<String, dynamic>> getProductById(int productId) async {
-  try {
-    final response = await http.get(
-      Uri.parse('${baseUrl}/products/$productId'),
-      headers: {
-        'Content-Type': 'application/json',
-        // Tambahkan header authorization jika diperlukan
-      },
-    );
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['success']) {
-        return data['data'];
+  static Future<Map<String, dynamic>> getProductById(int productId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('${baseUrl}/products/$productId'),
+        headers: {
+          'Content-Type': 'application/json',
+          // Tambahkan header authorization jika diperlukan
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success']) {
+          return data['data'];
+        } else {
+          throw Exception(data['message'] ?? 'Gagal mengambil data produk');
+        }
       } else {
-        throw Exception(data['message'] ?? 'Gagal mengambil data produk');
+        throw Exception('Server error: ${response.statusCode}');
       }
-    } else {
-      throw Exception('Server error: ${response.statusCode}');
+    } catch (e) {
+      throw Exception('Gagal terhubung ke server: ${e.toString()}');
     }
-  } catch (e) {
-    throw Exception('Gagal terhubung ke server: ${e.toString()}');
   }
-}
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\PendudukController;
 use App\Http\Controllers\Admin\ResidentsController;
 
 Route::get('/products', [PostController::class, 'getProduct']);
+Route::get('/products/{id}', [PostController::class, 'getProductById']);
 Route::get('/umkm', [PostController::class, 'getUmkm']);
 Route::get('/news', [PostController::class, 'getNews']);
 Route::get('/pengumuman', [PostController::class, 'getAnnouncements']);

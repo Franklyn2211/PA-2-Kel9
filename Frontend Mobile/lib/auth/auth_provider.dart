@@ -3,9 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/userpenduduk.dart';
 
 class AuthProvider with ChangeNotifier {
-  Penduduk? _user;
+  Resident? _user;
 
-  Penduduk? get user => _user;
+  Resident? get user => _user;
 
   // Getter untuk pendudukId
   int? get pendudukId => _user?.id;
@@ -25,7 +25,7 @@ class AuthProvider with ChangeNotifier {
     throw Exception('Tidak bisa menemukan ID dalam response');
   }
 
-  _user = Penduduk(
+  _user = Resident(
     id: int.parse(id.toString()), // Pastikan konversi ke int
     nik: userData['nik'] ?? userData['data']['nik'] ?? '',
     name: userData['name'] ?? userData['nama'] ?? userData['data']['name'] ?? '',
@@ -75,7 +75,7 @@ class AuthProvider with ChangeNotifier {
       debugPrint('Loading user from prefs: nik=$nik, name=$name, id=$id');
 
       if (nik != null && name != null && id != null) {
-        _user = Penduduk(
+        _user = Resident(
           nik: nik,
           name: name,
           password: password,
@@ -96,7 +96,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   // Login dengan objek Penduduk
-  Future<void> login(Penduduk penduduk) async {
+  Future<void> login(Resident penduduk) async {
     try {
       _user = penduduk;
       debugPrint('Login with user: $_user');
