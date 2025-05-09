@@ -17,7 +17,7 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>No</th>
                                         <th>Nama Penduduk</th>
                                         <th>Jenis Surat</th>
                                         <th>Tanggal Pengajuan</th>
@@ -41,7 +41,9 @@
                                                             'diajukan' => 'bg-info',
                                                             'diproses' => 'bg-warning',
                                                             'disetujui' => 'bg-success',
-                                                            'ditolak' => 'bg-danger'
+                                                            'ditolak' => 'bg-danger',
+                                                            // Add a default case for undefined keys
+                                                            'default' => 'bg-secondary'
                                                         ][$item->status] ?? 'bg-secondary';
                                                     @endphp
                                                     <span class="badge {{ $badgeClass }}">
@@ -51,9 +53,23 @@
                                                 <td>{{ $item->tanggal_diselesaikan ? $item->tanggal_diselesaikan->format('d F Y H:i') : '-' }}</td>
                                                 <td>
                                                     <div class="d-flex gap-2">
-                                                        <a href="{{ route('admin.pengajuan.show', $item->id) }}" class="btn btn-sm btn-soft-primary">
-                                                            <i class="fas fa-eye me-1"></i> Lihat
+                                                        <a href="{{ route('admin.pengajuan.document', $item->id) }}" class="btn btn-sm btn-soft-primary">
+                                                            <i class="fas fa-eye me-1"></i> Lihat PDF
                                                         </a>
+                                                        <form action="{{ route('admin.pengajuan.approve', $item->id) }}" method="POST" style="display: inline;">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="submit" class="btn btn-sm btn-soft-success" onclick="return confirm('Apakah Anda yakin ingin menyetujui pengajuan ini?')">
+                                                                <i class="fas fa-check me-1"></i> Setujui
+                                                            </button>
+                                                        </form>
+                                                        <form action="{{ route('admin.pengajuan.destroy', $item->id) }}" method="POST" style="display: inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-soft-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pengajuan ini?')">
+                                                                <i class="fas fa-trash me-1"></i> Hapus
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </td>
                                             </tr>

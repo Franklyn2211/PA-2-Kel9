@@ -15,26 +15,32 @@ class SuratDomisiliController extends Controller
 {
     public function store(Request $request)
     {
+        // Log data yang diterima
+        \Log::info('Data diterima untuk pengajuan surat domisili:', $request->all());
+
         $request->validate([
             'resident_id' => 'required|exists:residents,id',
             'keperluan' => 'required',
-            'nomor_telepon' => 'required'
+            'nomor_telepon' => 'required', // Pastikan ini sesuai dengan data dari frontend
         ]);
 
         DB::beginTransaction();
 
         try {
             // Cari template surat domisili
-            $template = surat_templates::where('jenis_surat', 'surat_domisili')->first();
+            $template = surat_templates::where('jenis_surat', 'surat domisili')->first();
             
             if (!$template) {
-                throw new \Exception("Template surat domisili belum tersedia");
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Template surat domisili belum tersedia. Silakan hubungi admin untuk menambahkan template.',
+                ], 400);
             }
 
             // Buat pengajuan umum
             $pengajuan = pengajuan_surat::create([
                 'resident_id' => $request->resident_id,
-                'template_id' => $template->id, // Pastikan template_id disertakan
+                'template_id' => $template->id,
                 'status' => 'diajukan'
             ]);
 
@@ -60,6 +66,7 @@ class SuratDomisiliController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('Error saat mengajukan surat domisili:', ['error' => $e->getMessage()]);
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mengajukan surat',

@@ -115,19 +115,27 @@ class _FormSuratPageState extends State<FormSuratPage> {
       // Data yang akan dikirim ke backend
       final requestData = {
         'resident_id': widget.pendudukId.toString(),
-        'jenis_surat': widget.jenisSurat,
+        'jenis_surat': widget.jenisSurat, // Ensure jenis_surat is included
         'keperluan': _tujuanController.text,
         'nomor_telepon': _telpController.text,
       };
 
+      // Tambahkan log untuk memeriksa data yang dikirim
+      debugPrint('Request Data: $requestData');
+      debugPrint('Endpoint: $baseUrl/$endpoint');
+
       final response = await http.post(
-        Uri.parse('$baseUrl/$endpoint'), // Gunakan endpoint dinamis
+        Uri.parse('$baseUrl/$endpoint'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
         body: jsonEncode(requestData),
       );
+
+      // Tambahkan log untuk memeriksa respons
+      debugPrint('Response Status Code: ${response.statusCode}');
+      debugPrint('Response Body: ${response.body}');
 
       final responseData = jsonDecode(response.body);
 
@@ -142,7 +150,12 @@ class _FormSuratPageState extends State<FormSuratPage> {
         Navigator.pop(context);
       } else {
         final errorMessage = responseData['message'] ?? 'Gagal mengajukan surat';
-        throw Exception(errorMessage);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $errorMessage'), // Tampilkan pesan error dari backend
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
