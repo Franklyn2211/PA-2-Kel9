@@ -73,13 +73,6 @@
         .form-field label {
             flex: 0 0 150px;
         }
-
-        .form-field label::after {
-            content: ":";
-            position: absolute;
-            right: 0;
-            font-weight: normal;
-        }
         .form-field span {
             flex: 6;
             padding-left: 10px; /* Tambahkan jarak antara titik dua dan teks */

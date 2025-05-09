@@ -108,6 +108,7 @@ class SuratController extends Controller
                 'nik' => $pengajuan->resident->nik ?? '[NIK Kosong]',
                 'alamat' => $pengajuan->resident->address ?? '[Alamat Kosong]',
                 'gender' => $pengajuan->resident->gender ?? '[Jenis Kelamin Kosong]',
+                'family_card_number' => $pengajuan->resident->family_card_number ?? '[Jenis Kelamin Kosong]',
                 'birth_date' => $pengajuan->resident->birth_date ?? '[Tanggal Lahir Kosong]',
                 'religion' => $pengajuan->resident->religion ?? '[Agama Kosong]',
                 'tanggal_surat' => now()->locale('id')->isoFormat('D MMMM YYYY'),
