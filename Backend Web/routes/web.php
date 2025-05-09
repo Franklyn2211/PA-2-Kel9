@@ -125,8 +125,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/dashboard', [SuratController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/pengajuan', [SuratController::class, 'pengajuan'])->name('admin.pengajuan.index');
     Route::get('/pengajuan/{id}', [SuratController::class, 'detailPengajuan'])->name('admin.pengajuan.show');
-    Route::post('/pengajuan/approve/{id}', [PengajuanSuratController::class, 'approve'])->name('admin.pengajuan.approve');
+    Route::put('/pengajuan/approve/{id}', [SuratController::class, 'approve'])->name('admin.pengajuan.approve');
     Route::post('/pengajuan/reject/{id}', [PengajuanSuratController::class, 'reject'])->name('admin.pengajuan.reject');
+    Route::delete('/pengajuan/{id}', [SuratController::class, 'destroy'])->name('admin.pengajuan.destroy');
+    Route::get('/pengajuan/{id}/document', [SuratController::class, 'generateAndShowPDF'])->name('admin.pengajuan.document');
 
     // Routes untuk manajemen template
     Route::resource('templates', SuratTemplateController::class);

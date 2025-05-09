@@ -39,7 +39,7 @@ class pengajuan_surat extends Model
     // Relasi ke SuratTemplate
     public function template()
     {
-        return $this->belongsTo(surat_templates::class, 'template_id');
+        return $this->belongsTo(surat_templates::class, 'template_id'); 
     }
 
     // Scope untuk filter berdasarkan status
