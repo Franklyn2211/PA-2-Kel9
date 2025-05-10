@@ -17,7 +17,7 @@ class OrderController extends Controller
             'product_id' => 'required|exists:products,id',
             'amount' => 'required|numeric',
             'note' => 'nullable|string',
-            'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg|max:5000',
         ]);
 
         if ($validator->fails()) {

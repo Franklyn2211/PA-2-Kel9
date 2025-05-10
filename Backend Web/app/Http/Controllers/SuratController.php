@@ -18,18 +18,6 @@ class SuratController extends Controller
 
         return view('admin.pengajuan.index', compact('pengajuan'));
     }
-    // Dashboard admin
-    public function dashboard()
-    {
-        $totalPengajuan = pengajuan_surat::count();
-        $totalResidents = Residents::count();
-        $recentPengajuan = pengajuan_surat::with(['resident', 'template'])
-            ->orderBy('created_at', 'desc')
-            ->take(5)
-            ->get();
-
-        return view('admin.dashboard', compact('totalPengajuan', 'totalResidents', 'recentPengajuan'));
-    }
 
     // Daftar pengajuan
     public function pengajuan(Request $request)

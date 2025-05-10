@@ -74,7 +74,7 @@ Route::prefix('umkm')->middleware('auth:umkm')->group(function () {
 // Admin Routes
 Route::prefix('admin')->middleware('auth')->group(function () {
     // Dashboard
-    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+    // Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard.index');
 
     // Other admin routes
@@ -122,7 +122,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::put('/template/{announcements}', [SuratTemplateController::class, 'update'])->name('admin.templates.update');
     Route::delete('/template/{announcements}', [SuratTemplateController::class, 'destroy'])->name('admin.templates.destroy');
 
-    Route::get('/dashboard', [SuratController::class, 'dashboard'])->name('admin.dashboard');
+    // Route::get('/dashboard', [SuratController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/pengajuan', [SuratController::class, 'pengajuan'])->name('admin.pengajuan.index');
     Route::get('/pengajuan/{id}', [SuratController::class, 'detailPengajuan'])->name('admin.pengajuan.show');
     Route::put('/pengajuan/approve/{id}', [SuratController::class, 'approve'])->name('admin.pengajuan.approve');
@@ -187,7 +187,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     })->name('admin.settings.index');
 });
 
-// Redirect root to admin dashboard if authenticated
-Route::get('/', function () {
-    return redirect()->route('admin.dashboard');
-});
+// // Redirect root to admin dashboard if authenticated
+// Route::get('/', function () {
+//     return redirect()->route('admin.dashboard');
+// });

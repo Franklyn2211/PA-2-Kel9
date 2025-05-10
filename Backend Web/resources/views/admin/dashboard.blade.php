@@ -38,8 +38,8 @@
         <div class="col-xl-3 col-md-6 mb-4 animate-on-scroll slideInUp" style="animation-delay: 0.3s">
             <x-admin.stat-card
                 icon="fa-file-alt"
-                {{-- value="{{ $suratDiproses }}" --}}
-                label="Surat Diproses Bulan Ini"
+                value="{{ $totalPengajuan }}"
+                label="Banyak Pengajuan Surat"
                 {{-- trend="{{ $suratSelesai }} selesai" --}}
                 trendIcon="fa-check-circle"
                 trendClass="stat-trend-up" />
@@ -63,36 +63,19 @@
             <div class="card h-100 animate-on-scroll fadeIn">
                 <div class="card-header">
                     <h6 class="mb-0">Permohonan Surat Terbaru</h6>
-                    <a href="#" class="btn btn-sm btn-soft-primary">Lihat Semua</a>
+                    <a href="{{ route('admin.pengajuan.index') }}" class="btn btn-sm btn-soft-primary">Lihat Semua</a>
                 </div>
                 <div class="card-body">
-                    <x-admin.document-card
-                        title="Surat Keterangan Domisili"
-                        user="Budi Santoso"
-                        date="18 Juni 2023"
-                        status="pending"
-                        statusText="Dalam Proses" />
-
-                    <x-admin.document-card
-                        title="Surat Pengantar KTP"
-                        user="Siti Rahma"
-                        date="17 Juni 2023"
-                        status="completed"
-                        statusText="Selesai" />
-
-                    <x-admin.document-card
-                        title="Surat Keterangan Usaha"
-                        user="Ahmad Fadli"
-                        date="16 Juni 2023"
-                        status="pending"
-                        statusText="Dalam Proses" />
-
-                    <x-admin.document-card
-                        title="Surat Keterangan Miskin"
-                        user="Dewi Lestari"
-                        date="15 Juni 2023"
-                        status="completed"
-                        statusText="Selesai" />
+                    @forelse ($recentPengajuan as $pengajuan)
+                        <x-admin.document-card
+                            title="{{ $pengajuan->template->jenis_surat ?? 'Jenis Surat Tidak Diketahui' }}"
+                            user="{{ $pengajuan->resident->name ?? 'Nama Tidak Diketahui' }}"
+                            date="{{ $pengajuan->created_at->format('d F Y') }}"
+                            status="{{ $pengajuan->status }}"
+                            statusText="{{ ucfirst($pengajuan->status) }}" />
+                    @empty
+                        <p class="text-muted">Tidak ada permohonan surat terbaru.</p>
+                    @endforelse
                 </div>
             </div>
         </div>

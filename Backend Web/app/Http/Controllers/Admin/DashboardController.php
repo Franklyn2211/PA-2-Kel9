@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\pengajuan_surat;
 use App\Models\Residents;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,11 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $totalPengajuan = pengajuan_surat::count();
+        $recentPengajuan = pengajuan_surat::with(['resident', 'template'])
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
         $totalPenduduk = Residents::count();
         $pendudukBaru = Residents::whereMonth('created_at', now()->month)->count();
 
@@ -29,7 +35,9 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact(
             'totalPenduduk',
             'pendudukBaru',
-            'demografi'
+            'demografi',
+            'totalPengajuan',
+            'recentPengajuan'
         ));
     }
 }
