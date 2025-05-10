@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\pengumumanResource;
 use App\Http\Resources\Postresource;
 use App\Http\Resources\PendudukResource;
 use App\Models\Announcements;
@@ -43,7 +44,7 @@ class PostController extends Controller
     public function getAnnouncements()
     {
         $announcements = Announcements::all();
-        return Postresource::collection($announcements);
+        return pengumumanResource::collection($announcements);
     }
     public function getUmkm()
     {

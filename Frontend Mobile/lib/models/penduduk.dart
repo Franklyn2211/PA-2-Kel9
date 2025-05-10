@@ -34,4 +34,18 @@ class Residents {
       photoUrl: json['photo_url'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nik': nik,
+      'name': name,
+      'gender': gender,
+      'address': address,
+      'birthDate': birthDate,
+      'religion': religion,
+      'familyCardNumber': familyCardNumber,
+      'photoUrl': photoUrl,
+    };
+  }
 }

@@ -125,7 +125,7 @@
                 </div>
                 <div class="form-field">
                     <label>Jenis Kelamin</label>
-                    <span>: {{ $gender }}</span>
+                    <span>: {{ $gender ?? 'Tidak Diketahui' }}</span>
                 </div>
                 <div class="form-field">
                     <label>NIK</label>
@@ -133,7 +133,7 @@
                 </div>
                 <div class="form-field">
                     <label>Tgl Lahir</label>
-                    <span style="margin-left: 30px;">: {{ $birth_date }}</span>
+                    <span style="margin-left: 30px;">: {{ $birth_date ?? 'Tidak Diketahui' }}</span>
                 </div>
                 <div class="form-field">
                     <label>Agama</label>

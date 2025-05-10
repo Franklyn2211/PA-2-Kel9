@@ -2,66 +2,75 @@ import 'package:aplikasi_desa/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class PeringatanLogin extends StatelessWidget {
+  final Color themeColor = const Color(0xFF3AC53E);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true, // Pastikan body diperluas ke seluruh layar
+      resizeToAvoidBottomInset: false, // Mencegah perubahan ukuran saat keyboard muncul
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.blue.shade50, Colors.white],
+            colors: [
+              themeColor.withOpacity(0.2),
+              Colors.white,
+            ],
           ),
         ),
         child: SafeArea(
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Animated lock icon with shadow
+                  // Icon with shadow
                   Container(
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
+                      color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.blue.withOpacity(0.3),
+                          color: themeColor.withOpacity(0.3),
+                          blurRadius: 20,
                           spreadRadius: 5,
-                          blurRadius: 15,
                         ),
                       ],
                     ),
                     child: Icon(
                       Icons.lock_person,
-                      size: 100,
-                      color: Colors.blue.shade700,
+                      size: 80,
+                      color: themeColor,
                     ),
                   ),
-                  SizedBox(height: 40),
-                  
-                  // Improved text with better typography
+                  const SizedBox(height: 24),
+
+                  // Title and subtitle
                   Text(
                     'Anda perlu login',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue.shade900,
+                      color: themeColor,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'untuk mengakses fitur ini',
                     style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.blue.shade800,
+                      fontSize: 16,
+                      color: Colors.grey.shade700,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 50),
-                  
-                  // Enhanced button with animation
-                  Container(
+                  const SizedBox(height: 40),
+
+                  // Login button
+                  SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
@@ -71,15 +80,15 @@ class PeringatanLogin extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade700,
+                        backgroundColor: themeColor,
                         foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         elevation: 5,
                       ),
-                      child: Text(
+                      child: const Text(
                         'Login Sekarang',
                         style: TextStyle(
                           fontSize: 18,
@@ -89,10 +98,9 @@ class PeringatanLogin extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
-                  SizedBox(height: 20),
-                  
-                  // Added text to return to home
+                  const SizedBox(height: 20),
+
+                  // Back to home button
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);

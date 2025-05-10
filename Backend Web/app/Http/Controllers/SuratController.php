@@ -130,4 +130,69 @@ class SuratController extends Controller
             return back()->with('error', 'Gagal generate PDF: ' . $e->getMessage());
         }
     }
+
+    public function getUserRequests(Request $request)
+    {
+        $userId = $request->input('user_id'); // Ambil ID user dari request
+        \Log::info("Fetching requests for user ID: $userId"); // Debug log
+
+        $pengajuan = pengajuan_surat::with(['template'])
+            ->where('resident_id', $userId) // Filter berdasarkan ID user
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        if ($pengajuan->isEmpty()) {
+            \Log::warning("No requests found for user ID: $userId");
+        }
+
+        \Log::info("Requests fetched: ", $pengajuan->toArray()); // Debug log
+
+        return response()->json($pengajuan);
+    }
+
+    public function downloadPDF($id)
+    {
+        try {
+            $pengajuan = pengajuan_surat::with(['template', 'resident'])->findOrFail($id);
+
+            if ($pengajuan->status !== 'disetujui') {
+                return response()->json(['error' => 'Surat belum disetujui'], 403);
+            }
+
+            $jenisSurat = strtolower(trim($pengajuan->template->jenis_surat));
+            $viewName = match ($jenisSurat) {
+                'surat domisili' => 'templates.surat_domisili',
+                'surat belum menikah' => 'templates.surat_belum_menikah',
+                default => throw new \Exception("Template untuk jenis surat '$jenisSurat' tidak ditemukan."),
+            };
+
+            $logoPath = public_path('media/image1.jpeg'); // Path ke logo
+            if (!file_exists($logoPath)) {
+                throw new \Exception("Logo tidak ditemukan di path: $logoPath");
+            }
+
+            $data = [
+                'nama' => $pengajuan->resident->name,
+                'nik' => $pengajuan->resident->nik,
+                'alamat' => $pengajuan->resident->address,
+                'gender' => $pengajuan->resident->gender,
+                'birth_date' => $pengajuan->resident->birth_date,
+                'religion' => $pengajuan->resident->religion,
+                'family_card_number' => $pengajuan->resident->family_card_number,
+                'tanggal_surat' => now()->locale('id')->isoFormat('D MMMM YYYY'),
+                'logo_base64' => 'data:image/jpeg;base64,' . base64_encode(file_get_contents($logoPath)),
+            ];
+
+            $pdf = Pdf::loadView($viewName, $data);
+
+            // Gunakan jenis surat sebagai nama file
+            $fileName = 'surat_' . str_replace(' ', '_', $jenisSurat) . '_' . $pengajuan->resident->name . '.pdf';
+
+            \Log::info("PDF berhasil dibuat untuk pengajuan ID: $id dengan nama file: $fileName"); // Debug log
+            return $pdf->download($fileName);
+        } catch (\Exception $e) {
+            \Log::error("Gagal membuat PDF untuk pengajuan ID: $id - " . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

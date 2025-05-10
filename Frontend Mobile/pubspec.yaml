@@ -50,6 +50,7 @@ dependencies:
   flutter_html_iframe: ^3.0.0
   image_picker: ^1.1.2
   provider: ^6.1.4
+  open_file: ^3.5.10
 
 
 dev_dependencies:

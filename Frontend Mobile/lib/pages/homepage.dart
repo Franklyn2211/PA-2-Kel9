@@ -1,4 +1,5 @@
 import 'package:aplikasi_desa/pages/all_berita_page.dart';
+import 'package:aplikasi_desa/pages/all_pengumuman_page.dart'; // Import halaman semua pengumuman
 import 'package:aplikasi_desa/pages/berita.dart';
 import 'package:aplikasi_desa/pages/berita_detail_page.dart';
 import 'package:aplikasi_desa/pages/peringatan_login.dart';
@@ -7,8 +8,10 @@ import 'package:flutter/material.dart';
 import '../models/product_model.dart';
 import '../models/berita.dart';
 import '../models/umkm.dart';
+import '../models/pengumuman.dart'; // Import model Pengumuman
 import '../services/api_service.dart';
 import 'package:html_unescape/html_unescape.dart';
+import '../pages/profile_page.dart'; // Import halaman profil
 
 // Import pages for navigation
 
@@ -24,6 +27,8 @@ class _HomePageState extends State<HomePage> {
   late Future<List<Product>> futureProducts;
   late Future<List<Berita>> futureBerita;
   late Future<List<Umkm>> futureUmkm;
+  late Future<List<Pengumuman>> futurePengumuman; // Tambahkan ini untuk pengumuman
+  int? _selectedPengumumanId; // Tambahkan ini untuk menyimpan ID pengumuman yang dipilih
 
   final Color themeColor = const Color(0xFF3AC53E);
   final Color themeLightColor = const Color(0xFF4CDF50);
@@ -188,6 +193,53 @@ class _HomePageState extends State<HomePage> {
 
                   const SizedBox(height: 24),
 
+                  // Pengumuman section
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _sectionTitle("📢 Pengumuman", "Lihat Semua", () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AllPengumumanPage(),
+                            ),
+                          );
+                        }),
+                        FutureBuilder<List<Pengumuman>>(
+                          future: futurePengumuman,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return SizedBox(
+                                height: 150,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: themeColor,
+                                  ),
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return _errorWidget('Error: ${snapshot.error}');
+                            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return _emptyStateWidget('Tidak ada pengumuman ditemukan');
+                            } else {
+                              List<Pengumuman> pengumumanList = snapshot.data!;
+                              return Column(
+                                children: pengumumanList
+                                    .take(3) // Batasi hanya 3 pengumuman
+                                    .map((pengumuman) => _pengumumanItem(pengumuman))
+                                    .toList(),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
                   // Informasi Desa section
                   _sectionTitle("ℹ️ Informasi Desa", "Detail", () {
                     // Navigate to detail informasi desa
@@ -280,6 +332,7 @@ class _HomePageState extends State<HomePage> {
       futureProducts = ApiService.fetchProducts();
       futureBerita = ApiService.fetchBerita();
       futureUmkm = ApiService.fetchUmkm();
+      futurePengumuman = ApiService.fetchPengumuman(); // Tambahkan ini
     });
   }
 
@@ -498,7 +551,11 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: _selectedIndex == 0 ? buildHomeContent() : _pages[_selectedIndex],
+      body: _selectedIndex == 0
+          ? buildHomeContent()
+          : (_selectedIndex == 4
+              ? ProfilePage() // Tampilkan halaman profil jika tab "Akun" ditekan
+              : _pages[_selectedIndex]),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: [
@@ -512,8 +569,7 @@ class _HomePageState extends State<HomePage> {
         child: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(
-              icon:
-                  Icon(_selectedIndex == 0 ? Icons.home : Icons.home_outlined),
+              icon: Icon(_selectedIndex == 0 ? Icons.home : Icons.home_outlined),
               label: 'Home',
               backgroundColor: Colors.white,
             ),
@@ -524,8 +580,7 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon:
-                  Icon(_selectedIndex == 2 ? Icons.work : Icons.work_outlined),
+              icon: Icon(_selectedIndex == 2 ? Icons.work : Icons.work_outlined),
               label: 'Layanan',
               backgroundColor: Colors.white,
             ),
@@ -714,6 +769,74 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _pengumumanItem(Pengumuman pengumuman) {
+    final isSelected = _selectedPengumumanId == pengumuman.id; // Cek apakah pengumuman ini dipilih
+    final fullDescription = _removeHtmlTags(pengumuman.description);
+    final description = isSelected
+        ? fullDescription
+        : (fullDescription.length > 20
+            ? fullDescription.substring(0, 20) + '...'
+            : fullDescription); // Potong deskripsi jika tidak dipilih
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedPengumumanId =
+              isSelected ? null : pengumuman.id; // Toggle detail pengumuman
+        });
+      },
+      child: Card(
+        color: Colors.white,
+        elevation: 3,
+        margin: const EdgeInsets.only(bottom: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                pengumuman.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                description,
+                maxLines: isSelected ? null : 3,
+                overflow: isSelected ? TextOverflow.visible : TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.grey[700], height: 1.3),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.calendar_today, size: 14, color: themeColor),
+                  const SizedBox(width: 4),
+                  Text(
+                    pengumuman.createdAt,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+              if (isSelected) ...[
+                const SizedBox(height: 8),
+              ],
             ],
           ),
         ),

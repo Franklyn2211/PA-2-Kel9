@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:aplikasi_desa/models/penduduk.dart';
+import 'package:aplikasi_desa/models/pengumuman.dart';
 import 'package:aplikasi_desa/models/userpenduduk.dart';
 import 'package:http/http.dart' as http;
 import '../models/penduduk_response.dart';
@@ -8,9 +9,10 @@ import '../models/berita.dart';
 import '../models/umkm.dart';
 import 'package:http_parser/http_parser.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "https://a90c-103-167-217-200.ngrok-free.app/api";
+  static const String baseUrl = "https://3231-103-167-217-200.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -18,7 +20,7 @@ class ApiService {
   };
 
   String getBaseUrl() {
-    return 'https://a90c-103-167-217-200.ngrok-free.app'; // Replace with your actual base URL
+    return 'https://3231-103-167-217-200.ngrok-free.app'; // Replace with your actual base URL
   }
 
   // ==================== NIK VERIFICATION ====================
@@ -101,6 +103,18 @@ class ApiService {
     final responseData = _parseResponse(response);
     return (responseData['data'] as List)
         .map((item) => Berita.fromJson(item))
+        .toList();
+  }
+  // ==================== PENGUMUMAN ====================
+  static Future<List<Pengumuman>> fetchPengumuman() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/pengumuman'),
+      headers: headers,
+    );
+
+    final responseData = _parseResponse(response);
+    return (responseData['data'] as List)
+        .map((item) => Pengumuman.fromJson(item))
         .toList();
   }
 
@@ -262,6 +276,50 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Gagal terhubung ke server: ${e.toString()}');
+    }
+  }
+
+  static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('auth_token'); // Pastikan token disimpan dengan key 'auth_token'
+  }
+
+  static Future<dynamic> get(String endpoint) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+
+    print('HTTP Status Code: ${response.statusCode}'); // Debug print
+    print('Raw Response Body: ${response.body}'); // Debug print
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load data: ${response.body}');
+    }
+  }
+
+  static Future<dynamic> post(String endpoint, Map<String, dynamic> body) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(body),
+    );
+
+    print('HTTP Status Code: ${response.statusCode}'); // Debug print
+    print('Raw Response Body: ${response.body}'); // Debug print
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to post data: ${response.body}');
     }
   }
 }

@@ -1,40 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/userpenduduk.dart';
+import '../models/penduduk.dart';
 
 class AuthProvider with ChangeNotifier {
-  Resident? _user;
+  Resident? _user; // Model untuk Resident
+  Residents? _residentDetails; // Model untuk Residents
 
   Resident? get user => _user;
+  Residents? get residentDetails => _residentDetails;
 
   // Getter untuk pendudukId
-  int? get pendudukId => _user?.id;
+  int? get pendudukId {
+    if (_residentDetails != null) {
+      return _residentDetails!.id;
+    } else if (_user != null) {
+      return _user!.id;
+    }
+    return null;
+  }
+
+  // Getter untuk name
+  String? get name {
+    if (_residentDetails != null) {
+      return _residentDetails!.name;
+    } else if (_user != null) {
+      return _user!.name;
+    }
+    return null;
+  }
+
+  // Getter untuk nik
+  String? get nik {
+    if (_residentDetails != null) {
+      return _residentDetails!.nik;
+    } else if (_user != null) {
+      return _user!.nik;
+    }
+    return null;
+  }
+
+  // Setter untuk user
+  set user(Resident? value) {
+    _user = value;
+    notifyListeners();
+  }
+
+  // Setter untuk residentDetails
+  set residentDetails(Residents? value) {
+    _residentDetails = value;
+    notifyListeners();
+  }
 
   // Method untuk menyimpan data user dari response API
   // Method setUser yang diperbaiki
   Future<void> setUser(Map<String, dynamic> userData) async {
-  debugPrint('Raw user data: $userData');
-  
-  // Cari ID di berbagai kemungkinan field
-  final dynamic id = userData['id'] ?? 
-                   userData['penduduk_id'] ??
-                   userData['data']['id'] ??
-                   userData['penduduk']['id'];
+    debugPrint('Raw user data: $userData');
 
-  if (id == null) {
-    throw Exception('Tidak bisa menemukan ID dalam response');
+    // Cari ID di berbagai kemungkinan field
+    final dynamic id = userData['id'] ??
+        userData['penduduk_id'] ??
+        userData['data']['id'] ??
+        userData['penduduk']['id'];
+
+    if (id == null) {
+      throw Exception('Tidak bisa menemukan ID dalam response');
+    }
+
+    _user = Resident(
+      id: int.parse(id.toString()), // Pastikan konversi ke int
+      nik: userData['nik'] ?? userData['data']['nik'] ?? '',
+      name: userData['name'] ?? userData['nama'] ?? userData['data']['name'] ?? '',
+      password: userData['password'] ?? '',
+    );
+
+    await _saveUserToPrefs();
+    notifyListeners();
   }
-
-  _user = Resident(
-    id: int.parse(id.toString()), // Pastikan konversi ke int
-    nik: userData['nik'] ?? userData['data']['nik'] ?? '',
-    name: userData['name'] ?? userData['nama'] ?? userData['data']['name'] ?? '',
-    password: userData['password'] ?? '',
-  );
-
-  await _saveUserToPrefs();
-  notifyListeners();
-}
 
   // Method private untuk menyimpan data ke SharedPreferences
   Future<void> _saveUserToPrefs() async {
