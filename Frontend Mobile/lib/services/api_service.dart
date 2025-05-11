@@ -12,7 +12,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "https://3231-103-167-217-200.ngrok-free.app/api";
+  static const String baseUrl = "https://2377-114-5-147-185.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -20,7 +20,7 @@ class ApiService {
   };
 
   String getBaseUrl() {
-    return 'https://3231-103-167-217-200.ngrok-free.app'; // Replace with your actual base URL
+    return 'https://2377-114-5-147-185.ngrok-free.app'; // Replace with your actual base URL
   }
 
   // ==================== NIK VERIFICATION ====================
@@ -286,15 +286,9 @@ class ApiService {
 
   static Future<dynamic> get(String endpoint) async {
     final response = await http.get(
-      Uri.parse('$baseUrl$endpoint'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
+        Uri.parse('$baseUrl$endpoint'),
+        headers: headers,
     );
-
-    print('HTTP Status Code: ${response.statusCode}'); // Debug print
-    print('Raw Response Body: ${response.body}'); // Debug print
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -321,5 +315,14 @@ class ApiService {
     } else {
       throw Exception('Failed to post data: ${response.body}');
     }
+  }
+  static Future<List<Map<String, dynamic>>> fetchUserOrders(int pendudukId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/orders?penduduk_id=$pendudukId'),
+      headers: headers,
+    );
+
+    final responseData = _parseResponse(response);
+    return List<Map<String, dynamic>>.from(responseData['data']);
   }
 }

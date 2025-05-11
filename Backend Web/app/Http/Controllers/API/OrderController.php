@@ -54,4 +54,27 @@ class OrderController extends Controller
             ], 500);
         }
     }
+    public function getUserOrders(Request $request)
+    {
+        $userId = $request->input('user_id'); // Ambil user_id dari request body
+
+        if (!$userId) {
+            return response()->json(['error' => 'User ID is required'], 400);
+        }
+
+        $orders = Order::with(['product.umkm'])
+            ->where('penduduk_id', $userId) // Gunakan user_id untuk filter
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($order) {
+                // Pastikan status dikirim sesuai nilai asli dari database
+                $order->status = $order->status; // Tidak ada manipulasi
+                return $order;
+            });
+
+        return response()->json([
+            'success' => true,
+            'data' => $orders,
+        ]);
+    }
 }

@@ -33,5 +33,5 @@ Route::middleware('auth:sanctum')->get('/user/requests', function () {
     \Log::info("Route /user/requests accessed"); // Debug log
     return app(\App\Http\Controllers\SuratController::class)->getUserRequests(request());
 });
-
+Route::get('/orders', [OrderController::class, 'getUserOrders']);
 Route::get('/pengajuan/{id}/download', [SuratController::class, 'downloadPDF']); // Rute untuk mengunduh PDF

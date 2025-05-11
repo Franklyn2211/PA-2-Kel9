@@ -74,7 +74,7 @@ Route::prefix('umkm')->middleware('auth:umkm')->group(function () {
 // Admin Routes
 Route::prefix('admin')->middleware('auth')->group(function () {
     // Dashboard
-    // Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard.index');
 
     // Other admin routes

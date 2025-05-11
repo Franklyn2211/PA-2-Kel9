@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../auth/auth_provider.dart';
 import '../pages/login_screen.dart';
+import '../pages/order_page.dart'; // Import OrderPage
 
 class ProfilePage extends StatelessWidget {
   final Color themeColor = const Color(0xFF3AC53E);
@@ -51,7 +52,7 @@ class ProfilePage extends StatelessWidget {
 
             // User Name
             Text(
-              residentDetails?.name ?? 'Nama tidak tersedia',
+              residentDetails?.name ?? user?.name ?? 'Nama tidak tersedia',
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -119,6 +120,31 @@ class ProfilePage extends StatelessWidget {
               child: Text(
                 user != null || residentDetails != null ? 'Logout' : 'Login',
                 style: const TextStyle(fontSize: 16),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // View Orders Button
+            ElevatedButton(
+              onPressed: () {
+                final userId = Provider.of<AuthProvider>(context, listen: false).user?.id ?? 0; // Ambil userId dari AuthProvider
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OrderPage(userId: userId), // Kirim userId ke OrderPage
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: themeColor,
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                'Lihat Pesanan Saya',
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ],
