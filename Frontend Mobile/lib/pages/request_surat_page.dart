@@ -1,10 +1,13 @@
+import 'package:aplikasi_desa/pages/homepage.dart'; // Import HomePage
 import 'package:aplikasi_desa/pages/layanan_surat_page.dart';
+import 'package:aplikasi_desa/pages/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:aplikasi_desa/services/api_service.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 
 class RequestSuratPage extends StatefulWidget {
   final int userId;
@@ -23,7 +26,24 @@ class _RequestSuratPageState extends State<RequestSuratPage> {
   @override
   void initState() {
     super.initState();
-    _fetchRequests();
+    _checkLoginStatus(); // Periksa status login sebelum memuat data
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (!isLoggedIn) {
+      await Future.delayed(const Duration(milliseconds: 100)); // Tambahkan delay
+      if (!mounted) return; // Pastikan widget masih aktif
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    } else {
+      // Jika sudah login, muat data request surat
+      _fetchRequests();
+    }
   }
 
   Future<void> _fetchRequests() async {
@@ -114,6 +134,15 @@ class _RequestSuratPageState extends State<RequestSuratPage> {
         title: const Text('Daftar Request Surat'),
         backgroundColor: themeColor,
         elevation: 2,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()), // Navigasi ke HomePage
+            );
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
