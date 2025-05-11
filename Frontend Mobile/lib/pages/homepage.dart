@@ -1,5 +1,6 @@
 import 'package:aplikasi_desa/pages/all_berita_page.dart';
 import 'package:aplikasi_desa/pages/all_pengumuman_page.dart'; // Import halaman semua pengumuman
+import 'package:aplikasi_desa/pages/all_product_page.dart';
 import 'package:aplikasi_desa/pages/berita.dart';
 import 'package:aplikasi_desa/pages/berita_detail_page.dart';
 import 'package:aplikasi_desa/pages/peringatan_login.dart';
@@ -27,8 +28,10 @@ class _HomePageState extends State<HomePage> {
   late Future<List<Product>> futureProducts;
   late Future<List<Berita>> futureBerita;
   late Future<List<Umkm>> futureUmkm;
-  late Future<List<Pengumuman>> futurePengumuman; // Tambahkan ini untuk pengumuman
-  int? _selectedPengumumanId; // Tambahkan ini untuk menyimpan ID pengumuman yang dipilih
+  late Future<List<Pengumuman>>
+      futurePengumuman; // Tambahkan ini untuk pengumuman
+  int?
+      _selectedPengumumanId; // Tambahkan ini untuk menyimpan ID pengumuman yang dipilih
 
   final Color themeColor = const Color(0xFF3AC53E);
   final Color themeLightColor = const Color(0xFF4CDF50);
@@ -41,6 +44,7 @@ class _HomePageState extends State<HomePage> {
 
   // List of pages to navigate to
   final List<Widget> _pages = [];
+  bool isPagesInitialized = false; // Tambahkan flag untuk inisialisasi _pages
 
   @override
   void initState() {
@@ -48,9 +52,19 @@ class _HomePageState extends State<HomePage> {
     _loadData();
 
     // Initialize pages list
-    _pages.add(buildHomeContent()); // Home content (implemented as a method)
-    _pages.add(BeritaPage()); // Berita page
-    _pages.add(PeringatanLogin()); // Berita page
+    _initializePages(); // Panggil metode untuk inisialisasi _pages
+  }
+
+  Future<void> _initializePages() async {
+    final products = await ApiService.fetchProducts(); // Ambil produk dari API
+    setState(() {
+      _pages.add(buildHomeContent()); // Halaman Home (indeks 0)
+      _pages.add(BeritaPage()); // Halaman Berita (indeks 1)
+      _pages.add(PeringatanLogin()); // Halaman Layanan (indeks 2)
+      _pages.add(AllProductPage(allProducts: products)); // Halaman Produk (indeks 3)
+      _pages.add(ProfilePage()); // Halaman Akun (indeks 4)
+      isPagesInitialized = true; // Tandai bahwa _pages telah diinisialisasi
+    });
   }
 
   // Method to build the home content
@@ -210,7 +224,8 @@ class _HomePageState extends State<HomePage> {
                         FutureBuilder<List<Pengumuman>>(
                           future: futurePengumuman,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return SizedBox(
                                 height: 150,
                                 child: Center(
@@ -221,14 +236,17 @@ class _HomePageState extends State<HomePage> {
                               );
                             } else if (snapshot.hasError) {
                               return _errorWidget('Error: ${snapshot.error}');
-                            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                              return _emptyStateWidget('Tidak ada pengumuman ditemukan');
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return _emptyStateWidget(
+                                  'Tidak ada pengumuman ditemukan');
                             } else {
                               List<Pengumuman> pengumumanList = snapshot.data!;
                               return Column(
                                 children: pengumumanList
                                     .take(3) // Batasi hanya 3 pengumuman
-                                    .map((pengumuman) => _pengumumanItem(pengumuman))
+                                    .map((pengumuman) =>
+                                        _pengumumanItem(pengumuman))
                                     .toList(),
                               );
                             }
@@ -251,8 +269,16 @@ class _HomePageState extends State<HomePage> {
 
                   // Produk Desa section
                   _sectionTitle("🛒 Produk Desa", "Lihat Semua", () {
-                    // Navigate to all products
-                    _navigateToPage(3); // Navigate to Products page
+                    futureProducts.then((products) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllProductPage(
+                              allProducts:
+                                  products), // Navigasi ke AllProductPage
+                        ),
+                      );
+                    });
                   }),
 
                   FutureBuilder<List<Product>>(
@@ -272,46 +298,35 @@ class _HomePageState extends State<HomePage> {
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return _emptyStateWidget('Tidak ada produk ditemukan');
                       } else {
-                        List<Product> products = snapshot.data!;
-                        return FutureBuilder<List<Umkm>>(
-                          future: futureUmkm,
-                          builder: (context, umkmSnapshot) {
-                            if (umkmSnapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return CircularProgressIndicator(
-                                  color: themeColor);
-                            } else if (umkmSnapshot.hasError) {
-                              return _errorWidget(
-                                  'Error: ${umkmSnapshot.error}');
-                            } else if (!umkmSnapshot.hasData) {
-                              return _emptyStateWidget(
-                                  'Data UMKM tidak tersedia');
-                            } else {
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount:
-                                    products.length > 5 ? 5 : products.length,
-                                itemBuilder: (context, index) {
-                                  // Find corresponding UMKM for the product
-                                  final umkm = umkmSnapshot.data!.firstWhere(
-                                    (u) => u.id == products[index].id,
-                                    orElse: () => Umkm(
-                                      id: 1,
-                                      namaUmkm: 'Contoh',
-                                      email: 'contoh@email.com',
-                                      phone: '08123456789',
-                                      qrisImage: 'link_qris.png',
-                                      status: true,
-                                      qrisUrl:
-                                          'https://example.com/default-photo.jpg',
-                                    ),
-                                  );
-                                  return _produkItem(products[index], umkm);
-                                },
-                              );
-                            }
-                          },
+                        List<Product> sortedProducts = snapshot.data!
+                          ..sort((a, b) {
+                            // Tangani null pada createdAt
+                            if (a.createdAt == null && b.createdAt == null)
+                              return 0;
+                            if (a.createdAt == null) return 1;
+                            if (b.createdAt == null) return -1;
+                            return b.createdAt!.compareTo(a.createdAt!);
+                          });
+                        List<Product> limitedProducts =
+                            sortedProducts.take(3).toList();
+
+                        return Column(
+                          children: limitedProducts.map((product) {
+                            final umkm = product.umkm; // Ambil data UMKM dari produk
+                            return _produkItem(
+                              product,
+                              umkm ??
+                                  Umkm(
+                                    id: 0,
+                                    namaUmkm: 'UMKM Tidak Diketahui', // Default jika UMKM null
+                                    email: '',
+                                    phone: '',
+                                    qrisImage: '',
+                                    status: false,
+                                    qrisUrl: '',
+                                  ),
+                            );
+                          }).toList(),
                         );
                       }
                     },
@@ -351,11 +366,21 @@ class _HomePageState extends State<HomePage> {
 
   // Method to navigate to a specific page
   void _navigateToPage(int index) {
+    if (!isPagesInitialized) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Halaman sedang dimuat, harap tunggu...'),
+          backgroundColor: themeColor,
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _selectedIndex = index;
     });
   }
-
+  
   // Show info dialog
   void _showInfoDialog() {
     showDialog(
@@ -551,11 +576,15 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: _selectedIndex == 0
-          ? buildHomeContent()
-          : (_selectedIndex == 4
-              ? ProfilePage() // Tampilkan halaman profil jika tab "Akun" ditekan
-              : _pages[_selectedIndex]),
+      body: isPagesInitialized
+          ? (_selectedIndex < _pages.length
+              ? _pages[_selectedIndex] // Tampilkan halaman sesuai indeks
+              : buildHomeContent()) // Default ke halaman utama jika indeks tidak valid
+          : Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(themeColor),
+              ),
+            ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: [
@@ -569,7 +598,8 @@ class _HomePageState extends State<HomePage> {
         child: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(
-              icon: Icon(_selectedIndex == 0 ? Icons.home : Icons.home_outlined),
+              icon:
+                  Icon(_selectedIndex == 0 ? Icons.home : Icons.home_outlined),
               label: 'Home',
               backgroundColor: Colors.white,
             ),
@@ -580,7 +610,8 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.white,
             ),
             BottomNavigationBarItem(
-              icon: Icon(_selectedIndex == 2 ? Icons.work : Icons.work_outlined),
+              icon:
+                  Icon(_selectedIndex == 2 ? Icons.work : Icons.work_outlined),
               label: 'Layanan',
               backgroundColor: Colors.white,
             ),
@@ -777,7 +808,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _pengumumanItem(Pengumuman pengumuman) {
-    final isSelected = _selectedPengumumanId == pengumuman.id; // Cek apakah pengumuman ini dipilih
+    final isSelected = _selectedPengumumanId ==
+        pengumuman.id; // Cek apakah pengumuman ini dipilih
     final fullDescription = _removeHtmlTags(pengumuman.description);
     final description = isSelected
         ? fullDescription
@@ -817,7 +849,8 @@ class _HomePageState extends State<HomePage> {
               Text(
                 description,
                 maxLines: isSelected ? null : 3,
-                overflow: isSelected ? TextOverflow.visible : TextOverflow.ellipsis,
+                overflow:
+                    isSelected ? TextOverflow.visible : TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.grey[700], height: 1.3),
               ),
               const SizedBox(height: 8),

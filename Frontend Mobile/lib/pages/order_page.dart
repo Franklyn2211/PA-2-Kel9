@@ -108,7 +108,8 @@ class _OrderPageState extends State<OrderPage> {
                     itemCount: orders.length,
                     itemBuilder: (context, index) {
                       final order = orders[index];
-                      final bool? status = order['status'] as bool?; // Status bisa null
+                      final bool? status = order['status'] as bool?;
+                      final String price = order['product']['price']; // Ambil price dari API
                       return Card(
                         elevation: 2,
                         margin: const EdgeInsets.only(bottom: 12),
@@ -134,6 +135,14 @@ class _OrderPageState extends State<OrderPage> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              const SizedBox(height: 8),
+                              Text(
+                                "Harga: Rp $price", // Tampilkan harga
+                                style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                               const SizedBox(height: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(

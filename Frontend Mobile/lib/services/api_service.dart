@@ -47,14 +47,20 @@ class ApiService {
   // ==================== PRODUCTS ====================
   static Future<List<Product>> fetchProducts() async {
     final response = await http.get(
-      Uri.parse('$baseUrl/products'),
-      headers: headers,
+        Uri.parse('$baseUrl/products'),
+        headers: headers,
     );
 
     final responseData = _parseResponse(response);
     return (responseData['data'] as List)
         .map((item) => Product.fromJson(item))
-        .toList();
+        .toList()
+        ..sort((a, b) {
+            if (a.createdAt == null && b.createdAt == null) return 0;
+            if (a.createdAt == null) return 1;
+            if (b.createdAt == null) return -1;
+            return b.createdAt!.compareTo(a.createdAt!);
+        });
   }
   // ==================== PENDUDUK ====================
   static Future<List<Residents>> fetchPenduduk() async {
