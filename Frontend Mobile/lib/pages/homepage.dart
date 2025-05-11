@@ -1,8 +1,10 @@
+import 'package:aplikasi_desa/models/gallery_model.dart';
 import 'package:aplikasi_desa/pages/all_berita_page.dart';
 import 'package:aplikasi_desa/pages/all_pengumuman_page.dart'; // Import halaman semua pengumuman
 import 'package:aplikasi_desa/pages/all_product_page.dart';
 import 'package:aplikasi_desa/pages/berita.dart';
 import 'package:aplikasi_desa/pages/berita_detail_page.dart';
+import 'package:aplikasi_desa/pages/gallery_page.dart';
 import 'package:aplikasi_desa/pages/peringatan_login.dart';
 import 'package:aplikasi_desa/pages/product_detail_page.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,10 @@ import '../models/umkm.dart';
 import '../models/pengumuman.dart'; // Import model Pengumuman
 import '../services/api_service.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:html/parser.dart'; // Tambahkan ini untuk memproses HTML
 import '../pages/profile_page.dart'; // Import halaman profil
+import '../pages/profil_desa_page.dart'; // Import halaman ProfilDesaPage
+import 'staff_page.dart'; // Import halaman StaffPage
 
 // Import pages for navigation
 
@@ -45,11 +50,13 @@ class _HomePageState extends State<HomePage> {
   // List of pages to navigate to
   final List<Widget> _pages = [];
   bool isPagesInitialized = false; // Tambahkan flag untuk inisialisasi _pages
+  String? history; // Tambahkan variabel untuk menyimpan data history
 
   @override
   void initState() {
     super.initState();
     _loadData();
+    _fetchProfilDesa(); // Panggil fungsi untuk memuat data profil desa
 
     // Initialize pages list
     _initializePages(); // Panggil metode untuk inisialisasi _pages
@@ -65,6 +72,27 @@ class _HomePageState extends State<HomePage> {
       _pages.add(ProfilePage()); // Halaman Akun (indeks 4)
       isPagesInitialized = true; // Tandai bahwa _pages telah diinisialisasi
     });
+  }
+
+  Future<void> _fetchProfilDesa() async {
+    try {
+      final data = await ApiService.fetchProfilDesa();
+      setState(() {
+        history = _removeHtmlTags(data['history']); // Hapus tag HTML dari history
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal memuat data sejarah desa: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  String _removeHtmlTags(String htmlText) {
+    final document = parse(htmlText);
+    return document.body?.text ?? '';
   }
 
   // Method to build the home content
@@ -129,24 +157,59 @@ class _HomePageState extends State<HomePage> {
                         width: 1,
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildQuickAction(Icons.description_outlined, "Layanan",
-                            () {
-                          _navigateToPage(2); // Navigate to Layanan page
-                        }, themeColor),
-                        _buildQuickAction(Icons.article_outlined, "Berita", () {
-                          _navigateToPage(1); // Navigate to Berita page
-                        }, themeColor),
-                        _buildQuickAction(Icons.store_outlined, "Produk", () {
-                          _navigateToPage(3); // Navigate to Produk page
-                        }, themeColor),
-                        _buildQuickAction(Icons.info_outline, "Info", () {
-                          // Show info dialog or navigate to info page
-                          _showInfoDialog();
-                        }, themeColor),
-                      ],
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal, // Tambahkan scroll horizontal
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 80, // Batasi lebar setiap tombol
+                            child: _buildQuickAction(Icons.description_outlined, "Layanan", () {
+                              _navigateToPage(2); // Navigate to Layanan page
+                            }, themeColor),
+                          ),
+                          SizedBox(
+                            width: 80,
+                            child: _buildQuickAction(Icons.article_outlined, "Berita", () {
+                              _navigateToPage(1); // Navigate to Berita page
+                            }, themeColor),
+                          ),
+                          SizedBox(
+                            width: 80,
+                            child: _buildQuickAction(Icons.store_outlined, "Produk", () {
+                              _navigateToPage(3); // Navigate to Produk page
+                            }, themeColor),
+                          ),
+                          SizedBox(
+                            width: 80,
+                            child: _buildQuickAction(Icons.info_outline, "Info", () {
+                              // Show info dialog or navigate to info page
+                              _showInfoDialog();
+                            }, themeColor),
+                          ),
+                          SizedBox(
+                            width: 80,
+                            child: _buildQuickAction(Icons.people_outline, "Struktur", () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const StaffPage(), // Navigasi ke halaman StaffPage
+                                ),
+                              );
+                            }, themeColor),
+                          ),
+                          SizedBox(
+                            width: 80,
+                            child: _buildQuickAction(Icons.photo_library_outlined, "Galeri Desa", () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const GalleryPage(), // Navigasi ke GalleryPage
+                                ),
+                              );
+                            }, themeColor),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -356,14 +419,6 @@ class _HomePageState extends State<HomePage> {
     return Future.delayed(const Duration(milliseconds: 100));
   }
 
-  String _removeHtmlTags(String htmlText) {
-    return htmlUnescape
-        .convert(htmlText)
-        .replaceAll(RegExp(r'<[^>]*>'), '')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim();
-  }
-
   // Method to navigate to a specific page
   void _navigateToPage(int index) {
     if (!isPagesInitialized) {
@@ -535,7 +590,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-    );
+      );
   }
 
   @override
@@ -803,8 +858,8 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      ),
-    );
+      )
+      );
   }
 
   Widget _pengumumanItem(Pengumuman pengumuman) {
@@ -920,10 +975,9 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             const SizedBox(height: 14),
-            const Text(
-              "Desa kami memiliki sejarah panjang dan budaya yang kaya. "
-              "Informasi lebih lengkap tentang sejarah, potensi, dan kearifan lokal desa kami dapat ditemukan di sini.",
-              style: TextStyle(
+            Text(
+              history ?? "Memuat sejarah desa...", // Tampilkan data history
+              style: const TextStyle(
                 fontSize: 14,
                 color: Colors.white,
                 height: 1.5,
@@ -932,8 +986,12 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 14),
             OutlinedButton(
               onPressed: () {
-                // Navigate to detail informasi
-                _showVillageInfoDetail();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfilDesaPage(), // Navigasi ke ProfilDesaPage
+                  ),
+                );
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.white,
@@ -1089,7 +1147,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-    );
+      );
   }
 
   Widget _errorWidget(String message) {

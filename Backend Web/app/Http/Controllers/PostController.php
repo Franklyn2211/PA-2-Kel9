@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GaleriResource;
 use App\Http\Resources\pengumumanResource;
 use App\Http\Resources\Postresource;
 use App\Http\Resources\PendudukResource;
+use App\Http\Resources\ProfilResource;
+use App\Http\Resources\StaffResource;
 use App\Models\Announcements;
 use App\Models\Gallery;
 use App\Models\News;
@@ -55,17 +58,17 @@ class PostController extends Controller
     public function getProfilDesa()
     {
         $profilDesa = ProfilDesa::first();
-        return new Postresource($profilDesa);
+        return new ProfilResource($profilDesa);
     }
 
     public function getStaff()
     {
         $staff = Staff::all();
-        return Postresource::collection($staff);
+        return StaffResource::collection($staff);
     }
     public function getGallery()
     {
         $galleries = Gallery::all();
-        return Postresource::collection($galleries);
+        return GaleriResource::collection($galleries);
     }
 }

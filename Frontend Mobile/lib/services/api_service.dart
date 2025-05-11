@@ -7,6 +7,8 @@ import '../models/penduduk_response.dart';
 import '../models/product_model.dart';
 import '../models/berita.dart';
 import '../models/umkm.dart';
+import '../models/staff_model.dart'; // Import model Staff
+import '../models/gallery_model.dart'; // Import model Gallery
 import 'package:http_parser/http_parser.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -122,6 +124,32 @@ class ApiService {
     return (responseData['data'] as List)
         .map((item) => Pengumuman.fromJson(item))
         .toList();
+  }
+
+  // ==================== STAFF ====================
+  static Future<List<Staff>> fetchStaff() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/staff'), // Perbaiki endpoint menjadi /staff
+      headers: headers,
+    );
+
+    final responseData = _parseResponse(response);
+    return (responseData['data'] as List)
+        .map((item) => Staff.fromJson(item))
+        .toList(); // Konversi data ke List<Staff>
+  }
+
+  // ==================== GALLERY ====================
+  static Future<List<Gallery>> fetchGallery() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/galeri'), // Endpoint untuk galeri
+      headers: headers,
+    );
+
+    final responseData = _parseResponse(response);
+    return (responseData['data'] as List)
+        .map((item) => Gallery.fromJson(item))
+        .toList(); // Konversi data ke List<Gallery>
   }
 
   // ==================== HELPER METHOD ====================
@@ -330,5 +358,15 @@ class ApiService {
 
     final responseData = _parseResponse(response);
     return List<Map<String, dynamic>>.from(responseData['data']);
+  }
+
+  static Future<Map<String, dynamic>> fetchProfilDesa() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/profildesa'),
+      headers: headers,
+    );
+
+    final responseData = _parseResponse(response);
+    return responseData['data']; // Kembalikan data profil desa
   }
 }
