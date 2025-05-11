@@ -2,6 +2,7 @@ import 'package:aplikasi_desa/models/gallery_model.dart';
 import 'package:aplikasi_desa/pages/all_berita_page.dart';
 import 'package:aplikasi_desa/pages/all_pengumuman_page.dart'; // Import halaman semua pengumuman
 import 'package:aplikasi_desa/pages/all_product_page.dart';
+import 'package:aplikasi_desa/pages/auth_checker.dart';
 import 'package:aplikasi_desa/pages/berita.dart';
 import 'package:aplikasi_desa/pages/berita_detail_page.dart';
 import 'package:aplikasi_desa/pages/gallery_page.dart';
@@ -67,7 +68,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _pages.add(buildHomeContent()); // Halaman Home (indeks 0)
       _pages.add(BeritaPage()); // Halaman Berita (indeks 1)
-      _pages.add(PeringatanLogin()); // Halaman Layanan (indeks 2)
+      _pages.add(AuthCheckerScreen()); // Halaman Layanan (indeks 2)
       _pages.add(AllProductPage(allProducts: products)); // Halaman Produk (indeks 3)
       _pages.add(ProfilePage()); // Halaman Akun (indeks 4)
       isPagesInitialized = true; // Tandai bahwa _pages telah diinisialisasi
