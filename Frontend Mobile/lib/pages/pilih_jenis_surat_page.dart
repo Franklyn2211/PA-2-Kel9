@@ -13,8 +13,8 @@ class _PilihJenisSuratPageState extends State<PilihJenisSuratPage> {
   String? selectedSurat;
 
   final List<Map<String, String>> jenisSurat = [
-    {'value': 'Surat Keterangan Belum Pernah Menikah', 'label': 'Surat Keterangan Belum Pernah Menikah'},
-    {'value': 'Surat Keterangan Domisili', 'label': 'Surat Keterangan Domisili'},
+    {'value': 'Surat Belum Menikah', 'label': 'Surat Belum Menikah'},
+    {'value': 'Surat Domisili', 'label': 'Surat Domisili'},
     {'value': 'Surat Keterangan Usaha', 'label': 'Surat Keterangan Usaha'},
     {'value': 'Surat Pengantar', 'label': 'Surat Pengantar'},
     {'value': 'Surat Keterangan Kelahiran', 'label': 'Surat Keterangan Kelahiran'},

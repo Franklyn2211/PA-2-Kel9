@@ -108,8 +108,8 @@ class _FormSuratPageState extends State<FormSuratPage> {
 
         // Tentukan endpoint berdasarkan jenis surat
         final endpoint = {
-          'Surat Keterangan Belum Pernah Menikah': 'api/pengajuan/belum-menikah',
-          'Surat Keterangan Domisili': 'api/pengajuan/surat-domisili',
+          'Surat Belum Menikah': 'api/pengajuan/belum-menikah',
+          'Surat Domisili': 'api/pengajuan/surat-domisili',
           'Surat Keterangan Usaha': 'api/pengajuan/surat-usaha',
           // Tambahkan jenis surat lainnya di sini
         }[widget.jenisSurat] ?? 'api/surat-umum';
