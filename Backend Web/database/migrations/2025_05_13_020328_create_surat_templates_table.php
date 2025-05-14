@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('jenis_surat')->unique(); // Contoh: 'surat_tidak_mampu'
             $table->string('nama_surat'); // Contoh: 'Surat Keterangan Tidak Mampu'
-            $table->text('template_path'); // Path ke file template
-            $table->text('placeholder_fields'); // JSON field yang bisa diisi otomatis
             $table->timestamps();
         });
     }

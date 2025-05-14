@@ -187,7 +187,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     })->name('admin.settings.index');
 });
 
-// // Redirect root to admin dashboard if authenticated
-// Route::get('/', function () {
-//     return redirect()->route('admin.dashboard');
-// });
+// Redirect root to admin dashboard if authenticated
+Route::get('/', function () {
+    return redirect()->route('admin.dashboard');
+});

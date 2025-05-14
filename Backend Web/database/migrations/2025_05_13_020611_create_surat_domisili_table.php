@@ -1,31 +1,35 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateSuratDomisiliTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('surat_keterangan_belum_pernah_menikah', function (Blueprint $table) {
+        Schema::create('surat_domisili', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('pengajuan_id');
-            $table->text('alasan_pengajuan');
-            $table->string('nomor_telepon');
-            $table->text('alamat_sekarang')->nullable();
+            $table->string('keperluan');
+            $table->json('data_tambahan')->nullable(); // Ubah dari binary ke json
+            $table->timestamps();
+
             $table->foreign('pengajuan_id')->references('id')->on('pengajuan_surat')->onDelete('cascade');
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('surat_keterangan_belum_pernah_menikahs');
+        Schema::dropIfExists('surat_domisili');
     }
-};
+}

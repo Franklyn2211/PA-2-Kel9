@@ -13,10 +13,6 @@
             <label for="nama_surat" class="form-label">Nama Surat</label>
             <input type="text" name="nama_surat" id="nama_surat" class="form-control" required>
         </div>
-        <div class="mb-3">
-            <label for="template" class="form-label">File Template</label>
-            <input type="file" name="template" id="template" class="form-control" required>
-        </div>
         <button type="submit" class="btn btn-success">Simpan</button>
     </form>
 </div>

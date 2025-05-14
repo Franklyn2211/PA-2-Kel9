@@ -18,8 +18,8 @@ return new class extends Migration
             $table->dateTime('tanggal_pengajuan')->useCurrent();
             $table->dateTime('tanggal_diselesaikan')->nullable();
             $table->timestamps();
-            
-            $table->foreign('resident_id')->references('id')->on('residents')->onDelete('cascade');
+
+            $table->foreign('resident_id')->references('id')->on('resident')->onDelete('cascade');
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pengajuan_surats');
+        Schema::dropIfExists('pengajuan_surat');
     }
 };

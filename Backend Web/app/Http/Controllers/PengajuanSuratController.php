@@ -36,7 +36,7 @@ class PengajuanSuratController extends Controller
         try {
             // Simpan data pengajuan umum
             $template = surat_templates::where('jenis_surat', $request->jenis_surat)->first();
-            
+
             $pengajuan = pengajuan_surat::create([
                 'resident_id' => $request->resident_id,
                 'template_id' => $template->id,
@@ -53,9 +53,9 @@ class PengajuanSuratController extends Controller
                         'alamat_sekarang' => $request->alamat_sekarang,
                     ]);
                     break;
-                
+
                 // Tambahkan case untuk jenis surat lainnya
-                
+
                 default:
                     throw new \Exception("Jenis surat tidak dikenali");
             }
@@ -87,7 +87,7 @@ class PengajuanSuratController extends Controller
             case 'surat_tidak_mampu':
                 $detailPengajuan = surat_tidak_mampu::where('pengajuan_id', $id)->first();
                 break;
-            
+
             // Tambahkan case untuk jenis surat lainnya
         }
 
@@ -103,7 +103,7 @@ class PengajuanSuratController extends Controller
     public function approve($id)
     {
         $pengajuan = pengajuan_surat::with(['template', 'resident'])->findOrFail($id);
-        
+
         // Generate nomor surat
         $pengajuan->nomor_surat = $this->generateNomorSurat($pengajuan);
         $pengajuan->status = 'disetujui';
@@ -120,7 +120,7 @@ class PengajuanSuratController extends Controller
     public function reject(Request $request, $id)
     {
         $request->validate(['feedback' => 'required|string']);
-        
+
         $pengajuan = pengajuan_surat::findOrFail($id);
         $pengajuan->status = 'ditolak';
         $pengajuan->feedback = $request->feedback;
@@ -134,14 +134,14 @@ class PengajuanSuratController extends Controller
         $count = pengajuan_surat::where('template_id', $pengajuan->template_id)
             ->whereYear('created_at', date('Y'))
             ->count();
-            
+
         $kodeSurat = [
             'surat_tidak_mampu' => 'STM',
             'surat_domisili' => 'SDM',
             // Tambahkan kode untuk jenis surat lainnya
         ];
-        
-        return sprintf('%s/%03d/%s/%d', 
+
+        return sprintf('%s/%03d/%s/%d',
             $kodeSurat[$pengajuan->template->jenis_surat],
             $count + 1,
             romanNumerals(date('n')),
@@ -158,7 +158,7 @@ class PengajuanSuratController extends Controller
         // Isi data umum
         $template->setValue('nomor_surat', $pengajuan->nomor_surat);
         $template->setValue('tanggal_surat', now()->format('d F Y'));
-        
+
         // Isi data penduduk
         $template->setValue('nama', $pengajuan->resident->name);
         $template->setValue('nik', $pengajuan->resident->nik);
@@ -172,7 +172,7 @@ class PengajuanSuratController extends Controller
                 $template->setValue('alasan_pengajuan', $detail->alasan_pengajuan);
                 $template->setValue('nomor_telepon', $detail->nomor_telepon);
                 break;
-            
+
             // Tambahkan case untuk jenis surat lainnya
         }
 
