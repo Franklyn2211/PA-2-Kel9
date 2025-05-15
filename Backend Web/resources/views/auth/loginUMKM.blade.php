@@ -76,6 +76,12 @@
             border-radius: 10px;
             margin-bottom: 1rem;
         }
+        .alert-danger {
+            background: rgba(255, 0, 0, 0.2);
+        }
+        .alert-success {
+            background: rgba(0, 255, 0, 0.2);
+        }
         a {
             color: #008000;
             text-decoration: none;
@@ -88,29 +94,40 @@
 <body>
     <div class="login-container">
         <h2>Login UMKM</h2>
+<!-- Pesan Sukses -->
+@if (session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
+<!-- Pesan Error -->
+@if ($errors->any())
+<div class="alert alert-danger">
+    {{ $errors->first() }}
+</div>
+@endif
 
-        <!-- Pesan Error -->
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                {{ $errors->first() }}
-            </div>
-        @endif
-
-        <!-- Form Login -->
-        {{-- <form action="{{ route('umkm.login') }}" method="POST"> --}}
-            @csrf
-            <div class="input-group mb-3">
-                <input type="password" name="password" class="form-control" placeholder="Password" required>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-login">Masuk</button>
-        </form>
-
+<!-- Form Login -->
+<form action="{{ route('login.umkm.post') }}" method="POST">
+@csrf
+<div class="input-group mb-3">
+<input type="text" name="email" class="form-control" placeholder="Email" required>
+<div class="input-group-append">
+<span class="input-group-text"><i class="fas fa-user"></i></span>
+</div>
+</div>
+<div class="input-group mb-3">
+<input type="password" name="password" class="form-control" placeholder="Password" required>
+<div class="input-group-append">
+<span class="input-group-text"><i class="fas fa-lock"></i></span>
+</div>
+</div>
+<button type="submit" class="btn btn-login">Masuk</button>
+</form>
         <!-- Link Tambahan -->
         <div class="text-center mt-3">
-            <a href="{{ route('register') }}">Daftar UMKM</a>
+            <a href="{{ route('register') }}">Daftar UMKM</a> |
+            <a href="{{ route('login') }}">Login Admin</a>
         </div>
     </div>
 

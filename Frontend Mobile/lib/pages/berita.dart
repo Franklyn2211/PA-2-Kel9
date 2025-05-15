@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/berita.dart';
 import '../services/api_service.dart';
 import 'all_berita_page.dart';
-<<<<<<< HEAD
-=======
-import 'package:html_unescape/html_unescape.dart'; // Import package html_unescape
->>>>>>> 2adfedfdb119fb23cc6b2b49ca139581a3432520
+
+import 'package:html_unescape/html_unescape.dart';
 
 class BeritaPage extends StatefulWidget {
   @override
@@ -15,14 +13,17 @@ class BeritaPage extends StatefulWidget {
 
 class _BeritaPageState extends State<BeritaPage> {
   late Future<List<Berita>> futureBerita;
-  final HtmlUnescape htmlUnescape = HtmlUnescape(); // Buat instance HtmlUnescape
+  final HtmlUnescape htmlUnescape = HtmlUnescape();
+  
+  // Define theme colors to match HomePage
+  final Color themeColor = const Color(0xFF3AC53E);
+  final Color themeAccentColor = const Color(0xFF2EA232);
+  final Color themeLightColor = const Color(0xFF4CDF50);
 
   @override
   void initState() {
     super.initState();
     futureBerita = ApiService.fetchBerita();
-<<<<<<< HEAD
-=======
   }
 
   // Fungsi untuk menghapus tag HTML dari teks
@@ -31,35 +32,30 @@ class _BeritaPageState extends State<BeritaPage> {
         .replaceAll(RegExp(r'<[^>]*>'), '') // Hapus tag HTML
         .replaceAll(RegExp(r'\s+'), ' ') // Ganti multiple spasi dengan satu spasi
         .trim();
->>>>>>> 2adfedfdb119fb23cc6b2b49ca139581a3432520
+  }
+
+  // Format date for display in a more readable format
+  String _formatDate(DateTime date) {
+    final months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+      'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+    ];
+    return "${date.day} ${months[date.month - 1]} ${date.year}";
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Berita Desa",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        backgroundColor: Colors.blue[800],
-        elevation: 0,
-        centerTitle: true,
-      ),
       body: FutureBuilder<List<Berita>>(
         future: futureBerita,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
+            return Center(
               child: CircularProgressIndicator(
-                color: Colors.blue,
+                color: Color(0xFFE9FFE9),
               ),
             );
           } else if (snapshot.hasError) {
-<<<<<<< HEAD
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -77,6 +73,24 @@ class _BeritaPageState extends State<BeritaPage> {
                       fontSize: 16,
                     ),
                     textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        futureBerita = ApiService.fetchBerita();
+                      });
+                    },
+                    icon: const Icon(Icons.refresh),
+                    label: const Text("Coba Lagi"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: themeColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -97,47 +111,6 @@ class _BeritaPageState extends State<BeritaPage> {
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 16,
-=======
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Tidak ada berita ditemukan'));
-          } else {
-            List<Berita> sortedBerita = snapshot.data!..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-            List<Berita> limitedBerita = sortedBerita.take(5).toList();
-
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.all(16),
-                    itemCount: limitedBerita.length,
-                    itemBuilder: (context, index) {
-                      Berita berita = limitedBerita[index];
-                      return beritaItem(berita);
-                    },
-                  ),
-                ),
-                if (sortedBerita.length > 5)
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AllBeritaPage(
-                              allBerita: sortedBerita,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Text("Lihat Semua Berita",
-                          style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green[800],
-                        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                      ),
->>>>>>> 2adfedfdb119fb23cc6b2b49ca139581a3432520
                     ),
                   ),
                 ],
@@ -153,27 +126,36 @@ class _BeritaPageState extends State<BeritaPage> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.blue[50]!, Colors.white],
+                  colors: [themeColor.withOpacity(0.1), Colors.white],
                 ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
+                  // Header section
+                  Container(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                     child: Row(
                       children: [
-                        const Icon(
-                          Icons.article,
-                          color: Colors.blue,
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: themeColor.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.article,
+                            color: themeColor,
+                            size: 24,
+                          ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 12),
                         Text(
                           "Berita Terbaru",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue[800],
+                            color: themeColor,
                           ),
                         ),
                       ],
@@ -206,10 +188,10 @@ class _BeritaPageState extends State<BeritaPage> {
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: Colors.green[700],
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          backgroundColor: themeColor,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           elevation: 2,
                         ),
@@ -239,16 +221,11 @@ class _BeritaPageState extends State<BeritaPage> {
   }
 
   Widget beritaItem(Berita berita) {
-<<<<<<< HEAD
-    // Format date for display
-    final DateTime date = berita.createdAt;
-    final String formattedDate = "${date.day}/${date.month}/${date.year}";
-    
     return Card(
-      elevation: 4,
+      elevation: 3,
       margin: const EdgeInsets.only(bottom: 16),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: InkWell(
         onTap: () {
@@ -259,170 +236,133 @@ class _BeritaPageState extends State<BeritaPage> {
             ),
           );
         },
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Gambar berita
+            // Featured image
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: Image.network(
-                berita.photoUrl,
-                width: double.infinity,
-                height: 180,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              child: Stack(
+                children: [
+                  Image.network(
+                    berita.photoUrl,
                     width: double.infinity,
-                    height: 180,
-                    color: Colors.grey[200],
-                    child: const Icon(
-                      Icons.image_not_supported,
-                      size: 50,
-                      color: Colors.grey,
+                    height: 200,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: double.infinity,
+                        height: 200,
+                        color: Colors.grey[200],
+                        child: Icon(
+                          Icons.image_not_supported,
+                          size: 50,
+                          color: Colors.grey[400],
+                        ),
+                      );
+                    },
+                  ),
+                  // Optional: Add a gradient overlay for better text readability if needed
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      margin: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: themeColor.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.calendar_today,
+                            size: 14,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            _formatDate(berita.createdAt),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
             ),
-            // Keterangan berita
+            // Content
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[100],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.calendar_today,
-                              size: 14,
-                              color: Colors.blue,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              formattedDate,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
                   Text(
                     berita.title,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
+                      height: 1.3,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Text(
-                    berita.description,
+                    _removeHtmlTags(berita.description),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 14,
-                      height: 1.4,
+                      height: 1.5,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BeritaDetailPage(berita: berita),
-                            ),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.blue[800],
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BeritaDetailPage(berita: berita),
+                          ),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: themeColor,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Row(
-                          children: [
-                            Text(
-                              "Baca Selengkapnya",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(width: 4),
-                            Icon(Icons.arrow_forward, size: 16),
-                          ],
-                        ),
+                        backgroundColor: themeColor.withOpacity(0.1),
                       ),
-                    ],
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Baca Selengkapnya",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 4),
+                          Icon(Icons.arrow_forward, size: 16),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
-=======
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BeritaDetailPage(berita: berita),
-          ),
-        );
-      },
-      child: Card(
-        color: Colors.white,
-        elevation: 3,
-        margin: EdgeInsets.only(bottom: 10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  berita.photoUrl,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
               ),
-              SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(berita.title,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
-                    SizedBox(height: 4),
-                    Text(
-                      _removeHtmlTags(berita.description), // Gunakan fungsi untuk menghapus HTML
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                  ],
-                ),
->>>>>>> 2adfedfdb119fb23cc6b2b49ca139581a3432520
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -12,6 +12,15 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        return $request->expectsJson() ? null : route('login');
+        if ($request->expectsJson()) {
+            return null;
+        }
+
+        // Redirect based on guard
+        if ($request->is('umkm/*')) {
+            return route('login.umkm');
+        }
+
+        return route('login');
     }
 }

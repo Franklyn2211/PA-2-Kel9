@@ -2,7 +2,7 @@
     <div class="sidebar-header">
         <a href="/admin/dashboard" class="sidebar-logo">
             <div class="sidebar-logo-icon">
-                <img src="{{ asset('assets/images/logo.png') }}" alt="Desa Digital Logo">
+                <img src="{{ asset('assets/images/logo.bmp') }}" alt="Desa Digital Logo">
             </div>
             <div class="sidebar-logo-text">
                 <div class="sidebar-logo-title">Desa Ambarita</div>
@@ -29,12 +29,6 @@
                     <span class="nav-text">Data Penduduk</span>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('admin/layanan*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{route('admin.layanan.index')}}">
-                    <i class="fas fa-hands-helping"></i>
-                    <span class="nav-text">Layanan</span>
-                </a>
-            </li>
             <li class="nav-item {{ request()->is('admin/berita*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{route('admin.berita.index')}}">
                     <i class="fas fa-newspaper"></i>
@@ -48,13 +42,13 @@
                 </a>
             </li>
             <li class="nav-item {{ request()->is('admin/galeri*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/galeri">
+                <a class="nav-link" href="{{route('admin.galeri.index')}}">
                     <i class="fas fa-images"></i>
                     <span class="nav-text">Galeri</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->is('admin/surat*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/surat">
+                <a class="nav-link" href="/admin/pengajuan">
                     <i class="fas fa-file-alt"></i>
                     <span class="nav-text">Surat Menyurat</span>
                 </a>
@@ -63,22 +57,16 @@
 
         <div class="nav-section">Master Data</div>
         <ul class="nav flex-column">
-            <li class="nav-item {{ request()->is('admin/aparatur*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/aparatur">
+            <li class="nav-item {{ request()->is('admin/staff*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{route('admin.staff.index')}}">
                     <i class="fas fa-user-tie"></i>
-                    <span class="nav-text">Aparatur Desa</span>
+                    <span class="nav-text">Staff Desa</span>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('admin/program*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/program">
-                    <i class="fas fa-tasks"></i>
-                    <span class="nav-text">Program Desa</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('admin/pembangunan*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/pembangunan">
-                    <i class="fas fa-hard-hat"></i>
-                    <span class="nav-text">Pembangunan</span>
+            <li class="nav-item {{ request()->is('admin/umkm*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{route('admin.umkm.index')}}">
+                    <i class="fas fa-store"></i>
+                    <span class="nav-text">UMKM</span>
                 </a>
             </li>
         </ul>
@@ -86,21 +74,9 @@
         <div class="nav-section">Sistem</div>
         <ul class="nav flex-column">
             <li class="nav-item {{ request()->is('admin/profil*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/profil">
+                <a class="nav-link" href="{{route('admin.profildesa.index')}}">
                     <i class="fas fa-info-circle"></i>
                     <span class="nav-text">Profil Desa</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('admin/users*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/users">
-                    <i class="fas fa-user-shield"></i>
-                    <span class="nav-text">Pengguna</span>
-                </a>
-            </li>
-            <li class="nav-item {{ request()->is('admin/settings*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/settings">
-                    <i class="fas fa-sliders-h"></i>
-                    <span class="nav-text">Pengaturan</span>
                 </a>
             </li>
         </ul>

@@ -94,42 +94,53 @@
         @endif
 
         <!-- Form Registrasi -->
-        {{-- <form action="{{ route('register.umkm.post') }}" method="POST"> --}}
-            @csrf
-            <div class="input-group mb-3">
-                <input type="text" name="nik" class="form-control" placeholder="NIK (16 digit)" value="{{ old('nik') }}" maxlength="16" required>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                </div>
-            </div>
+<form action="{{ route('register.umkm.post') }}" method="POST">
+    @csrf
 
-            <div class="input-group mb-3">
-                <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                </div>
-            </div>
+    <div class="input-group mb-3">
+        <input type="text" name="nama_umkm" class="form-control" placeholder="Nama UMKM" value="{{ old('nama_umkm') }}" required>
+        <div class="input-group-append">
+            <span class="input-group-text"><i class="fas fa-store"></i></span>
+        </div>
+    </div>
 
-            <div class="input-group mb-3">
-                <input type="password" name="password" class="form-control" placeholder="Password" required>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                </div>
-            </div>
+    <div class="input-group mb-3">
+        <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required>
+        <div class="input-group-append">
+            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+        </div>
+    </div>
 
-            <div class="input-group mb-3">
-                <input type="password" name="password_confirmation" class="form-control" placeholder="Konfirmasi Password" required>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                </div>
-            </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text">+62</span>
+        <input type="text" name="phone" class="form-control" placeholder="Nomor HP" value="{{ old('phone') }}" maxlength="11" required>
+        <div class="input-group-append">
+            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+        </div>
+    </div>
 
-            <button type="submit" class="btn btn-register">Daftar</button>
-        </form>
+    <div class="input-group mb-3">
+        <input type="password" name="password" class="form-control" placeholder="Password" required>
+        <div class="input-group-append">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+        </div>
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="password" name="password_confirmation" class="form-control" placeholder="Konfirmasi Password" required>
+        <div class="input-group-append">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-register">Daftar</button>
+</form>
+
 
         <!-- Link Tambahan -->
         <div class="text-center mt-3">
-            <a href="{{ route('login') }}">Sudah punya akun? Masuk di sini</a>
+            <a href="{{ route('login.umkm') }}">Sudah punya akun? Masuk di sini</a> |
+            <a href="{{ route('login') }}">Login Admin</a>
         </div>
     </div>
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Penduduk;
+use App\Models\Resident;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,7 +15,7 @@ class AuthController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        $penduduk = Penduduk::where('nik', $request->nik)->first();
+        $penduduk = Resident::where('nik', $request->nik)->first();
 
         if (!$penduduk || !Hash::check($request->password, $penduduk->password)) {
             return response()->json([

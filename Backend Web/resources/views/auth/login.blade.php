@@ -121,7 +121,8 @@
 
         <!-- Link Tambahan -->
         <div class="text-center mt-3">
-            <a href="{{ route('register') }}">Daftar UMKM</a>
+            <a href="{{ route('register') }}">Daftar UMKM</a> |
+            <a href="{{ route('login.umkm') }}">Login UMKM</a>
         </div>
     </div>
 

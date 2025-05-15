@@ -2,7 +2,7 @@
 import 'penduduk.dart';
 
 class PendudukResponse {
-  final List<Penduduk> data;
+  final List<Residents> data;
 
   PendudukResponse({
     required this.data,
@@ -11,7 +11,7 @@ class PendudukResponse {
   factory PendudukResponse.fromJson(Map<String, dynamic> json) {
     return PendudukResponse(
       data: (json['data'] as List)
-          .map((item) => Penduduk.fromJson(item))
+          .map((item) => Residents.fromJson(item))
           .toList(),
     );
   }
