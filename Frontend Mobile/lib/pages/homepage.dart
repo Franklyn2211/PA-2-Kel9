@@ -864,74 +864,79 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _pengumumanItem(Pengumuman pengumuman) {
-    final isSelected = _selectedPengumumanId ==
-        pengumuman.id; // Cek apakah pengumuman ini dipilih
-    final fullDescription = _removeHtmlTags(pengumuman.description);
-    final description = isSelected
-        ? fullDescription
-        : (fullDescription.length > 20
-            ? fullDescription.substring(0, 20) + '...'
-            : fullDescription); // Potong deskripsi jika tidak dipilih
+  final isSelected = _selectedPengumumanId == pengumuman.id;
+  final fullDescription = _removeHtmlTags(pengumuman.description);
+  final description = isSelected
+      ? fullDescription
+      : (fullDescription.length > 20
+          ? fullDescription.substring(0, 20) + '...'
+          : fullDescription);
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedPengumumanId =
-              isSelected ? null : pengumuman.id; // Toggle detail pengumuman
-        });
-      },
-      child: Card(
-        color: Colors.white,
-        elevation: 3,
-        margin: const EdgeInsets.only(bottom: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+  return GestureDetector(
+    onTap: () {
+      setState(() {
+        _selectedPengumumanId = isSelected ? null : pengumuman.id;
+      });
+
+      // Navigasi ke halaman detail
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AllPengumumanPage(),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                pengumuman.title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+      );
+    },
+    child: Card(
+      color: Colors.white,
+      elevation: 3,
+      margin: const EdgeInsets.only(bottom: 14),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              pengumuman.title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
-              const SizedBox(height: 8),
-              Text(
-                description,
-                maxLines: isSelected ? null : 3,
-                overflow:
-                    isSelected ? TextOverflow.visible : TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.grey[700], height: 1.3),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Icon(Icons.calendar_today, size: 14, color: themeColor),
-                  const SizedBox(width: 4),
-                  Text(
-                    pengumuman.createdAt,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              description,
+              maxLines: isSelected ? null : 3,
+              overflow:
+                  isSelected ? TextOverflow.visible : TextOverflow.ellipsis,
+              style: TextStyle(color: Colors.grey[700], height: 1.3),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.calendar_today, size: 14, color: themeColor),
+                const SizedBox(width: 4),
+                Text(
+                  pengumuman.createdAt,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
                   ),
-                ],
-              ),
-              if (isSelected) ...[
-                const SizedBox(height: 8),
+                ),
               ],
-            ],
-          ),
+            ),
+            if (isSelected) const SizedBox(height: 8),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _informasiDesa() {
     return Card(

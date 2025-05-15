@@ -196,7 +196,7 @@ class _PaymentProofScreenState extends State<PaymentProofScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Unggah Bukti Pembayaran'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF3AC53E),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
