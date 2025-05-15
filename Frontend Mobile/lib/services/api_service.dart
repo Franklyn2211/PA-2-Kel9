@@ -14,7 +14,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "https://c444-103-167-217-200.ngrok-free.app/api";
+  static const String baseUrl = "https://1c3f-2404-c0-5610-00-b45-c41d.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -22,7 +22,7 @@ class ApiService {
   };
 
   String getBaseUrl() {
-    return 'https://c444-103-167-217-200.ngrok-free.app'; // Replace with your actual base URL
+    return 'https://1c3f-2404-c0-5610-00-b45-c41d.ngrok-free.app'; // Replace with your actual base URL
   }
 
   // ==================== NIK VERIFICATION ====================
@@ -368,5 +368,20 @@ class ApiService {
 
     final responseData = _parseResponse(response);
     return responseData['data']; // Kembalikan data profil desa
+  }
+
+  static Future<bool> saveFcmToken({required int userId, required String fcmToken}) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/save-fcm-token'),
+      headers: headers,
+      body: jsonEncode({
+        'user_id': userId,
+        'fcm_token': fcmToken,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
   }
 }

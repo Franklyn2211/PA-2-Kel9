@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
 use App\Models\pengajuan_surat;
 use App\Models\Residents;
 use App\Models\surat_belum_menikah;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notification;
 use PhpOffice\PhpWord\TemplateProcessor; // Ensure this library is installed via Composer
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -60,14 +63,47 @@ class SuratController extends Controller
 
     public function approve($id)
     {
-        $pengajuan = pengajuan_surat::findOrFail($id);
+        $pengajuan = pengajuan_surat::with('resident')->findOrFail($id);
         $pengajuan->status = 'disetujui';
-        $pengajuan->tanggal_diselesaikan = now()->timezone('Asia/Jakarta'); // Set the completion time to the current time
+        $pengajuan->tanggal_diselesaikan = now()->timezone('Asia/Jakarta');
         $pengajuan->save();
+
+        // Kirim notifikasi FCM jika user punya fcm_token
+        $resident = $pengajuan->resident;
+        if ($resident && !empty($resident->fcm_token)) {
+            $this->sendFcmNotification(
+                $resident->fcm_token,
+                'Pengajuan Surat Disetujui',
+                'Pengajuan surat Anda telah disetujui.'
+            );
+        }
 
         return redirect()->route('admin.pengajuan.index')->with('success', 'Pengajuan berhasil disetujui.');
     }
 
+    /**
+     * Kirim notifikasi FCM ke user
+     */
+    protected function sendFcmNotification($fcmToken, $title, $body)
+    {
+        $factory = (new Factory)
+            ->withServiceAccount(base_path(env('FCM_SERVICE_ACCOUNT_JSON')));
+
+        $messaging = $factory->createMessaging();
+
+        $message = CloudMessage::withTarget('token', $fcmToken)
+            ->withNotification(FirebaseNotification::create($title, $body))
+            ->withData([
+                'type' => 'approval',
+            ]);
+
+        try {
+            $messaging->send($message);
+            \Log::info('✅ FCM sent successfully to ' . $fcmToken);
+        } catch (\Throwable $e) {
+            \Log::error('❌ FCM send failed: ' . $e->getMessage());
+        }
+    }
     public function generateAndShowPDF($id)
     {
         try {
@@ -182,5 +218,21 @@ class SuratController extends Controller
             \Log::error("Gagal membuat PDF untuk pengajuan ID: $id - " . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    public function saveFcmToken(Request $request)
+    {
+        \Log::info('Save FCM Token called', $request->all());
+
+        $request->validate([
+            'user_id' => 'required|exists:residents,id',
+            'fcm_token' => 'required|string',
+        ]);
+
+        $resident = \App\Models\Residents::find($request->user_id);
+        $resident->fcm_token = $request->fcm_token;
+        $resident->save();
+
+        return response()->json(['success' => true, 'message' => 'FCM token berhasil disimpan']);
     }
 }

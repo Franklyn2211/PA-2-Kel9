@@ -5,6 +5,8 @@ import 'package:aplikasi_desa/screens/registrasi.dart';
 import 'package:aplikasi_desa/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import '../main.dart'; // Import fungsi sendFcmTokenToBackend
 
 class LoginScreen extends StatefulWidget {
   final int? productId; // Add productId parameter
@@ -55,6 +57,12 @@ class _LoginScreenState extends State<LoginScreen> {
         print('Data respons login: ${response['data']}');
         print('User setelah login: ${authProvider.user?.toJson()}');
         print('User ID: ${authProvider.user?.id}');
+
+        // Kirim FCM token ke backend setelah login berhasil
+        final userId = authProvider.user?.id;
+        if (userId != null) {
+          await sendFcmTokenToBackend(userId);
+        }
 
         // Navigasi setelah login berhasil
         if (mounted) {

@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->date('birth_date');
             $table->string('religion', 50);
             $table->string('family_card_number', 16);
+            $table->string('fcm_token')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

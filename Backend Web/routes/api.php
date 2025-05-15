@@ -35,3 +35,4 @@ Route::middleware('auth:sanctum')->get('/user/requests', function () {
 });
 Route::get('/orders', [OrderController::class, 'getUserOrders']);
 Route::get('/pengajuan/{id}/download', [SuratController::class, 'downloadPDF']); // Rute untuk mengunduh PDF
+Route::post('/user/save-fcm-token', [\App\Http\Controllers\SuratController::class, 'saveFcmToken']);
