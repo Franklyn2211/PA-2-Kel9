@@ -14,7 +14,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "https://1c3f-2404-c0-5610-00-b45-c41d.ngrok-free.app/api";
+  static const String baseUrl = "https://7022-114-5-147-119.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -22,7 +22,7 @@ class ApiService {
   };
 
   String getBaseUrl() {
-    return 'https://1c3f-2404-c0-5610-00-b45-c41d.ngrok-free.app'; // Replace with your actual base URL
+    return 'https://7022-114-5-147-119.ngrok-free.app'; // Replace with your actual base URL
   }
 
   // ==================== NIK VERIFICATION ====================

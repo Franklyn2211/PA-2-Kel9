@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Tambahkan ini
+import 'package:intl/intl.dart';
+import 'package:flutter_html/flutter_html.dart'; // Tambahkan package ini untuk menangani HTML
+import 'package:html/parser.dart' show parse; // Untuk parsing HTML
 import 'package:aplikasi_desa/pages/berita_detail_page.dart';
 import '../models/berita.dart';
 
@@ -12,19 +14,28 @@ class AllBeritaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Semua Berita"),
-        backgroundColor: Colors.blue[800],
-        elevation: 0,
+        title: const Text(
+          "Semua Berita",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Color(0xFF3AC53E),
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
+        ),
       ),
-      body: allBerita.isEmpty
-          ? _buildEmptyState()
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: allBerita.length,
-              itemBuilder: (context, index) {
-                return _buildBeritaItem(context, allBerita[index]);
-              },
-            ),
+      body: Container(
+        color: Colors.grey[100], // Background color untuk seluruh halaman
+        child: allBerita.isEmpty
+            ? _buildEmptyState()
+            : ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: allBerita.length,
+                itemBuilder: (context, index) {
+                  return _buildBeritaItem(context, allBerita[index]);
+                },
+              ),
+      ),
     );
   }
 
@@ -34,9 +45,9 @@ class AllBeritaPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.article,
-            size: 64,
-            color: Colors.grey,
+            Icons.article_outlined,
+            size: 80,
+            color: Color(0xFF3AC53E),
           ),
           SizedBox(height: 16),
           Text(
@@ -45,6 +56,14 @@ class AllBeritaPage extends StatelessWidget {
               fontSize: 18,
               color: Colors.grey,
               fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            "Cek kembali nanti untuk informasi terbaru",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
             ),
           ),
         ],
@@ -61,95 +80,128 @@ class AllBeritaPage extends StatelessWidget {
       child: InkWell(
         onTap: () => _navigateToDetail(context, berita),
         borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildBeritaImage(berita),
-              const SizedBox(width: 12),
-              _buildBeritaContent(berita),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image Header
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+              child: Hero(
+                tag: 'berita-image-${berita.id ?? ""}',
+                child: Image.network(
+                  berita.photoUrl,
+                  height: 180,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      height: 180,
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.image_not_supported, size: 40, color: Colors.grey),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      height: 180,
+                      color: Colors.grey[200],
+                      child: const Center(child: CircularProgressIndicator()),
+                    );
+                  },
+                ),
+              ),
+            ),
+            // Content
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    berita.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _stripHtmlTags(berita.description),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.grey[700], fontSize: 14, height: 1.5),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildInfoFooter(berita),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildBeritaImage(Berita berita) {
-    return Hero(
-      tag: 'berita-image-${berita.id ?? ""}',
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          berita.photoUrl,
-          width: 100,
-          height: 100,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              width: 100,
-              height: 100,
-              color: Colors.grey[300],
-              child: const Icon(Icons.image_not_supported, color: Colors.grey),
-            );
-          },
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Container(
-              width: 100,
-              height: 100,
-              color: Colors.grey[200],
-              child: const Center(child: CircularProgressIndicator()),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBeritaContent(Berita berita) {
-    // Format tanggal di sini
+  Widget _buildInfoFooter(Berita berita) {
     final formattedDate = berita.createdAt != null
-        ? DateFormat('dd MMM yyyy HH:mm').format(berita.createdAt!)
+        ? DateFormat('dd MMM yyyy • HH:mm').format(berita.createdAt!)
         : 'Tanggal tidak tersedia';
 
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            berita.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.black87,
-            ),
+    return Row(
+      children: [
+        Icon(Icons.calendar_today, size: 16, color: Color(0xFF3AC53E)),
+        const SizedBox(width: 6),
+        Text(
+          formattedDate,
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
           ),
-          const SizedBox(height: 6),
-          Text(
-            berita.description,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(color: Colors.grey[700], fontSize: 14),
+        ),
+        const Spacer(),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: Color(0xFF3AC53E).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
           ),
-          const SizedBox(height: 8),
-          Row(
+          child: Row(
             children: [
-              const Icon(Icons.calendar_today, size: 14, color: Colors.blue),
-              const SizedBox(width: 4),
+              Icon(Icons.arrow_forward, size: 14, color: Color(0xFF3AC53E)),
+              SizedBox(width: 4),
               Text(
-                formattedDate, // Gunakan formattedDate yang sudah dibuat
+                "Selengkapnya",
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey[600],
+                  color: Color(0xFF3AC53E),
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  // Fungsi untuk menghapus tag HTML dari teks
+  String _stripHtmlTags(String htmlString) {
+    if (htmlString == null || htmlString.isEmpty) {
+      return '';
+    }
+    
+    var document = parse(htmlString);
+    String parsedString = document.body!.text;
+    
+    // Mengganti entitas HTML yang umum
+    parsedString = parsedString.replaceAll('&nbsp;', ' ');
+    parsedString = parsedString.replaceAll('&amp;', '&');
+    parsedString = parsedString.replaceAll('&lt;', '<');
+    parsedString = parsedString.replaceAll('&gt;', '>');
+    
+    return parsedString.trim();
   }
 
   void _navigateToDetail(BuildContext context, Berita berita) {
