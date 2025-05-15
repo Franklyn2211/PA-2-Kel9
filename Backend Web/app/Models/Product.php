@@ -9,6 +9,8 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $table = 'product';
+
     protected $fillable = [
         'product_name',
         'description',
@@ -17,23 +19,5 @@ class Product extends Model
         'price',
         'stock',
         'phone',
-        'umkm_id',
     ];
-
-    protected $appends = ['photo_url', 'qris_url'];
-
-    public function umkm()
-    {
-        return $this->belongsTo(UMKM::class);
-    }
-
-    public function getPhotoUrlAttribute()
-    {
-        return $this->photo ? asset('storage/'.$this->photo) : null;
-    }
-
-    public function getQrisUrlAttribute()
-    {
-        return optional($this->umkm)->qris_url;
-    }
 }

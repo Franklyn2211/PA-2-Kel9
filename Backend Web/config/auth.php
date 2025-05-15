@@ -40,12 +40,6 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-
-        'umkm' => [
-            'driver' => 'session',
-            'provider' => 'umkm',
-            'session' => 'umkm_session', // Use a unique session for UMKM
-        ],
     ],
 
     /*
@@ -71,10 +65,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        'umkm' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\UMKM::class,
-        ],
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
     ],
 
     /*

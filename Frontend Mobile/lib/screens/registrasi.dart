@@ -17,7 +17,7 @@ class _NikVerificationScreenState extends State<NikVerificationScreen> {
   bool _isLoading = false;
   bool _isVerified = false;
   String? _errorMessage;
-  Residents? _pendudukData;
+  Penduduk? _pendudukData;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 

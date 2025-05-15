@@ -15,14 +15,5 @@ class News extends Model
         'title',
         'description',
         'photo',
-        'user_id',
     ];
-    protected static function booted()
-    {
-        static::creating(function ($news) {
-            if (is_null($news->user_id)) {
-                $news->user_id = 1; // Default value
-            }
-        });
-    }
 }

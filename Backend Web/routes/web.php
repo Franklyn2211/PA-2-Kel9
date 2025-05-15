@@ -2,20 +2,12 @@
 
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\NewsController;
-use App\Http\Controllers\Admin\ProfilDesaController;
-use App\Http\Controllers\Admin\StaffController;
-use App\Http\Controllers\SuratController;
-use App\Http\Controllers\SuratTemplateController;
-use App\Http\Controllers\UMKM\ProductController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ResidentsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\UMKMController;
-use App\Http\Controllers\PengajuanSuratController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -30,46 +22,9 @@ use Illuminate\Http\Request;
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('/register/umkm', [UMKMController::class, 'showRegisterForm'])->name('register');
-Route::post('/register/umkm', [UMKMController::class, 'register'])->name('register.umkm.post');
-Route::get('/login/umkm', [UMKMController::class, 'showLoginForm'])->name('login.umkm');
-Route::post('/login/umkm', [UMKMController::class, 'login'])->name('login.umkm.post');
-Route::post('/logout/umkm', [UMKMController::class, 'logout'])->name('logout.umkm');
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-// Add a route to clear the session flag after the popup is displayed
-Route::post('/clear-just-logged-in', function (Request $request) {
-    $request->session()->forget('just_logged_in'); // Clear the session flag
-    return response()->noContent();
-})->name('clear.just_logged_in');
-
-// Umkm Routes
-Route::prefix('umkm')->middleware('auth:umkm')->group(function () {
-    Route::get('/', [\App\Http\Controllers\UMKM\DashboardController::class, 'index'])->name('umkm.dashboard');
-    Route::get('/umkm/dashboard', [\App\Http\Controllers\UMKM\DashboardController::class, 'index'])->name('umkm.dashboard.index');
-
-    // Other UMKM routes
-    Route::get('/products', [ProductController::class, 'index'])->name('umkm.products.index');
-    Route::get('/products/create', [ProductController::class, 'create'])->name('umkm.products.create');
-    Route::post('/products', [ProductController::class, 'store'])->name('umkm.products.store');
-    Route::get('/products/{products}/edit', [ProductController::class, 'edit'])->name('umkm.products.edit');
-    Route::put('/products/{products}', [ProductController::class, 'update'])->name('umkm.products.update');
-    Route::delete('/products/{products}', [ProductController::class, 'destroy'])->name('umkm.products.destroy');
-
-    Route::get('/orders', [\App\Http\Controllers\UMKM\OrderController::class, 'index'])->name('umkm.order.index');
-    Route::patch('/orders/{id}/status', [\App\Http\Controllers\UMKM\OrderController::class, 'updateStatus'])->name('umkm.order.status');
-
-    Route::get('/profil', function () {
-        return view('umkm.profil');
-    })->name('umkm.profil');
-
-    Route::post('/profil/qris', [UMKMController::class, 'updateQRIS'])->name('umkm.qris.update');
-
-    // Add routes for editing and updating the UMKM profile
-    Route::get('/profil/edit', [UMKMController::class, 'edit'])->name('umkm.profil.edit');
-    Route::put('/profil', [UMKMController::class, 'update'])->name('umkm.profil.update');
-});
 
 // Admin Routes
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -101,62 +56,29 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/berita/{news}/edit', [NewsController::class, 'edit'])->name('admin.berita.edit');
     Route::put('/berita/{news}', [NewsController::class, 'update'])->name('admin.berita.update');
     Route::delete('/berita/{news}', [NewsController::class, 'destroy'])->name('admin.berita.destroy');
-    // Profil
-    Route::get('/profil', function () {
-        return view('admin.profil');
-    })->name('admin.profil');
-    Route::put('/profil', [LoginController::class, 'updateProfile'])->name('admin.profil.update');
-    Route::get('/profil/edit', [LoginController::class, 'editProfile'])->name('admin.profil.edit');
+
     // Pengumuman
     Route::get('/pengumuman', [AnnouncementController::class, 'index'])->name('admin.pengumuman.index');
     Route::get('/pengumuman/create', [AnnouncementController::class, 'create'])->name('admin.pengumuman.create');
-    Route::post('/pengumuman', [AnnouncementController::class, 'store'])->name('admin.pengumuman.store');
+    Route::post('/pengumuman', [AnnouncementController::class,'store'])->name('admin.pengumuman.store');
     Route::get('/pengumuman/{announcements}/edit', [AnnouncementController::class, 'edit'])->name('admin.pengumuman.edit');
     Route::put('/pengumuman/{announcements}', [AnnouncementController::class, 'update'])->name('admin.pengumuman.update');
     Route::delete('/pengumuman/{announcements}', [AnnouncementController::class, 'destroy'])->name('admin.pengumuman.destroy');
 
-    Route::get('/template', [SuratTemplateController::class, 'index'])->name('admin.templates.index');
-    Route::get('/template/create', [SuratTemplateController::class, 'create'])->name('admin.templates.create');
-    Route::post('/template', [SuratTemplateController::class, 'store'])->name('admin.templates.store');
-    Route::get('/template/{announcements}/edit', [SuratTemplateController::class, 'edit'])->name('admin.templates.edit');
-    Route::put('/template/{announcements}', [SuratTemplateController::class, 'update'])->name('admin.templates.update');
-    Route::delete('/template/{announcements}', [SuratTemplateController::class, 'destroy'])->name('admin.templates.destroy');
-
-    // Route::get('/dashboard', [SuratController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/pengajuan', [SuratController::class, 'pengajuan'])->name('admin.pengajuan.index');
-    Route::get('/pengajuan/{id}', [SuratController::class, 'detailPengajuan'])->name('admin.pengajuan.show');
-    Route::put('/pengajuan/approve/{id}', [SuratController::class, 'approve'])->name('admin.pengajuan.approve');
-    Route::post('/pengajuan/reject/{id}', [PengajuanSuratController::class, 'reject'])->name('admin.pengajuan.reject');
-        Route::delete('/pengajuan/{id}', [SuratController::class, 'destroy'])->name('admin.pengajuan.destroy');
-    Route::get('/pengajuan/{id}/document', [SuratController::class, 'generateAndShowPDF'])->name('admin.pengajuan.document');
-
-    // Routes untuk manajemen template
-    Route::resource('templates', SuratTemplateController::class);
-    // UMKM
-    Route::get('/umkm', [\App\Http\Controllers\Admin\UmkmController::class, 'index'])->name('admin.umkm.index');
-    Route::patch('/umkm/{id}/status', [\App\Http\Controllers\Admin\UmkmController::class, 'updateStatus'])->name('admin.umkm.updateStatus');
-
     // Galeri
-    Route::get('/galeri', [GalleryController::class, 'index'])->name('admin.galeri.index');
-    Route::get('/galeri/create', [GalleryController::class, 'create'])->name('admin.galeri.create');
-    Route::post('/galeri', [GalleryController::class, 'store'])->name('admin.galeri.store');
-    Route::get('/galeri/{galleries}/edit', [GalleryController::class, 'edit'])->name('admin.galeri.edit');
-    Route::put('/galeri/{galleries}', [GalleryController::class, 'update'])->name('admin.galeri.update');
-    Route::delete('/galeri/{galleries}', [GalleryController::class, 'destroy'])->name('admin.galeri.destroy');
+    Route::get('/galeri', function () {
+        return view('admin.galeri.index');
+    })->name('admin.galeri.index');
 
     // Surat Menyurat
     Route::get('/surat', function () {
-        return view('admin.pengajuan.index');
-    })->name('admin.pengajuan.index');
-    Route::get('/admin/pengajuan', [SuratController::class, 'index'])->name('admin.pengajuan.index');
+        return view('admin.surat.index');
+    })->name('admin.surat.index');
 
-    // Staff
-    Route::get('/staff', [StaffController::class, 'index'])->name('admin.staff.index');
-    Route::get('/staff/create', [StaffController::class, 'create'])->name('admin.staff.create');
-    Route::post('/staff', [StaffController::class, 'store'])->name('admin.staff.store');
-    Route::get('/staff/{staff}/edit', [StaffController::class, 'edit'])->name('admin.staff.edit');
-    Route::put('/staff/{staff}', [StaffController::class, 'update'])->name('admin.staff.update');
-    Route::delete('/staff/{staff}', [StaffController::class, 'destroy'])->name('admin.staff.destroy');
+    // Aparatur Desa
+    Route::get('/aparatur', function () {
+        return view('admin.aparatur.index');
+    })->name('admin.aparatur.index');
 
     // Program Desa
     Route::get('/program', function () {
@@ -169,12 +91,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     })->name('admin.pembangunan.index');
 
     // Profil Desa
-    Route::get('/profildesa', [ProfilDesaController::class, 'index'])->name('admin.profildesa.index');
-    Route::get('/profildesa/create', [ProfilDesaController::class, 'create'])->name('admin.profildesa.create');
-    Route::post('/profildesa', [ProfilDesaController::class, 'store'])->name('admin.profildesa.store');
-    Route::get('/profildesa/{profilDesa}/edit', [ProfilDesaController::class, 'edit'])->name('admin.profildesa.edit');
-    Route::put('/profildesa/{profilDesa}', [ProfilDesaController::class, 'update'])->name('admin.profildesa.update');
-    Route::delete('/profildesa/{profilDesa}', [ProfilDesaController::class, 'destroy'])->name('admin.profildesa.destroy');
+    Route::get('/profil', function () {
+        return view('admin.profil.index');
+    })->name('admin.profil.index');
 
     // Pengguna
     Route::get('/users', function () {

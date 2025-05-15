@@ -2,33 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\GaleriResource;
-use App\Http\Resources\pengumumanResource;
 use App\Http\Resources\Postresource;
-use App\Http\Resources\PendudukResource;
-use App\Http\Resources\ProfilResource;
-use App\Http\Resources\StaffResource;
 use App\Models\Announcements;
-use App\Models\Gallery;
 use App\Models\News;
 use App\Models\Product;
-use App\Models\ProfilDesa;
-use App\Models\Resident;
 use App\Models\Residents;
-use App\Models\Staff;
-use App\Models\Umkm;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function getProduct()
-    {
-        $products = Product::with('umkm:id,nama_umkm,qris_image')->get();
-        return PostResource::collection($products);
+    public function getProduct(){
+        $products = Product::all();
+        return Postresource::collection($products);
     }
 
-    public function getNews()
-    {
+    public function getNews(){
         $news = News::all();
         return Postresource::collection($news);
     }
@@ -36,39 +24,12 @@ class PostController extends Controller
     public function getResidents()
     {
         $residents = Residents::all();
-        return PendudukResource::collection($residents);
-    }
-    public function getPenduduk()
-    {
-        $penduduk = Resident::all();
-        return Pendudukresource::collection($penduduk);
+        return Postresource::collection($residents);
     }
 
     public function getAnnouncements()
     {
         $announcements = Announcements::all();
-        return pengumumanResource::collection($announcements);
-    }
-    public function getUmkm()
-    {
-        $umkms = Umkm::all();
-        return response()->json($umkms);
-    }
-
-    public function getProfilDesa()
-    {
-        $profilDesa = ProfilDesa::first();
-        return new ProfilResource($profilDesa);
-    }
-
-    public function getStaff()
-    {
-        $staff = Staff::all();
-        return StaffResource::collection($staff);
-    }
-    public function getGallery()
-    {
-        $galleries = Gallery::all();
-        return GaleriResource::collection($galleries);
+        return Postresource::collection($announcements);
     }
 }
