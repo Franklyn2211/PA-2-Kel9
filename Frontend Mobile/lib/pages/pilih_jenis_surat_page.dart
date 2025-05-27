@@ -15,9 +15,9 @@ class _PilihJenisSuratPageState extends State<PilihJenisSuratPage> {
   final List<Map<String, String>> jenisSurat = [
     {'value': 'Surat Belum Menikah', 'label': 'Surat Belum Menikah'},
     {'value': 'Surat Domisili', 'label': 'Surat Domisili'},
-    {'value': 'Surat Keterangan Usaha', 'label': 'Surat Keterangan Usaha'},
-    {'value': 'Surat Pengantar', 'label': 'Surat Pengantar'},
-    {'value': 'Surat Keterangan Kelahiran', 'label': 'Surat Keterangan Kelahiran'},
+    // {'value': 'Surat Keterangan Usaha', 'label': 'Surat Keterangan Usaha'},
+    // {'value': 'Surat Pengantar', 'label': 'Surat Pengantar'},
+    // {'value': 'Surat Keterangan Kelahiran', 'label': 'Surat Keterangan Kelahiran'},
   ];
 
   // Update colors to use blue theme

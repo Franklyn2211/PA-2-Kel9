@@ -1,5 +1,7 @@
+import 'package:aplikasi_desa/pages/layanan_surat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:aplikasi_desa/pages/product_detail_page.dart';
+import 'package:intl/intl.dart';
 import '../models/product_model.dart';
 import '../services/api_service.dart';
 
@@ -57,11 +59,15 @@ class _AllProductPageState extends State<AllProductPage> {
   String formatPrice(String price) {
     // Add thousand separators to price
     try {
-      int priceValue = int.parse(price.replaceAll('.', '').replaceAll(',', ''));
-      return priceValue.toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.');
+      double jumlah = double.parse(price);
+      final formatter = NumberFormat.currency(
+        locale: 'id_ID',
+        symbol: '',
+        decimalDigits: 0,
+      );
+      return formatter.format(jumlah);
     } catch (e) {
-      return price;
+      return price; // Jika parsing gagal, kembalikan harga asli
     }
   }
 
@@ -73,14 +79,14 @@ class _AllProductPageState extends State<AllProductPage> {
           'Semua Produk',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: StepWidget.themeColor,
           ),
         ),
-        backgroundColor: themeColor,
+        backgroundColor: themeColor.withOpacity(0.05),
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
+            icon: const Icon(Icons.refresh, color: Color.fromARGB(255, 17, 19, 119)),
             onPressed: _refreshProducts,
             tooltip: 'Refresh',
           ),
@@ -133,11 +139,11 @@ class _AllProductPageState extends State<AllProductPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.shopping_bag_outlined,
-            size: 80,
-            color: Colors.grey[400],
-          ),
+          // Icon(
+          //   Icons.shopping_bag_outlined,
+          //   size: 80,
+          //   color: Colors.grey[400],
+          // ),
           const SizedBox(height: 16),
           Text(
             'Tidak ada produk tersedia',

@@ -187,39 +187,39 @@ class BeritaDetailPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           // Share button
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              // Share functionality
-                            },
-                            icon: const Icon(Icons.share, size: 20),
-                            label: const Text("Bagikan"),
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Color(0xFF3AC53E),
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
+                          // ElevatedButton.icon(
+                          //   onPressed: () {
+                          //     // Share functionality
+                          //   },
+                          //   icon: const Icon(Icons.share, size: 20),
+                          //   label: const Text("Bagikan"),
+                          //   style: ElevatedButton.styleFrom(
+                          //     foregroundColor: Colors.white,
+                          //     backgroundColor: Color(0xFF3AC53E),
+                          //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(8),
+                          //     ),
+                          //   ),
+                          // ),
                           const SizedBox(width: 16),
                           
                           // Bookmark button
-                          OutlinedButton.icon(
-                            onPressed: () {
-                              // Bookmark functionality
-                            },
-                            icon: const Icon(Icons.bookmark_border, size: 20),
-                            label: const Text("Simpan"),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Color(0xFF3AC53E),
-                              side: BorderSide(color: Color(0xFF3AC53E)!),
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
+                          // OutlinedButton.icon(
+                          //   onPressed: () {
+                          //     // Bookmark functionality
+                          //   },
+                          //   icon: const Icon(Icons.bookmark_border, size: 20),
+                          //   label: const Text("Simpan"),
+                          //   style: OutlinedButton.styleFrom(
+                          //     foregroundColor: Color(0xFF3AC53E),
+                          //     side: BorderSide(color: Color(0xFF3AC53E)!),
+                          //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(8),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                       

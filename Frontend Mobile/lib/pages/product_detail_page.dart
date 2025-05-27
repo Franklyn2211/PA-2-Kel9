@@ -198,29 +198,29 @@ class HalamanDetailProduk extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Colors.white),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.favorite_border),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Ditambahkan ke favorit")),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.share),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Bagikan produk")),
-              );
-            },
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   elevation: 0,
+      //   backgroundColor: Colors.transparent,
+      //   iconTheme: IconThemeData(color: Colors.white),
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(Icons.favorite_border),
+      //       onPressed: () {
+      //         ScaffoldMessenger.of(context).showSnackBar(
+      //           SnackBar(content: Text("Ditambahkan ke favorit")),
+      //         );
+      //       },
+      //     ),
+      //     IconButton(
+      //       icon: Icon(Icons.share),
+      //       onPressed: () {
+      //         ScaffoldMessenger.of(context).showSnackBar(
+      //           SnackBar(content: Text("Bagikan produk")),
+      //         );
+      //       },
+      //     ),
+      //   ],
+      // ),
       body: Column(
         children: [
           Expanded(

@@ -609,28 +609,28 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: themeColor,
         elevation: 2,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: Colors.white),
-            onPressed: () {
-              // Show notifications
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Tidak ada notifikasi baru'),
-                  backgroundColor: themeColor,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.notifications_outlined, color: Colors.white),
+        //     onPressed: () {
+        //       // Show notifications
+        //       ScaffoldMessenger.of(context).showSnackBar(
+        //         SnackBar(
+        //           content: const Text('Tidak ada notifikasi baru'),
+        //           backgroundColor: themeColor,
+        //           behavior: SnackBarBehavior.floating,
+        //           shape: RoundedRectangleBorder(
+        //             borderRadius: BorderRadius.circular(10),
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        //   IconButton(
+        //     icon: const Icon(Icons.search, color: Colors.white),
+        //     onPressed: () {},
+        //   ),
+        // ],
       ),
       body: isPagesInitialized
           ? (_selectedIndex < _pages.length
