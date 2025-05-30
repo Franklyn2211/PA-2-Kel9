@@ -41,6 +41,7 @@ class SuratDomisiliController extends Controller
             $pengajuan = pengajuan_surat::create([
                 'resident_id' => $request->resident_id,
                 'jenis_surat' => $template->jenis_surat,
+                'template_id' => $template->id, // Tambahkan baris ini
                 'status' => 'diajukan'
             ]);
 

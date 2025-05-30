@@ -13,7 +13,7 @@ class pengajuan_surat extends Model
 
     protected $fillable = [
         'resident_id',
-        'jenis_surat',
+        'template_id',
         'status',
         'tanggal_diselesaikan'
     ];
@@ -34,6 +34,12 @@ class pengajuan_surat extends Model
     public function resident()
     {
         return $this->belongsTo(Residents::class, 'resident_id');
+    }
+
+    // Relasi ke SuratTemplate
+    public function template()
+    {
+        return $this->belongsTo(surat_templates::class, 'template_id'); 
     }
 
     // Scope untuk filter berdasarkan status

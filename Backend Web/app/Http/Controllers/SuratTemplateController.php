@@ -74,9 +74,6 @@ class SuratTemplateController extends Controller
     {
         $template = surat_templates::findOrFail($id);
 
-        // Hapus file template
-        Storage::delete($template->template_path);
-
         // Hapus data dari database
         $template->delete();
 
