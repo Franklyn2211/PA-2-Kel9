@@ -126,12 +126,18 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/pengajuan', [SuratController::class, 'pengajuan'])->name('admin.pengajuan.index');
     Route::get('/pengajuan/{id}', [SuratController::class, 'detailPengajuan'])->name('admin.pengajuan.show');
     Route::put('/pengajuan/approve/{id}', [SuratController::class, 'approve'])->name('admin.pengajuan.approve');
-    Route::post('/pengajuan/reject/{id}', [PengajuanSuratController::class, 'reject'])->name('admin.pengajuan.reject');
         Route::delete('/pengajuan/{id}', [SuratController::class, 'destroy'])->name('admin.pengajuan.destroy');
     Route::get('/pengajuan/{id}/document', [SuratController::class, 'generateAndShowPDF'])->name('admin.pengajuan.document');
 
     // Routes untuk manajemen template
-    Route::resource('templates', SuratTemplateController::class);
+    Route::get('/templates', [SuratTemplateController::class, 'index'])->name('admin.templates.index');
+    Route::get('/templates/create', [SuratTemplateController::class, 'create'])->name('admin.templates.create');
+    Route::post('/templates', [SuratTemplateController::class, 'store'])->name('admin.templates.store');
+    Route::get('/templates/{id}/edit', [SuratTemplateController::class, 'edit'])->name('admin.templates.edit');
+    Route::put('/templates/{id}', [SuratTemplateController::class, 'update'])->name('admin.templates.update');
+    Route::delete('/templates/{id}', [SuratTemplateController::class, 'destroy'])->name('admin.templates.destroy');
+
+
     // UMKM
     Route::get('/umkm', [\App\Http\Controllers\Admin\UmkmController::class, 'index'])->name('admin.umkm.index');
     Route::patch('/umkm/{id}/status', [\App\Http\Controllers\Admin\UmkmController::class, 'updateStatus'])->name('admin.umkm.updateStatus');
@@ -143,12 +149,6 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/galeri/{galleries}/edit', [GalleryController::class, 'edit'])->name('admin.galeri.edit');
     Route::put('/galeri/{galleries}', [GalleryController::class, 'update'])->name('admin.galeri.update');
     Route::delete('/galeri/{galleries}', [GalleryController::class, 'destroy'])->name('admin.galeri.destroy');
-
-    // Surat Menyurat
-    Route::get('/surat', function () {
-        return view('admin.pengajuan.index');
-    })->name('admin.pengajuan.index');
-    Route::get('/admin/pengajuan', [SuratController::class, 'index'])->name('admin.pengajuan.index');
 
     // Staff
     Route::get('/staff', [StaffController::class, 'index'])->name('admin.staff.index');

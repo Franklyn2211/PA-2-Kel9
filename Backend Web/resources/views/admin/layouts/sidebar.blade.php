@@ -47,11 +47,28 @@
                     <span class="nav-text">Galeri</span>
                 </a>
             </li>
-            <li class="nav-item {{ request()->is('admin/surat*') ? 'active' : '' }}">
-                <a class="nav-link" href="/admin/pengajuan">
+            <li class="nav-item {{ request()->is('admin/pengajuan*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->is('admin/templates*') || request()->is('admin/admin/pengajuan*') ? 'active' : '' }}"
+                   data-bs-toggle="collapse" href="#suratMenu" role="button" aria-expanded="false" aria-controls="suratMenu">
                     <i class="fas fa-file-alt"></i>
                     <span class="nav-text">Surat Menyurat</span>
                 </a>
+                <div class="collapse {{ request()->is('admin/templates*') || request()->is('admin/admin/pengajuan*') ? 'show' : '' }}" id="suratMenu">
+                    <ul class="nav flex-column" style="padding-left: 1.5rem;">
+                        <li class="nav-item {{ request()->is('admin/templates*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{route('admin.templates.index')}}" style="font-size: 0.85rem;">
+                                <i class="fas fa-file"></i>
+                                <span class="nav-text">Template Surat</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ request()->is('admin/pengajuan*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{route('admin.pengajuan.index')}}" style="font-size: 0.85rem;">
+                                <i class="fas fa-envelope"></i>
+                                <span class="nav-text">Pengajuan Surat</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         </ul>
 

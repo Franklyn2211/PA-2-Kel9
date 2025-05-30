@@ -39,7 +39,7 @@ class PengajuanSuratController extends Controller
 
             $pengajuan = pengajuan_surat::create([
                 'resident_id' => $request->resident_id,
-                'template_id' => $template->id,
+                'jenis_surat' => $template->jenis_surat,
                 'status' => 'diajukan',
             ]);
 

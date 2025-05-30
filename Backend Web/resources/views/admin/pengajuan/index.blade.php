@@ -82,27 +82,12 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            {{ $pengajuan->links('pagination::bootstrap-4') }}
+                        </div>
                     </div>
                 </div>
             </div>
-            @if(isset($detailPengajuan))
-                <div class="col-12">
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h6>Detail Pengajuan</h6>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-group">
-                                @foreach ($detailPengajuan->toArray() as $key => $value)
-                                    <li class="list-group-item">
-                                        <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $value ?? '-' }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            @endif
         </div>
     </div>
 @endsection

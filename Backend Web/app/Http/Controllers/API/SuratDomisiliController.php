@@ -28,8 +28,8 @@ class SuratDomisiliController extends Controller
 
         try {
             // Cari template surat domisili
-            $template = surat_templates::where('jenis_surat', 'surat domisili')->first();
-            
+            $template = surat_templates::where('jenis_surat', 'Surat Domisili')->first();
+
             if (!$template) {
                 return response()->json([
                     'success' => false,
@@ -40,7 +40,7 @@ class SuratDomisiliController extends Controller
             // Buat pengajuan umum
             $pengajuan = pengajuan_surat::create([
                 'resident_id' => $request->resident_id,
-                'template_id' => $template->id,
+                'jenis_surat' => $template->jenis_surat,
                 'status' => 'diajukan'
             ]);
 
@@ -92,12 +92,12 @@ class SuratDomisiliController extends Controller
 
         $filename = 'surat_domisili_' . $pengajuan->id . '.txt';
         $path = storage_path('app/generated/' . $filename);
-        
+
         // Buat direktori jika belum ada
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
-        
+
         file_put_contents($path, $content);
 
         return response()->download($path)->deleteFileAfterSend(true);

@@ -194,6 +194,10 @@ class _RequestSuratPageState extends State<RequestSuratPage> {
                     itemBuilder: (context, index) {
                       final request = requests[index];
                       final status = request['status'] as String;
+                      final jenisSurat = request['template'] != null
+                          ? request['template']['jenis_surat']
+                          : request['jenis_surat']; // Gunakan 'jenis_surat' jika 'template' null
+
                       return Card(
                         elevation: 2,
                         margin: const EdgeInsets.only(bottom: 12),
@@ -210,7 +214,7 @@ class _RequestSuratPageState extends State<RequestSuratPage> {
                             horizontal: 16,
                           ),
                           title: Text(
-                            request['template']['jenis_surat'],
+                            jenisSurat, // Gunakan 'jenisSurat' yang sudah divalidasi
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,

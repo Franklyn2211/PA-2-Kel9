@@ -12,13 +12,13 @@ class SuratTemplateController extends Controller
     public function index()
     {
         $templates = surat_templates::all();
-        return view('templates.index', compact('templates'));
+        return view('admin.templates.index', compact('templates'));
     }
 
     // Menampilkan form tambah template
     public function create()
     {
-        return view('templates.create');
+        return view('admin.templates.create');
     }
 
     // Menyimpan template baru
@@ -39,7 +39,7 @@ class SuratTemplateController extends Controller
             ]);
 
             // Redirect dengan pesan sukses
-            return redirect()->route('templates.index')
+            return redirect()->route('admin.templates.index')
                 ->with('success', 'Template berhasil ditambahkan');
         } catch (\Exception $e) {
             // Tangani error dan tampilkan pesan
@@ -51,7 +51,7 @@ class SuratTemplateController extends Controller
     public function edit($id)
     {
         $template = surat_templates::findOrFail($id);
-        return view('templates.edit', compact('template'));
+        return view('admin.templates.edit', compact('template'));
     }
 
     // Update template
@@ -65,7 +65,7 @@ class SuratTemplateController extends Controller
 
         $template->update($data);
 
-        return redirect()->route('templates.index')
+        return redirect()->route('admin.templates.index')
             ->with('success', 'Template berhasil diperbarui');
     }
 
@@ -80,7 +80,7 @@ class SuratTemplateController extends Controller
         // Hapus data dari database
         $template->delete();
 
-        return redirect()->route('templates.index')
+        return redirect()->route('admin.templates.index')
             ->with('success', 'Template berhasil dihapus');
     }
 }

@@ -25,7 +25,7 @@ class SuratBelumMenikahController extends Controller
         try {
             // Cari template surat belum menikah
             $template = surat_templates::where('jenis_surat', 'surat belum menikah')->first();
-            
+
             if (!$template) {
                 throw new \Exception("Template surat belum menikah belum tersedia");
             }
@@ -33,7 +33,7 @@ class SuratBelumMenikahController extends Controller
             // Buat pengajuan umum
             $pengajuan = pengajuan_surat::create([
                 'resident_id' => $request->resident_id,
-                'template_id' => $template->id,
+                'jenis_surat' => $template->jenis_surat,
                 'status' => 'diajukan'
             ]);
 
@@ -41,9 +41,7 @@ class SuratBelumMenikahController extends Controller
             $suratBelumMenikah = surat_belum_menikah::create([
                 'pengajuan_id' => $pengajuan->id,
                 'keperluan' => $request->keperluan,
-                'data_tambahan' => json_encode([
                     'nomor_telepon' => $request->nomor_telepon
-                ])
             ]);
 
             DB::commit();
@@ -84,12 +82,12 @@ class SuratBelumMenikahController extends Controller
 
         $filename = 'surat_belum_menikah_' . $pengajuan->id . '.txt';
         $path = storage_path('app/generated/' . $filename);
-        
+
         // Buat direktori jika belum ada
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
-        
+
         file_put_contents($path, $content);
 
         return response()->download($path)->deleteFileAfterSend(true);

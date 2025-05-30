@@ -14,7 +14,8 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "https://c444-103-167-217-200.ngrok-free.app/api";
+  static const String baseUrl =
+      "https://bc31-103-179-248-94.ngrok-free.app/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -22,7 +23,7 @@ class ApiService {
   };
 
   String getBaseUrl() {
-    return 'https://c444-103-167-217-200.ngrok-free.app'; // Replace with your actual base URL
+    return 'https://bc31-103-179-248-94.ngrok-free.app'; // Replace with your actual base URL
   }
 
   // ==================== NIK VERIFICATION ====================
@@ -49,21 +50,22 @@ class ApiService {
   // ==================== PRODUCTS ====================
   static Future<List<Product>> fetchProducts() async {
     final response = await http.get(
-        Uri.parse('$baseUrl/products'),
-        headers: headers,
+      Uri.parse('$baseUrl/products'),
+      headers: headers,
     );
 
     final responseData = _parseResponse(response);
     return (responseData['data'] as List)
         .map((item) => Product.fromJson(item))
         .toList()
-        ..sort((a, b) {
-            if (a.createdAt == null && b.createdAt == null) return 0;
-            if (a.createdAt == null) return 1;
-            if (b.createdAt == null) return -1;
-            return b.createdAt!.compareTo(a.createdAt!);
-        });
+      ..sort((a, b) {
+        if (a.createdAt == null && b.createdAt == null) return 0;
+        if (a.createdAt == null) return 1;
+        if (b.createdAt == null) return -1;
+        return b.createdAt!.compareTo(a.createdAt!);
+      });
   }
+
   // ==================== PENDUDUK ====================
   static Future<List<Residents>> fetchPenduduk() async {
     final response = await http.get(
@@ -113,6 +115,7 @@ class ApiService {
         .map((item) => Berita.fromJson(item))
         .toList();
   }
+
   // ==================== PENGUMUMAN ====================
   static Future<List<Pengumuman>> fetchPengumuman() async {
     final response = await http.get(
@@ -247,7 +250,7 @@ class ApiService {
 
       // Add file dengan nama field yang sesuai backend
       var file = await http.MultipartFile.fromPath(
-        'bukti_transfer',  // Ubah dari bukti_transfer
+        'bukti_transfer', // Ubah dari bukti_transfer
         buktiTransfer.path,
         contentType: MediaType('image', 'jpeg'),
       );
@@ -315,13 +318,14 @@ class ApiService {
 
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token'); // Pastikan token disimpan dengan key 'auth_token'
+    return prefs.getString(
+        'auth_token'); // Pastikan token disimpan dengan key 'auth_token'
   }
 
   static Future<dynamic> get(String endpoint) async {
     final response = await http.get(
-        Uri.parse('$baseUrl$endpoint'),
-        headers: headers,
+      Uri.parse('$baseUrl$endpoint'),
+      headers: headers,
     );
 
     if (response.statusCode == 200) {
@@ -331,7 +335,8 @@ class ApiService {
     }
   }
 
-  static Future<dynamic> post(String endpoint, Map<String, dynamic> body) async {
+  static Future<dynamic> post(
+      String endpoint, Map<String, dynamic> body) async {
     final response = await http.post(
       Uri.parse('$baseUrl$endpoint'),
       headers: {
@@ -350,7 +355,9 @@ class ApiService {
       throw Exception('Failed to post data: ${response.body}');
     }
   }
-  static Future<List<Map<String, dynamic>>> fetchUserOrders(int pendudukId) async {
+
+  static Future<List<Map<String, dynamic>>> fetchUserOrders(
+      int pendudukId) async {
     final response = await http.get(
       Uri.parse('$baseUrl/orders?penduduk_id=$pendudukId'),
       headers: headers,

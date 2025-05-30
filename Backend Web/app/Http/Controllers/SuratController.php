@@ -14,7 +14,7 @@ class SuratController extends Controller
     // Dashboard admin
     public function index()
     {
-        $pengajuan = pengajuan_surat::with(['resident', 'template'])->orderBy('created_at', 'desc')->get();
+        $pengajuan = pengajuan_surat::with(['resident'])->orderBy('created_at', 'desc')->get();
 
         return view('admin.pengajuan.index', compact('pengajuan'));
     }
@@ -22,24 +22,21 @@ class SuratController extends Controller
     // Daftar pengajuan
     public function pengajuan(Request $request)
     {
-        $status = $request->get('status', 'diajukan');
-
-        $pengajuan = pengajuan_surat::with(['resident', 'template'])
-            ->where('status', $status)
+        $pengajuan = pengajuan_surat::with(['resident'])
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
-        return view('admin.pengajuan.index', compact('pengajuan', 'status'));
+        return view('admin.pengajuan.index', compact('pengajuan'));
     }
 
     // Detail pengajuan untuk admin
     public function detailPengajuan($id)
     {
-        $pengajuan = pengajuan_surat::with(['resident', 'template'])->findOrFail($id);
+        $pengajuan = pengajuan_surat::with(['resident'])->findOrFail($id);
 
         // Ambil data khusus berdasarkan jenis surat
         $detailPengajuan = null;
-        switch ($pengajuan->template->jenis_surat) {
+        switch ($pengajuan->jenis_surat) {
             case 'surat_tidak_mampu':
                 $detailPengajuan = surat_belum_menikah::where('pengajuan_id', $id)->first();
                 break;
@@ -73,7 +70,7 @@ class SuratController extends Controller
         try {
             // [1] Ambil data pengajuan
             \Log::info("Memulai proses generate PDF untuk pengajuan ID: $id");
-            $pengajuan = pengajuan_surat::with(['resident', 'template'])->findOrFail($id);
+            $pengajuan = pengajuan_surat::with(['resident'])->findOrFail($id);
 
             // [2] Validasi data resident
             if (!$pengajuan->resident) {
@@ -82,11 +79,11 @@ class SuratController extends Controller
             }
 
             // [3] Tentukan template berdasarkan jenis surat
-            $jenisSurat = strtolower(trim($pengajuan->template->jenis_surat));
+            $jenisSurat = strtolower(trim($pengajuan->jenis_surat));
             \Log::info("Jenis surat: $jenisSurat");
             $viewName = match ($jenisSurat) {
-                'surat domisili' => 'templates.surat_domisili',
-                'surat belum menikah' => 'templates.surat_belum_menikah',
+                'surat domisili' => 'admin.templates.surat_domisili',
+                'surat belum menikah' => 'admin.templates.surat_belum_menikah',
                 default => throw new \Exception("Template untuk jenis surat '$jenisSurat' tidak ditemukan."),
             };
 
@@ -124,7 +121,7 @@ class SuratController extends Controller
         $userId = $request->input('user_id'); // Ambil ID user dari request
         \Log::info("Fetching requests for user ID: $userId"); // Debug log
 
-        $pengajuan = pengajuan_surat::with(['template'])
+        $pengajuan = pengajuan_surat::with(['resident'])
             ->where('resident_id', $userId) // Filter berdasarkan ID user
             ->orderBy('created_at', 'desc')
             ->get();
@@ -141,13 +138,13 @@ class SuratController extends Controller
     public function downloadPDF($id)
     {
         try {
-            $pengajuan = pengajuan_surat::with(['template', 'resident'])->findOrFail($id);
+            $pengajuan = pengajuan_surat::with(['resident'])->findOrFail($id);
 
             if ($pengajuan->status !== 'disetujui') {
                 return response()->json(['error' => 'Surat belum disetujui'], 403);
             }
 
-            $jenisSurat = strtolower(trim($pengajuan->template->jenis_surat));
+            $jenisSurat = strtolower(trim($pengajuan->jenis_surat));
             $viewName = match ($jenisSurat) {
                 'surat domisili' => 'templates.surat_domisili',
                 'surat belum menikah' => 'templates.surat_belum_menikah',

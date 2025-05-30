@@ -15,7 +15,7 @@ class DashboardController extends Controller
     public function index()
     {
         $totalPengajuan = pengajuan_surat::count();
-        $recentPengajuan = pengajuan_surat::with(['resident', 'template'])
+        $recentPengajuan = pengajuan_surat::with(['resident'])
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();

@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('surat_keterangan_belum_pernah_menikah', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('pengajuan_id');
-            $table->text('alasan_pengajuan');
+            $table->text('keperluan');
             $table->string('nomor_telepon');
             $table->text('alamat_sekarang')->nullable();
+            $table->timestamps();
             $table->foreign('pengajuan_id')->references('id')->on('pengajuan_surat')->onDelete('cascade');
         });
     }
