@@ -94,7 +94,7 @@ flutter:
   - assets/madu.jpg
   - assets/festival.jpg
   - assets/images/logo.png
-  - assets/images/background2.jpg
+  - assets/images/background.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
