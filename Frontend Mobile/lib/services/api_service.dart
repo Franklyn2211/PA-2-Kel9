@@ -376,4 +376,19 @@ class ApiService {
     final responseData = _parseResponse(response);
     return responseData['data']; // Kembalikan data profil desa
   }
+
+  static Future<bool> saveFcmToken({required int userId, required String fcmToken}) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/save-fcm-token'),
+      headers: headers,
+      body: jsonEncode({
+        'user_id': userId,
+        'fcm_token': fcmToken,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
 }
