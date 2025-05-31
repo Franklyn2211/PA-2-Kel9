@@ -24,7 +24,7 @@ class SuratBelumMenikahController extends Controller
 
         try {
             // Cari template surat belum menikah
-            $template = surat_templates::where('jenis_surat', 'surat belum menikah')->first();
+            $template = \App\Models\surat_templates::where('jenis_surat', $request->jenis_surat)->first();
 
             if (!$template) {
                 throw new \Exception("Template surat belum menikah belum tersedia");
@@ -34,6 +34,7 @@ class SuratBelumMenikahController extends Controller
             $pengajuan = pengajuan_surat::create([
                 'resident_id' => $request->resident_id,
                 'jenis_surat' => $template->jenis_surat,
+                'template_id' => $template->id, // Tambahkan baris ini
                 'status' => 'diajukan'
             ]);
 

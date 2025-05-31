@@ -9,12 +9,12 @@ class surat_belum_menikah extends Model
 {
     use HasFactory;
 
-    protected $table = 'surat_keterangan_belum_pernah_menikah';
+    protected $table = 'surat_belum_menikah';
 
     protected $fillable = [
         'pengajuan_id',
         'keperluan',
-        'nomor_telepon',
+       'data_tambahan', // Tambahkan ini
     ];
 
     public function pengajuan()

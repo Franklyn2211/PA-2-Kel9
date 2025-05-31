@@ -27,13 +27,13 @@ class SuratDomisiliController extends Controller
         DB::beginTransaction();
 
         try {
-            // Cari template surat domisili
-            $template = surat_templates::where('jenis_surat', 'Surat Domisili')->first();
+            // Ambil template berdasarkan jenis surat dari request
+            $template = surat_templates::where('jenis_surat', operator: $request->jenis_surat)->first();
 
             if (!$template) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Template surat domisili belum tersedia. Silakan hubungi admin untuk menambahkan template.',
+                    'message' => 'Template surat tidak ditemukan. Silakan hubungi admin.',
                 ], 400);
             }
 
@@ -41,7 +41,7 @@ class SuratDomisiliController extends Controller
             $pengajuan = pengajuan_surat::create([
                 'resident_id' => $request->resident_id,
                 'jenis_surat' => $template->jenis_surat,
-                'template_id' => $template->id, // Tambahkan baris ini
+                'template_id' => $template->id, // Wajib diisi!
                 'status' => 'diajukan'
             ]);
 
@@ -58,7 +58,7 @@ class SuratDomisiliController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Pengajuan surat domisili berhasil',
+                'message' => 'Pengajuan surat berhasil',
                 'data' => [
                     'pengajuan' => $pengajuan,
                     'surat_domisili' => $suratDomisili
@@ -67,7 +67,7 @@ class SuratDomisiliController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Error saat mengajukan surat domisili:', ['error' => $e->getMessage()]);
+            \Log::error('Error saat mengajukan surat:', ['error' => $e->getMessage()]);
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mengajukan surat',
