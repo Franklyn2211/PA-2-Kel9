@@ -17,7 +17,7 @@ class PostResource extends JsonResource
     {
         // Base structure yang sama untuk semua tipe
         $response = [
-            'id' => $this->id,
+            'id' => (int) $this->id,
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),
             'photo_url' => $this->photo ? url('storage/' . ltrim($this->photo, '/')) : null,
@@ -31,11 +31,11 @@ class PostResource extends JsonResource
                 'description' => $this->description ?? '',
                 'photo' => $this->photo,
                 'location' => $this->location ?? '',
-                'price' => $this->price ?? '0',
-                'stock' => $this->stock ?? 0,
+                'price' => (string) $this->price ?? '0',
+                'stock' => (string) $this->stock ?? '0',
                 'phone' => $this->phone ?? '',
-                'umkm_id' => $this->umkm_id ?? 0,
-                'qris_url' => $this->qris_url ?? $this->umkm->qris_url ?? null,
+                'umkm_id' => (int) $this->umkm_id ?? 0,
+                'qris_url' => $this->qris_url ?? ($this->umkm->qris_url ?? null),
                 'umkm' => $this->whenLoaded('umkm', function() {
                     return [
                         'id' => $this->umkm->id ?? 0,

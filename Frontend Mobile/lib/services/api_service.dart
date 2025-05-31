@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   static const String baseUrl =
-      "https://2ef3-114-10-86-74.ngrok-free.app/api";
+      "https://ambaritadigital.com/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -23,7 +23,7 @@ class ApiService {
   };
 
   String getBaseUrl() {
-    return 'https://2ef3-114-10-86-74.ngrok-free.app'; // Replace with your actual base URL
+    return 'https://ambaritadigital.com'; // Replace with your actual base URL
   }
 
   // ==================== NIK VERIFICATION ====================
@@ -34,6 +34,8 @@ class ApiService {
         Uri.parse('$baseUrl/resident?nik=$nik'),
         headers: headers,
       );
+      print('verifyNik Status: ${response.statusCode}');
+      print('verifyNik Body: ${response.body}');
 
       final responseData = json.decode(response.body);
 
@@ -42,41 +44,59 @@ class ApiService {
       } else {
         throw Exception(responseData['message'] ?? 'Gagal memverifikasi NIK');
       }
-    } catch (e) {
+    } catch (e, stack) {
+      print('verifyNik ERROR: $e');
+      print('verifyNik STACK: $stack');
       throw Exception('Error: $e');
     }
   }
 
   // ==================== PRODUCTS ====================
   static Future<List<Product>> fetchProducts() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/products'),
-      headers: headers,
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/products'),
+        headers: headers,
+      );
+      print('PRODUCTS Status: ${response.statusCode}');
+      print('PRODUCTS Body: ${response.body}');
 
-    final responseData = _parseResponse(response);
-    return (responseData['data'] as List)
-        .map((item) => Product.fromJson(item))
-        .toList()
-      ..sort((a, b) {
-        if (a.createdAt == null && b.createdAt == null) return 0;
-        if (a.createdAt == null) return 1;
-        if (b.createdAt == null) return -1;
-        return b.createdAt!.compareTo(a.createdAt!);
-      });
+      final responseData = _parseResponse(response);
+      return (responseData['data'] as List)
+          .map((item) => Product.fromJson(item))
+          .toList()
+        ..sort((a, b) {
+          if (a.createdAt == null && b.createdAt == null) return 0;
+          if (a.createdAt == null) return 1;
+          if (b.createdAt == null) return -1;
+          return b.createdAt!.compareTo(a.createdAt!);
+        });
+    } catch (e, stack) {
+      print('fetchProducts ERROR: $e');
+      print('fetchProducts STACK: $stack');
+      rethrow;
+    }
   }
 
   // ==================== PENDUDUK ====================
   static Future<List<Residents>> fetchPenduduk() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/pendudukku'),
-      headers: headers,
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/pendudukku'),
+        headers: headers,
+      );
+      print('PENDUDUK Status: ${response.statusCode}');
+      print('PENDUDUK Body: ${response.body}');
 
-    final responseData = _parseResponse(response);
-    return (responseData['data'] as List)
-        .map((item) => Residents.fromJson(item))
-        .toList();
+      final responseData = _parseResponse(response);
+      return (responseData['data'] as List)
+          .map((item) => Residents.fromJson(item))
+          .toList();
+    } catch (e, stack) {
+      print('fetchPenduduk ERROR: $e');
+      print('fetchPenduduk STACK: $stack');
+      rethrow;
+    }
   }
 
   // ==================== UMKM ====================
@@ -84,8 +104,10 @@ class ApiService {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/umkm'),
-        headers: {'Accept': 'application/json'},
+        headers: headers,
       );
+      print('UMKM Status: ${response.statusCode}');
+      print('UMKM Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
@@ -94,65 +116,103 @@ class ApiService {
         throw Exception(
             'Failed to load UMKM. Status code: ${response.statusCode}');
       }
-    } on FormatException catch (e) {
+    } on FormatException catch (e, stack) {
+      print('fetchUmkm FormatException: $e');
+      print('fetchUmkm STACK: $stack');
       throw Exception('Invalid JSON format: $e');
-    } on http.ClientException catch (e) {
+    } on http.ClientException catch (e, stack) {
+      print('fetchUmkm ClientException: $e');
+      print('fetchUmkm STACK: $stack');
       throw Exception('Network error: $e');
-    } catch (e) {
+    } catch (e, stack) {
+      print('fetchUmkm ERROR: $e');
+      print('fetchUmkm STACK: $stack');
       throw Exception('Unexpected error: $e');
     }
   }
 
   // ==================== NEWS ====================
   static Future<List<Berita>> fetchBerita() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/news'),
-      headers: headers,
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/news'),
+        headers: headers,
+      );
+      print('BERITA Status: ${response.statusCode}');
+      print('BERITA Body: ${response.body}');
 
-    final responseData = _parseResponse(response);
-    return (responseData['data'] as List)
-        .map((item) => Berita.fromJson(item))
-        .toList();
+      final responseData = _parseResponse(response);
+      return (responseData['data'] as List)
+          .map((item) => Berita.fromJson(item))
+          .toList();
+    } catch (e, stack) {
+      print('fetchBerita ERROR: $e');
+      print('fetchBerita STACK: $stack');
+      rethrow;
+    }
   }
 
   // ==================== PENGUMUMAN ====================
   static Future<List<Pengumuman>> fetchPengumuman() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/pengumuman'),
-      headers: headers,
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/pengumuman'),
+        headers: headers,
+      );
+      print('PENGUMUMAN Status: ${response.statusCode}');
+      print('PENGUMUMAN Body: ${response.body}');
 
-    final responseData = _parseResponse(response);
-    return (responseData['data'] as List)
-        .map((item) => Pengumuman.fromJson(item))
-        .toList();
+      final responseData = _parseResponse(response);
+      return (responseData['data'] as List)
+          .map((item) => Pengumuman.fromJson(item))
+          .toList();
+    } catch (e, stack) {
+      print('fetchPengumuman ERROR: $e');
+      print('fetchPengumuman STACK: $stack');
+      rethrow;
+    }
   }
 
   // ==================== STAFF ====================
   static Future<List<Staff>> fetchStaff() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/staff'), // Perbaiki endpoint menjadi /staff
-      headers: headers,
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/staff'),
+        headers: headers,
+      );
+      print('STAFF Status: ${response.statusCode}');
+      print('STAFF Body: ${response.body}');
 
-    final responseData = _parseResponse(response);
-    return (responseData['data'] as List)
-        .map((item) => Staff.fromJson(item))
-        .toList(); // Konversi data ke List<Staff>
+      final responseData = _parseResponse(response);
+      return (responseData['data'] as List)
+          .map((item) => Staff.fromJson(item))
+          .toList();
+    } catch (e, stack) {
+      print('fetchStaff ERROR: $e');
+      print('fetchStaff STACK: $stack');
+      rethrow;
+    }
   }
 
   // ==================== GALLERY ====================
   static Future<List<Gallery>> fetchGallery() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/galeri'), // Endpoint untuk galeri
-      headers: headers,
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/galeri'),
+        headers: headers,
+      );
+      print('GALLERY Status: ${response.statusCode}');
+      print('GALLERY Body: ${response.body}');
 
-    final responseData = _parseResponse(response);
-    return (responseData['data'] as List)
-        .map((item) => Gallery.fromJson(item))
-        .toList(); // Konversi data ke List<Gallery>
+      final responseData = _parseResponse(response);
+      return (responseData['data'] as List)
+          .map((item) => Gallery.fromJson(item))
+          .toList();
+    } catch (e, stack) {
+      print('fetchGallery ERROR: $e');
+      print('fetchGallery STACK: $stack');
+      rethrow;
+    }
   }
 
   // ==================== HELPER METHOD ====================

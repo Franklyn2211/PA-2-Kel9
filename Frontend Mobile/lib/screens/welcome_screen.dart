@@ -1,3 +1,5 @@
+import 'package:aplikasi_desa/models/berita.dart';
+import 'package:aplikasi_desa/pages/berita.dart';
 import 'package:aplikasi_desa/pages/homepage.dart';
 import 'package:flutter/material.dart';
 

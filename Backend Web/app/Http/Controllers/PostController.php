@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\GaleriResource;
-use App\Http\Resources\pengumumanResource;
+use App\Http\Resources\PengumumanResource;
 use App\Http\Resources\Postresource;
-use App\Http\Resources\PendudukResource;
-use App\Http\Resources\ProfilResource;
-use App\Http\Resources\StaffResource;
+use App\Http\Resources\Pendudukresource;
+use App\Http\Resources\Profilresource;
+use App\Http\Resources\Staffresource;
 use App\Models\Announcements;
 use App\Models\Gallery;
 use App\Models\News;
@@ -16,7 +16,7 @@ use App\Models\ProfilDesa;
 use App\Models\Resident;
 use App\Models\Residents;
 use App\Models\Staff;
-use App\Models\Umkm;
+use App\Models\UMKM;
 use Illuminate\Http\Request;
 
 class PostController extends Controller

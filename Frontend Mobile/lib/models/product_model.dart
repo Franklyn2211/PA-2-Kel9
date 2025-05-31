@@ -35,24 +35,28 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['id'] as int? ?? 0,
+      id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
       productName: json['product_name'] as String? ?? '',
       description: json['description'] as String? ?? '',
       photo: json['photo'] as String? ?? '',
       photoUrl: json['photo_url'] as String? ?? '',
       location: json['location'] as String? ?? '',
-      price: json['price'] as String? ?? '0.00', // Tetap string
-      stock: json['stock'] as int? ?? 0,
+      price: json['price']?.toString() ?? '0',
+      stock: json['stock'] is int
+          ? json['stock']
+          : int.tryParse(json['stock']?.toString() ?? '0') ?? 0,
       phone: json['phone'] as String? ?? '',
-      umkmId: json['umkm_id'] as int? ?? 0,
+      umkmId: json['umkm_id'] is int
+          ? json['umkm_id']
+          : int.tryParse(json['umkm_id']?.toString() ?? '0') ?? 0,
       qrisUrl: json['qris_url'] as String?,
-      umkm: json['umkm'] != null ? Umkm.fromJson(json['umkm']) : null, // Parsing data UMKM
+      umkm: json['umkm'] != null ? Umkm.fromJson(json['umkm']) : null,
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at']) // Parsing jika tidak null
-          : null, // Tetapkan null jika created_at tidak ada
+          ? DateTime.tryParse(json['created_at'])
+          : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at']) // Parsing updated_at jika ada
-          : null, // Tetapkan null jika updated_at tidak ada
+          ? DateTime.tryParse(json['updated_at'])
+          : null,
     );
   }
 }

@@ -22,6 +22,13 @@ class Product extends Model
 
     protected $appends = ['photo_url', 'qris_url'];
 
+    protected $casts = [
+        'id' => 'integer',
+        'price' => 'integer',
+        'stock' => 'integer',
+        'umkm_id' => 'integer',
+    ];
+
     public function umkm()
     {
         return $this->belongsTo(UMKM::class);
