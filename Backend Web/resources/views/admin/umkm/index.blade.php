@@ -27,9 +27,9 @@
                             </thead>
                             <tbody>
                                 @if ($umkm->isEmpty())
-                                <tr>
-                                    <td colspan="6" class="text-center">Tidak ada data umkm</td>
-                                </tr>
+                                <div class="col-12">
+                            <p class="text-muted text-center">Belum ada UMKM yang mendaftar.</p>
+                        </div>
                                 @else
                                     @foreach ($umkm as $key => $umkm)
                                     <tr>

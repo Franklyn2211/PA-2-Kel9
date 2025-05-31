@@ -25,14 +25,14 @@ class SuratController extends Controller
     // Daftar pengajuan
     public function pengajuan(Request $request)
     {
-        $status = $request->get('status', 'diajukan');
+        // $status = $request->get('status');
 
         $pengajuan = pengajuan_surat::with(['resident', 'template'])
-            ->where('status', $status)
+            // ->where('status', $status)
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
-        return view('admin.pengajuan.index', compact('pengajuan', 'status'));
+        return view('admin.pengajuan.index', compact('pengajuan'));
     }
 
     // Detail pengajuan untuk admin

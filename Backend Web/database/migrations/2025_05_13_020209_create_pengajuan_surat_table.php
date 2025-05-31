@@ -13,8 +13,7 @@ return new class extends Migration
         Schema::create('pengajuan_surat', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('resident_id');
-            $table->unsignedBigInteger('template_id'); // Tambahkan kolom ini
-            $table->string('jenis_surat');
+            $table->unsignedBigInteger('template_id');
             $table->enum('status', ['draft', 'diajukan', 'diproses', 'disetujui', 'ditolak'])->default('draft');
             $table->dateTime('tanggal_pengajuan')->useCurrent();
             $table->dateTime('tanggal_diselesaikan')->nullable();

@@ -41,6 +41,11 @@
                             </div>
                         </div>
                         @endforeach
+                        @if ($announcements->isEmpty())
+                        <div class="col-12">
+                            <p class="text-muted text-center">Belum ada Pengumuman yang tersedia. Silahkan tambah Pengumuman.</p>
+                        </div>
+                        @endif
                     </div>
 
                     <div class="d-flex justify-content-center mt-3">

@@ -63,9 +63,9 @@
                                 </tr>
                                 @endforeach
                                 @if ($staff->isEmpty())
-                                <tr>
-                                    <td colspan="9" class="text-center">Data Staff Kosong</td>
-                                </tr>
+                                <div class="col-12">
+                            <p class="text-muted text-center">Belum ada Data Staff yang tersedia. Silahkan tambah Data Staff.</p>
+                        </div>
                                 @endif
                             </tbody>
                         </table>

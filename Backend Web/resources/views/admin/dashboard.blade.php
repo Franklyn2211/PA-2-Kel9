@@ -48,8 +48,8 @@
         <div class="col-xl-3 col-md-6 mb-4 animate-on-scroll slideInUp" style="animation-delay: 0.4s">
             <x-admin.stat-card
                 icon="fa-calendar-check"
-                {{-- value="{{ $kegiatanBulanIni }}" --}}
-                label="Kegiatan Bulan Ini"
+                value="{{ $diAjukan }}"
+                label="Surat yang belum diproses"
                 {{-- trend="{{ $kegiatanBerlangsung }} berlangsung" --}}
                 trendIcon="fa-clock"
                 trendClass="stat-trend-up" />

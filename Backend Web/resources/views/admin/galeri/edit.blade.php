@@ -46,7 +46,7 @@
                         </div>
 
                         <!-- Tombol Submit -->
-                        <button type="submit" class="btn btn-soft-primary">Tambah Galeri</button>
+                        <button type="submit" class="btn btn-soft-primary">Simpan Perubahan</button>
                     </form>
                 </div>
             </div>

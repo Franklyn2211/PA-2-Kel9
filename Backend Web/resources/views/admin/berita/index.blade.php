@@ -42,6 +42,11 @@
                             </div>
                         </div>
                         @endforeach
+                        @if ($news->isEmpty())
+                        <div class="col-12">
+                            <p class="text-muted text-center">Belum ada Berita yang tersedia. Silahkan tambah Berita.</p>
+                        </div>
+                        @endif
                     </div>
                     <div class="d-flex justify-content-end mt-3">
                         {{ $news->links('pagination::bootstrap-4') }}

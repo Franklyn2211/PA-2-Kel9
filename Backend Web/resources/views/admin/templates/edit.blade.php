@@ -32,8 +32,7 @@
                         </div>
 
                         <!-- Tombol Submit -->
-                        <button type="submit" class="btn btn-soft-primary">Simpan</button>
-                        <a href="{{ route('admin.templates.index') }}" class="btn btn-secondary">Batal</a>
+                        <button type="submit" class="btn btn-soft-primary">Simpan Perubahan</button>
                     </form>
                 </div>
             </div>

@@ -64,7 +64,6 @@
 
                         <!-- Tombol Submit -->
                         <button type="submit" class="btn btn-soft-primary">Simpan Perubahan</button>
-                        <a href="{{ route('umkm.products.index') }}" class="btn btn-danger">Batal</a>
                     </form>
                 </div>
             </div>

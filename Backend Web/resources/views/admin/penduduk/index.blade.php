@@ -70,9 +70,9 @@
                                 </tr>
                                 @endforeach
                                 @if ($residents->isEmpty())
-                                <tr>
-                                    <td colspan="9" class="text-center">Data Penduduk Kosong</td>
-                                </tr>
+                                <div class="col-12">
+                            <p class="text-muted text-center">Belum ada Data Penduduk. Silahkan tambah Data Penduduk.</p>
+                        </div>
                                 @endif
                             </tbody>
                         </table>

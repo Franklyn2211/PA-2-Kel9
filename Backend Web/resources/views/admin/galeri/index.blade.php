@@ -42,6 +42,11 @@
                             </div>
                         </div>
                         @endforeach
+                        @if ($galleries->isEmpty())
+                        <div class="col-12">
+                            <p class="text-muted text-center">Belum ada Gambar yang tersedia. Silahkan tambah Gambar.</p>
+                        </div>
+                        @endif
                     </div>
                     <div class="d-flex justify-content-end mt-3">
                         {{ $galleries->links('pagination::bootstrap-4') }}

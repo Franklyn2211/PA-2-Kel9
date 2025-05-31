@@ -30,9 +30,9 @@
                             </thead>
                             <tbody>
                                 @if ($templates->isEmpty())
-                                <tr>
-                                    <td colspan="4" class="text-center">Tidak ada template surat</td>
-                                </tr>
+                                <div class="col-12">
+                            <p class="text-muted text-center">Belum ada Template yang tersedia. Silakan tambah Template.</p>
+                        </div>
                                 @else
                                     @foreach ($templates as $key => $template)
                                     <tr>
