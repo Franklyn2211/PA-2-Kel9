@@ -14,7 +14,7 @@ class surat_templates extends Model
     protected $fillable = [
         'jenis_surat',
         'nama_surat',
-        'template_path',
+        'user_id',
     ];
     // Relasi ke pengajuan surat
     public function pengajuanSurat()
@@ -22,9 +22,12 @@ class surat_templates extends Model
         return $this->hasMany(pengajuan_surat::class, 'template_id');
     }
 
-    // Method untuk mendapatkan path lengkap template
-    public function getFullPathAttribute()
+    protected static function booted()
     {
-        return storage_path('app/' . $this->template_path);
+        static::creating(function ($template) {
+            if (is_null($template->user_id)) {
+                $template->user_id = 1; // Default value
+            }
+        });
     }
 }
