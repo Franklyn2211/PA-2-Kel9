@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_html/flutter_html.dart'; // Tambahkan package ini untuk menangani HTML
 import 'package:html/parser.dart' show parse; // Untuk parsing HTML
 import 'package:aplikasi_desa/pages/berita_detail_page.dart';
 import '../models/berita.dart';

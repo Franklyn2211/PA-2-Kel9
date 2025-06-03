@@ -16,7 +16,7 @@ class DashboardController extends Controller
     {
         $totalPengajuan = pengajuan_surat::count();
         $diAjukan = pengajuan_surat::where('status', 'diajukan')->count();
-        $recentPengajuan = pengajuan_surat::with(['resident'])
+        $recentPengajuan = pengajuan_surat::with(['resident', 'template'])
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();

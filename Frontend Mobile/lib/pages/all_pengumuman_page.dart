@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/pengumuman.dart';
 import '../services/api_service.dart';
-import 'pengumuman_detail_pengumuman.dart'; // Import halaman detail yang akan kita buat
 
 class AllPengumumanPage extends StatelessWidget {
   final Color themeColor = const Color(0xFF3AC53E);

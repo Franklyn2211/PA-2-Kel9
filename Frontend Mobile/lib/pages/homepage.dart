@@ -1,4 +1,3 @@
-import 'package:aplikasi_desa/models/gallery_model.dart';
 import 'package:aplikasi_desa/pages/all_berita_page.dart';
 import 'package:aplikasi_desa/pages/all_pengumuman_page.dart'; // Import halaman semua pengumuman
 import 'package:aplikasi_desa/pages/all_product_page.dart';
@@ -6,7 +5,6 @@ import 'package:aplikasi_desa/pages/auth_checker.dart';
 import 'package:aplikasi_desa/pages/berita.dart';
 import 'package:aplikasi_desa/pages/berita_detail_page.dart';
 import 'package:aplikasi_desa/pages/gallery_page.dart';
-import 'package:aplikasi_desa/pages/peringatan_login.dart';
 import 'package:aplikasi_desa/pages/product_detail_page.dart';
 import 'package:flutter/material.dart';
 import '../models/product_model.dart';

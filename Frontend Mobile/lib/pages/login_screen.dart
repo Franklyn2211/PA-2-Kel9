@@ -5,7 +5,6 @@ import 'package:aplikasi_desa/screens/registrasi.dart';
 import 'package:aplikasi_desa/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import '../main.dart'; // Import fungsi sendFcmTokenToBackend
 
 class LoginScreen extends StatefulWidget {

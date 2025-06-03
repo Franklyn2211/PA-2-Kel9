@@ -68,7 +68,7 @@
                 <div class="card-body">
                     @forelse ($recentPengajuan as $pengajuan)
                         <x-admin.document-card
-                            title="{{ $pengajuan->jenis_surat ?? 'Jenis Surat Tidak Diketahui' }}"
+                            title="{{ $pengajuan->template->jenis_surat ?? 'Jenis Surat Tidak Diketahui' }}"
                             user="{{ $pengajuan->resident->name ?? 'Nama Tidak Diketahui' }}"
                             date="{{ $pengajuan->created_at->format('d F Y') }}"
                             status="{{ $pengajuan->status }}"
