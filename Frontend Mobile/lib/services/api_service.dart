@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   static const String baseUrl =
-      "https://bba8-103-179-248-111.ngrok-free.app/api";
+      "https://ambaritadigital.com/api";
   static const Map<String, String> headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -23,7 +23,7 @@ class ApiService {
   };
 
   String getBaseUrl() {
-    return 'https://bba8-103-179-248-111.ngrok-free.app'; // Replace with your actual base URL
+    return 'https://ambaritadigital.com'; // Replace with your actual base URL
   }
 
   // ==================== NIK VERIFICATION ====================

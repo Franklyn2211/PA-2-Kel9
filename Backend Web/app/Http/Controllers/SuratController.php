@@ -7,9 +7,9 @@ use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
 use App\Models\pengajuan_surat;
 use App\Models\Residents;
 use App\Models\surat_belum_menikah;
+use App\Models\Staff; // Tambahkan ini di bagian use
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notification;
-use PhpOffice\PhpWord\TemplateProcessor; // Ensure this library is installed via Composer
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class SuratController extends Controller
@@ -127,6 +127,10 @@ class SuratController extends Controller
             };
 
             // [4] Siapkan data untuk template
+            // Ambil nama kepala desa dari staff
+            $kepalaDesa = Staff::where('position', 'Kepala Desa')->first();
+            $namaKepalaDesa = $kepalaDesa ? $kepalaDesa->name : '[Nama Kepala Desa Tidak Ditemukan]';
+
             $data = [
                 'nama' => $pengajuan->resident->name ?? '[Nama Kosong]',
                 'nik' => $pengajuan->resident->nik ?? '[NIK Kosong]',
@@ -137,6 +141,7 @@ class SuratController extends Controller
                 'religion' => $pengajuan->resident->religion ?? '[Agama Kosong]',
                 'tanggal_surat' => now()->locale('id')->isoFormat('D MMMM YYYY'),
                 'logo_base64' => 'data:image/jpeg;base64,' . base64_encode(file_get_contents(public_path('media/image1.jpeg'))),
+                'nama_kepala_desa' => $namaKepalaDesa, // Tambahkan ini
             ];
             \Log::info("Data untuk template berhasil disiapkan.", $data);
 
@@ -195,6 +200,10 @@ class SuratController extends Controller
                 throw new \Exception("Logo tidak ditemukan di path: $logoPath");
             }
 
+            // Ambil nama kepala desa dari staff
+            $kepalaDesa = \App\Models\Staff::where('position', 'Kepala Desa')->first();
+            $namaKepalaDesa = $kepalaDesa ? $kepalaDesa->name : '[Nama Kepala Desa Tidak Ditemukan]';
+
             $data = [
                 'nama' => $pengajuan->resident->name,
                 'nik' => $pengajuan->resident->nik,
@@ -205,6 +214,7 @@ class SuratController extends Controller
                 'family_card_number' => $pengajuan->resident->family_card_number,
                 'tanggal_surat' => now()->locale('id')->isoFormat('D MMMM YYYY'),
                 'logo_base64' => 'data:image/jpeg;base64,' . base64_encode(file_get_contents($logoPath)),
+                'nama_kepala_desa' => $namaKepalaDesa, // Tambahkan ini
             ];
 
             $pdf = Pdf::loadView($viewName, $data);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/gallery_model.dart';
 import '../services/api_service.dart';
+import 'package:share_plus/share_plus.dart';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({Key? key}) : super(key: key);
@@ -283,6 +284,11 @@ class GalleryDetailPage extends StatelessWidget {
 
   const GalleryDetailPage({Key? key, required this.gallery}) : super(key: key);
 
+  void _shareGallery(BuildContext context) {
+    final String shareText = 'Galeri: ${gallery.title}\n${gallery.photoUrl}';
+    Share.share(shareText, subject: gallery.title);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -431,13 +437,7 @@ class GalleryDetailPage extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.share, color: Colors.white),
               onPressed: () {
-                // Implementasi share disini
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Fitur berbagi sedang dalam pengembangan'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
+                _shareGallery(context);
               },
               tooltip: 'Bagikan',
             ),

@@ -155,7 +155,7 @@
                 <p>Dikeluarkan di Ambarita</p>
                 <p>pada tanggal: {{ $tanggal_surat }}</p>
                 <p class="kepala-desa">KEPALA DESA AMBARITA</p>
-                <p style="margin-top: 110px;">( Andri Sigiro )</p>
+                <p style="margin-top: 110px;">({{ $nama_kepala_desa }})</p>
             </div>
         </div>
     </div>

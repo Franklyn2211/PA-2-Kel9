@@ -13,9 +13,13 @@ class AllBeritaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white), // Icon back putih
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text(
           "Semua Berita",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
         ),
         backgroundColor: Color(0xFF3AC53E),
         elevation: 2,

@@ -321,10 +321,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 24),
 
                   // Informasi Desa section
-                  _sectionTitle("ℹ️ Informasi Desa", "Detail", () {
-                    // Navigate to detail informasi desa
-                    _showVillageInfoDetail();
-                  }),
+                  _sectionTitle("ℹ️ Informasi Desa", "", () {}),
                   _informasiDesa(),
 
                   const SizedBox(height: 24),
@@ -488,110 +485,6 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
-  // Show village info detail
-  void _showVillageInfoDetail() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'Detail Informasi Desa',
-              style: TextStyle(color: Colors.white),
-            ),
-            backgroundColor: themeColor,
-            iconTheme: const IconThemeData(color: Colors.white),
-          ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    'https://example.com/desa_ambarita.jpg',
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        height: 200,
-                        width: double.infinity,
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.image_not_supported,
-                            size: 50, color: Colors.grey),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Desa Ambarita',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: themeColor,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Kecamatan Simanindo, Kabupaten Samosir, Sumatera Utara',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Sejarah Desa',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Desa Ambarita merupakan salah satu desa yang terletak di kecamatan Simanindo, Kabupaten Samosir, Provinsi Sumatera Utara. Desa ini memiliki sejarah panjang dan kaya akan budaya Batak Toba. Salah satu daya tarik utama di desa ini adalah keberadaan situs bersejarah Batu Kursi Parsidangan yang merupakan peninggalan Raja Siallagan.',
-                  style: TextStyle(fontSize: 15, height: 1.5),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Potensi Desa',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  '1. Pariwisata: Situs bersejarah dan pemandangan alam\n'
-                  '2. Pertanian: Padi, jagung, dan sayuran\n'
-                  '3. Kerajinan: Ukiran kayu dan tenun ulos\n'
-                  '4. Perikanan: Budidaya ikan di Danau Toba',
-                  style: TextStyle(fontSize: 15, height: 1.5),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Kearifan Lokal',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Desa Ambarita masih mempertahankan adat istiadat Batak Toba seperti upacara adat, musik gondang, dan tari tor-tor. Masyarakat desa juga masih memegang teguh filosofi Dalihan Na Tolu yang mengatur hubungan kekerabatan dan sosial dalam masyarakat Batak.',
-                  style: TextStyle(fontSize: 15, height: 1.5),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

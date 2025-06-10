@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,12 +13,14 @@
             padding: 20px;
             color: #000;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             border: 1px solid #ddd;
         }
+
         .header {
             text-align: center;
             margin-bottom: 10px;
@@ -25,6 +28,7 @@
             padding-bottom: 20px;
             position: relative;
         }
+
         .logo {
             position: absolute;
             left: 0;
@@ -32,68 +36,85 @@
             width: 80px;
             height: auto;
         }
+
         .pemerintah {
             font-weight: bold;
             font-size: 16px;
             margin-bottom: 5px;
         }
+
         .kecamatan {
             font-size: 14px;
             margin-bottom: 5px;
         }
+
         .desa {
             font-weight: bold;
             font-size: 16px;
             margin-bottom: 5px;
         }
+
         .alamat {
             margin-bottom: 10px;
             font-size: 12px;
         }
+
         .judul {
             text-align: center;
             font-weight: bold;
             text-decoration: underline;
             font-size: 18px;
         }
+
         .nomor {
             text-align: center;
             font-size: 14px;
         }
+
         .content {
             text-align: justify;
         }
+
         .form-data {
             margin: 20px 0 30px 30px;
         }
+
         .form-field {
             margin-bottom: 10px;
             display: flex;
         }
+
         .form-field label {
             flex: 0 0 150px;
         }
+
         .form-field span {
             flex: 6;
-            padding-left: 10px; /* Tambahkan jarak antara titik dua dan teks */
+            padding-left: 10px;
+            /* Tambahkan jarak antara titik dua dan teks */
         }
+
         .ttd {
             float: right;
             width: 250px;
             text-align: center;
         }
+
         .ttd p {
             margin: 3px 0;
         }
+
         .kepala-desa {
             font-weight: bold;
             text-decoration: underline;
         }
+
         .clearfix::after {
             content: "";
             clear: both;
             display: table;
         }
+
         @media print {
             .container {
                 border: none;
@@ -101,6 +122,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -116,7 +138,8 @@
         <div class="nomor">Nomor: ______/SKD/BA/II/2025</div>
 
         <div class="content">
-            <p>Yang bertanda tangan di bawah ini Kepala Desa Ambarita Kecamatan Simanindo Kabupaten Samosir menerangkan bahwa:</p>
+            <p>Yang bertanda tangan di bawah ini Kepala Desa Ambarita Kecamatan Simanindo Kabupaten Samosir menerangkan
+                bahwa:</p>
 
             <div class="form-data">
                 <div class="form-field">
@@ -145,9 +168,12 @@
                 </div>
             </div>
 
-            <p>adalah benar telah melaporkan diri dan tercatat sebagai penduduk Sementara di Dusun I(Satu) Kampung Kristen Labuhan Desa Ambarita Kecamatan Simanindo Kabupaten Samosir Provinsi Sumatera Utara. Surat Keterangan ini berlaku selama <strong>6(Enam) bulan</strong> sejak tanggal diterbitkan.</p>
+            <p>adalah benar telah melaporkan diri dan tercatat sebagai penduduk Sementara di Dusun I(Satu) Kampung
+                Kristen Labuhan Desa Ambarita Kecamatan Simanindo Kabupaten Samosir Provinsi Sumatera Utara. Surat
+                Keterangan ini berlaku selama <strong>6(Enam) bulan</strong> sejak tanggal diterbitkan.</p>
 
-            <p>Demikian Surat Keterangan ini dibuat dan diberikan pada yang bersangkutan untuk dapat dipergunakan seperlunya.</p>
+            <p>Demikian Surat Keterangan ini dibuat dan diberikan pada yang bersangkutan untuk dapat dipergunakan
+                seperlunya.</p>
         </div>
 
         <div class="clearfix">
@@ -155,9 +181,10 @@
                 <p>Dikeluarkan di Ambarita</p>
                 <p>pada tanggal: {{ $tanggal_surat }}</p>
                 <p class="kepala-desa">KEPALA DESA AMBARITA</p>
-                <p style="margin-top: 110px;">( Andri Sigiro )</p>
+                <p style="margin-top: 110px;">({{ $nama_kepala_desa }})</p>
             </div>
         </div>
     </div>
 </body>
+
 </html>

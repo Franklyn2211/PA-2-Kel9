@@ -63,11 +63,11 @@ class OrderController extends Controller
         }
 
         $orders = Order::with(['product.umkm'])
-            ->where('penduduk_id', $userId) // Gunakan user_id untuk filter
+            ->where('penduduk_id', $userId) 
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($order) {
-                // Pastikan status dikirim sesuai nilai asli dari database
+
                 $order->status = $order->status; // Tidak ada manipulasi
                 return $order;
             });

@@ -101,60 +101,20 @@ class PengumumanDetailPage extends StatelessWidget {
       expandedHeight: 120,
       pinned: true,
       backgroundColor: themeColor,
-      flexibleSpace: FlexibleSpaceBar(
-        title: Text(
-          'Detail Pengumuman',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-            color: Colors.white,
-          ),
-        ),
-        background: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                themeColor,
-                themeColor.withGreen(themeColor.green - 40),
-              ],
-            ),
-          ),
-          child: Stack(
-            children: [
-              // Elemen dekoratif (opsional)
-              Positioned(
-                right: -30,
-                bottom: -30,
-                child: Icon(
-                  Icons.campaign,
-                  size: 150,
-                  color: Colors.white.withOpacity(0.1),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
         onPressed: () => Navigator.pop(context),
       ),
-      actions: [
-        // Tombol favorite/bookmark (opsional)
-        IconButton(
-          icon: const Icon(Icons.bookmark_border, color: Colors.white),
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Pengumuman disimpan'),
-                backgroundColor: themeColor,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          },
+      title: const Text(
+        'Detail Pengumuman',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+          color: Colors.white,
         ),
+      ),
+      centerTitle: true,
+      actions: [
       ],
     );
   }

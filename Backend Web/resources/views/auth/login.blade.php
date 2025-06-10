@@ -111,11 +111,7 @@
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
                 </div>
-            </div>
-            <div class="form-check mb-3">
-                <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                <label class="form-check-label" for="remember">Ingat Saya</label>
-            </div>
+            </div>  
             <button type="submit" class="btn btn-login">Masuk</button>
         </form>
 

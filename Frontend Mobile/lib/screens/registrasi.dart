@@ -134,7 +134,11 @@ class _NikVerificationScreenState extends State<NikVerificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Verifikasi NIK dan Registrasi'),
+        title: Text('Verifikasi NIK dan Registrasi',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        )),
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
       ),

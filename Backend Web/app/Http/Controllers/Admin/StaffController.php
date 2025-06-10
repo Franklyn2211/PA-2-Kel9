@@ -93,7 +93,7 @@ class StaffController extends Controller
     {
         $staff = Staff::findOrFail($id);
         if (Storage::disk('public')->exists('photos/staff/' . $staff->photo)) {
-            Storage::disk('public')->delete('photos/staff/' . $staff->photo);
+            Storage::disk(name: 'public')->delete('photos/staff/' . $staff->photo);
         }
         $staff->delete();
         return redirect()->route('admin.staff.index')->with('success', 'Data staff berhasil dihapus');
