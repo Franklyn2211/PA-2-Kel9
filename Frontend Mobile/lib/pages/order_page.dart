@@ -54,12 +54,20 @@ class _OrderPageState extends State<OrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Daftar Pesanan'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white), // Icon back putih
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text('Daftar Pesanan',
+          style: TextStyle(
+            color: Colors.white
+          ),
+        ),
         backgroundColor: themeColor,
         elevation: 2,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Colors.white), // Icon putih
             onPressed: () {
               setState(() {
                 isLoading = true;
@@ -105,7 +113,7 @@ class _OrderPageState extends State<OrderPage> {
                     itemBuilder: (context, index) {
                       final order = orders[index];
                       final bool? status = order['status'] as bool?;
-                      final String price = order['product']['price']; // Ambil price dari API
+                      final String price = order['product']['price'].toString(); // Pastikan price bertipe String
                       return Card(
                         elevation: 2,
                         margin: const EdgeInsets.only(bottom: 12),

@@ -36,9 +36,13 @@ class _GalleryPageState extends State<GalleryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white), // Icon back putih
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text(
           'Galeri Desa',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
         ),
         backgroundColor: const Color(0xFF3AC53E),
       ),

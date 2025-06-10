@@ -13,9 +13,13 @@ class AllPengumumanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white), // Icon back putih
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text(
           'Semua Pengumuman',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: themeColor,
         elevation: 2,

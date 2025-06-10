@@ -186,7 +186,7 @@ class _RequestSuratPageState extends State<RequestSuratPage> {
       appBar: AppBar(
         title: const Text(
           'Daftar Request Surat',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
         ),
         backgroundColor: themeColor,
         elevation: 0,
